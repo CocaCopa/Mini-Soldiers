@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public GameObject temp;
+    public GameObject temp_2;
     private void Spine() {
         Vector3 mousePosition = MouseWorldPosition();
         Vector3 playerToMouseDir = (mousePosition - transform.position).normalized;
