@@ -1,18 +1,20 @@
 using UnityEngine;
 using CocaCopa;
-using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerController : MonoBehaviour {
 
-    [SerializeField] private Transform spineTransform;
     [SerializeField] private float movementSpeed;
     [SerializeField] private AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
     [SerializeField] private AnimationCurve descelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
     [SerializeField] private float evaluationSpeed;
+    [SerializeField] private float rotationSpeed;
 
     public float MovementSpeed => characterSpeed;
 
+    private PlayerInput input;
     private AnimationCurve movementCurve;
+    private LookAtMouseAnimRig mouseAnimRig;
     private float horizontalInput;
     private float verticalInput;
     private float lastHorizontalInput;
@@ -20,15 +22,21 @@ public class PlayerController : MonoBehaviour {
     private float accelerationPoints;
     private float characterSpeed;
     private bool accelerate;
+    private Vector3 lookDirection;
+
+    private void Awake() {
+        input = FindObjectOfType<PlayerInput>();
+        mouseAnimRig = GetComponentInChildren<LookAtMouseAnimRig>();
+    }
 
     private void Update() {
         Movement();
-        Spine();
+        Rotation();
     }
 
     private void Movement() {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        horizontalInput = input.MovementInput().x;
+        verticalInput = input.MovementInput().y;
 
         if (verticalInput != 0 || horizontalInput != 0) {
             lastHorizontalInput = horizontalInput;
@@ -44,30 +52,30 @@ public class PlayerController : MonoBehaviour {
         float interpolationTime = Utilities.EvaluateAnimationCurve(movementCurve, ref accelerationPoints, evaluationSpeed, accelerate);
         characterSpeed = Mathf.Lerp(0, movementSpeed, interpolationTime);
 
-        Vector3 moveDirection = Vector3.forward * lastVerticalInput + Vector3.right * lastHorizontalInput;
-        moveDirection.Normalize();
+        Vector3 inputDirection = Vector3.forward * lastVerticalInput + Vector3.right * lastHorizontalInput;
+        inputDirection.Normalize();
 
-        Vector3 additivePosition = characterSpeed * Time.deltaTime * moveDirection;
+        Vector3 additivePosition = characterSpeed * Time.deltaTime * inputDirection;
         transform.position += additivePosition;
     }
 
-    public GameObject temp;
-    public GameObject temp_2;
-    private void Spine() {
-        Vector3 mousePosition = MouseWorldPosition();
-        Vector3 playerToMouseDir = (mousePosition - transform.position).normalized;
-        spineTransform.forward = playerToMouseDir;
-    }
+    private void Rotation() {
+        Vector3 inputDirection = lastVerticalInput == 0 && lastHorizontalInput == 0
+            ? Vector3.forward
+            : Vector3.forward * lastVerticalInput + Vector3.right * lastHorizontalInput;
+        inputDirection.Normalize();
+        
+        Vector3 characterToMouseDirection = (mouseAnimRig.MousePositionObject.transform.position - transform.position).normalized;
 
-    private Vector3 MouseWorldPosition() {
-        Vector3 mouseScreenPosition = Input.mousePosition;
-        Ray mouseRay = Camera.main.ScreenPointToRay(mouseScreenPosition);
-
-        if (Physics.Raycast(mouseRay, out RaycastHit hit)) {
-            Vector3 mouseHitPoint = hit.point;
-            mouseHitPoint.y = transform.position.y;
-            return mouseHitPoint;
+        if (Vector3.Dot(inputDirection, characterToMouseDirection) > 0) {
+            Vector3 targetDirection = Vector3.Dot(lookDirection, inputDirection) <= 0f ? characterToMouseDirection : inputDirection;
+            lookDirection = Vector3.RotateTowards(lookDirection, targetDirection, Time.deltaTime * rotationSpeed, 1f);
         }
-        return Vector3.zero;
+        else {
+            Vector3 targetDirection = Vector3.Dot(lookDirection, -inputDirection) <= 0f ? characterToMouseDirection : -inputDirection;
+            lookDirection = Vector3.RotateTowards(lookDirection, targetDirection, Time.deltaTime * rotationSpeed, 1f);
+        }
+
+        transform.forward = lookDirection;
     }
 }

@@ -1,18 +1,22 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class LookAtMouse : MonoBehaviour {
+public class LookAtMouseAnimRig : MonoBehaviour {
 
     [SerializeField] private RigBuilder rigBuilder;
+    [SerializeField] private MultiAimConstraint multiAimConstraint;
+    [Space(10)]
+    [Tooltip("Speed at which the assigned bone should rotate towards the mouse position.")]
+    [SerializeField] private float rotationSpeed = 10f;
 
-    private MultiAimConstraint multiAimConstraint;
     private Rig animationRig;
     private float rigWeightTargetValue;
 
     private GameObject mousePositionObject;
 
+    public GameObject MousePositionObject => mousePositionObject;
+
     private void Awake() {
-        multiAimConstraint = GetComponentInChildren<MultiAimConstraint>();
         animationRig = GetComponent<Rig>();
         mousePositionObject = new GameObject(name = "MousePositionObject");
     }
@@ -23,7 +27,7 @@ public class LookAtMouse : MonoBehaviour {
 
     private void Update() {
         mousePositionObject.transform.position = MouseWorldPosition();
-        animationRig.weight = Mathf.Lerp(animationRig.weight, rigWeightTargetValue, 10f * Time.deltaTime);
+        animationRig.weight = Mathf.Lerp(animationRig.weight, rigWeightTargetValue, rotationSpeed * Time.deltaTime);
     }
 
     private void AssignObjectToLookAt(GameObject lookAtObject) {
