@@ -1,11 +1,6 @@
 using UnityEngine;
 using CocaCopa;
 
-public enum MoveState { 
-    Walking,
-    Running
-};
-
 public class CharacterMovement : MonoBehaviour {
 
     [Header("--- Movement Speed ---")]
@@ -82,10 +77,6 @@ public class CharacterMovement : MonoBehaviour {
 
         Vector3 additivePosition = characterSpeed * Time.deltaTime * inputDirection;
         transform.position += additivePosition;
-    }
-
-    private void UpdateCharacterSpeed() {
-
     }
 
     /// <summary>
