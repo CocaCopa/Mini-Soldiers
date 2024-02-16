@@ -194,8 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa1b0fbe6aaf384e817a6cef214bb41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spineTransform: {fileID: 2457756531596346007}
-  movementSpeed: 5
+  walkSpeed: 2
   accelerationCurve:
     serializedVersion: 2
     m_Curve:
@@ -245,8 +244,10 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   evaluationSpeed: 3
-  temp: {fileID: 0}
-  temp_2: {fileID: 0}
+  rotationSpeed: 7.5
+  weapon: {fileID: 0}
+  defaultClip: {fileID: 0}
+  shootclip: {fileID: 0}
 --- !u!1 &2457756531596526783
 GameObject:
   m_ObjectHideFlags: 0

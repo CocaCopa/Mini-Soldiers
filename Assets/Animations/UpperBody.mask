@@ -1,0 +1,334 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UpperBody
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: backpack_flamethrower
+    m_Weight: 1
+  - m_Path: backpack_medic
+    m_Weight: 1
+  - m_Path: Bip001
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Footsteps
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 L Thigh
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 L Thigh/Bip001 L Calf
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 L Thigh/Bip001 L Calf/Bip001 L Foot
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 L Thigh/Bip001 L Calf/Bip001 L Foot/Bip001
+      L Toe0
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 L Thigh/Bip001 L Calf/Bip001 L Foot/Bip001
+      L Toe0/Bip001 L Toe0Nub
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 R Thigh
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 R Thigh/Bip001 R Calf
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 R Thigh/Bip001 R Calf/Bip001 R Foot
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 R Thigh/Bip001 R Calf/Bip001 R Foot/Bip001
+      R Toe0
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 R Thigh/Bip001 R Calf/Bip001 R Foot/Bip001
+      R Toe0/Bip001 R Toe0Nub
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Backpack_container
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 L Clavicle
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 L Clavicle/Bip001 L UpperArm
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 L Clavicle/Bip001 L UpperArm/Bip001
+      L Forearm
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 L Clavicle/Bip001 L UpperArm/Bip001
+      L Forearm/Bip001 L Hand
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 L Clavicle/Bip001 L UpperArm/Bip001
+      L Forearm/Bip001 L Hand/L_hand_container
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/Bip001 HeadNub
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_01
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_02
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_gasmask
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_medic_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_medic_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_officer_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_officer_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_officer_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_AHung_officer_D
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_gasmask_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_gasmask_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_medic
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_officer_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_british_officer_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_D
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_gasmask
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_medic_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_medic_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_officer_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_officer_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_officer_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_french_officer_D
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_D
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_gasmask
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/head_german_medic_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_medic_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_officer_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_officer_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_german_officer_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_russian_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_russian_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_russian_gasmask
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_russian_medic
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_russian_officer_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_russian_officer_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_russian_officer_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_gasmask
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_medic_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_medic_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_officer_A
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_officer_B
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Neck/Bip001 Head/HEAD_CONTAINER/Head_US_officer_C
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_bar
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_chauchat
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_club
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_colt1911
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_fedorov
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_flamethrower
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_grenadelauncher
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_hotchkiss
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_knife
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_lewis
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_madsen
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_mauserC96
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_maxim
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_mp18
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_pistol
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_revolver
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_rifle
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_rifle_bayonet
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_rifle_scope
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_shotgun
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_sword
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_twobarreled
+    m_Weight: 1
+  - m_Path: Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 R Clavicle/Bip001 R UpperArm/Bip001
+      R Forearm/Bip001 R Hand/R_hand_container/w_wirecutter
+    m_Weight: 1
+  - m_Path: Body_AHung_A
+    m_Weight: 1
+  - m_Path: Body_AHung_B
+    m_Weight: 1
+  - m_Path: Body_AHung_C
+    m_Weight: 1
+  - m_Path: Body_AHung_medic
+    m_Weight: 1
+  - m_Path: Body_AHung_officer_A
+    m_Weight: 1
+  - m_Path: Body_AHung_officer_B
+    m_Weight: 1
+  - m_Path: Body_AHung_officer_C
+    m_Weight: 1
+  - m_Path: Body_british_A
+    m_Weight: 1
+  - m_Path: Body_british_B
+    m_Weight: 1
+  - m_Path: Body_british_medic
+    m_Weight: 1
+  - m_Path: Body_british_officer_A
+    m_Weight: 1
+  - m_Path: Body_british_officer_B
+    m_Weight: 1
+  - m_Path: Body_french_A
+    m_Weight: 1
+  - m_Path: Body_french_B
+    m_Weight: 1
+  - m_Path: Body_french_C
+    m_Weight: 1
+  - m_Path: Body_french_medic
+    m_Weight: 1
+  - m_Path: Body_french_officer_A
+    m_Weight: 1
+  - m_Path: Body_french_officer_B
+    m_Weight: 1
+  - m_Path: Body_french_officer_C
+    m_Weight: 1
+  - m_Path: Body_german_A
+    m_Weight: 1
+  - m_Path: Body_german_B
+    m_Weight: 1
+  - m_Path: Body_german_C
+    m_Weight: 1
+  - m_Path: Body_german_medic
+    m_Weight: 1
+  - m_Path: Body_german_officer_A
+    m_Weight: 1
+  - m_Path: Body_german_officer_B
+    m_Weight: 1
+  - m_Path: Body_russian_A
+    m_Weight: 1
+  - m_Path: Body_russian_B
+    m_Weight: 1
+  - m_Path: Body_russian_medic
+    m_Weight: 1
+  - m_Path: Body_russian_officer_A
+    m_Weight: 1
+  - m_Path: Body_russian_officer_B
+    m_Weight: 1
+  - m_Path: Body_US_A
+    m_Weight: 1
+  - m_Path: Body_US_medic
+    m_Weight: 1
+  - m_Path: Body_US_officer_A
+    m_Weight: 1
+  - m_Path: Body_US_officer_B
+    m_Weight: 1
