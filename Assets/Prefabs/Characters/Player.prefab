@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 2457756531301814502}
   - component: {fileID: 2596502444931738785}
   - component: {fileID: 639703154}
+  - component: {fileID: 5542318307143682264}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -196,10 +197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa1b0fbe6aaf384e817a6cef214bb41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 7.5
-  weapon: {fileID: 0}
-  defaultClip: {fileID: 7400000, guid: b52eaa91ecca9f54ab7a5d96c28ad9c7, type: 2}
-  shootclip: {fileID: 7400000, guid: d3c77ec88dccb7e4180fb37c756685da, type: 2}
 --- !u!114 &2596502444931738785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +274,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 8.5
+--- !u!114 &5542318307143682264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2457756531301814497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e98ef0940f86b0040a9ba8c20b16779e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2457756531596526783
 GameObject:
   m_ObjectHideFlags: 0

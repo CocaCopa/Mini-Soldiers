@@ -38,4 +38,22 @@ public class CharacterAnimator : MonoBehaviour {
         // Apply the overrides to the animator
         animator.runtimeAnimatorController = aoc;
     }
+
+    /// <summary>
+    /// Determines if the specified animation clip is currently playing within a given percentage of its duration.
+    /// </summary>
+    /// <param name="clip">The animation clip to check.</param>
+    /// <param name="animatorLayer">The desired percentage of the clip's duration.</param>
+    /// <param name="percentage">The desired percentage of the clip's duration.</param>
+    /// <returns>True, if the playhead is within the specified percentage of the animation clip; otherwise, false.</returns>
+    public bool IsClipPlaying(AnimationClip clip, int animatorLayer, float percentage) {
+        AnimatorClipInfo[] currentClipInfo = animator.GetCurrentAnimatorClipInfo(animatorLayer);
+        foreach (var clipInfo in currentClipInfo) {
+            if (clipInfo.clip == clip) {
+                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= percentage)
+                    return true;
+            }
+        }
+        return false;
+    }
 }

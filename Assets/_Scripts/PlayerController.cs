@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    [SerializeField] private WeaponSO weapon;
-    [SerializeField] private AnimationClip defaultClip;
-    [SerializeField] private AnimationClip shootclip;
-
     private PlayerInput input;
     private LookAtObjectAnimRig mouseAnimRig;
     private CharacterMovement movement;
@@ -30,22 +26,5 @@ public class PlayerController : MonoBehaviour {
         followMouseObject.transform.position = input.MouseWorldPosition();
         movement.MoveTowardsDirection(input.MovementInput(), input.RunKeyContinuous());
         orientation.CharacterRotation(input.MovementInput(), followMouseObject.transform);
-        Shoot();
-    }
-
-    private void Shoot() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            CharacterAnimator anim = GetComponentInChildren<CharacterAnimator>();
-            anim.SetShootAnimationClip(defaultClip, shootclip);
-        }
-
-        if (Input.GetMouseButtonDown(0)) {
-            Animator anim = GetComponentInChildren<Animator>();
-            anim.SetBool("New Bool", true);
-        }
-        else if (Input.GetMouseButtonUp(0)) {
-            Animator anim = GetComponentInChildren<Animator>();
-            anim.SetBool("New Bool", false);
-        }
     }
 }
