@@ -22,6 +22,8 @@ public class PlayerInput : MonoBehaviour {
         runKeyPressed = false;
     }
 
+    public bool RunKeyContinuous() => runKeyPressed;
+
     public Vector2 MovementInput() => inputActions.Player.Movement.ReadValue<Vector2>();
 
     public Vector3 MouseWorldPosition() {

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour {
@@ -6,19 +5,21 @@ public class CharacterAnimator : MonoBehaviour {
     private const string MOVEMENT_SPEED = "MovementSpeed";
     private const string MOVEMENT_ANIMATION_SPEED = "MovementAnimationSpeed";
 
-    private PlayerController playerController;
+    private CharacterMovement movement;
+    private CharacterOrientation orientation;
     private Animator animator;
 
     private void Awake() {
-        playerController = transform.root.GetComponent<PlayerController>();
+        movement = transform.root.GetComponent<CharacterMovement>();
+        orientation = transform.root.GetComponent<CharacterOrientation>();
         animator = GetComponent<Animator>();
     }
 
     private void Update() {
-        float movementSpeed = playerController.CharacterSpeed;
+        float movementSpeed = movement.CurrentSpeed;
         animator.SetFloat(MOVEMENT_SPEED, movementSpeed);
 
-        float playbackSpeed = playerController.MovingBackwards ? -1 : 1;
+        float playbackSpeed = orientation.MovingBackwards ? -1 : 1;
         animator.SetFloat(MOVEMENT_ANIMATION_SPEED, playbackSpeed);
     }
 

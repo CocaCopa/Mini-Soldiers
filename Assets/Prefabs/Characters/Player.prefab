@@ -136,7 +136,7 @@ MonoBehaviour:
       m_Item7:
         transform: {fileID: 0}
         weight: 0
-    m_Offset: {x: 0, y: 0, z: 0}
+    m_Offset: {x: -17, y: 0, z: 0}
     m_MinLimit: -180
     m_MaxLimit: 180
     m_AimAxis: 2
@@ -159,6 +159,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2457756531301814503}
   - component: {fileID: 2457756531301814502}
+  - component: {fileID: 2596502444931738785}
+  - component: {fileID: 639703154}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -194,7 +196,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa1b0fbe6aaf384e817a6cef214bb41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 7.5
+  weapon: {fileID: 0}
+  defaultClip: {fileID: 7400000, guid: b52eaa91ecca9f54ab7a5d96c28ad9c7, type: 2}
+  shootclip: {fileID: 7400000, guid: d3c77ec88dccb7e4180fb37c756685da, type: 2}
+--- !u!114 &2596502444931738785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2457756531301814497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c70a16175840e334c97631b0c8f4720c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   walkSpeed: 2
+  runSpeed: 8
   accelerationCurve:
     serializedVersion: 2
     m_Curve:
@@ -243,11 +262,21 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  evaluationSpeed: 3
-  rotationSpeed: 7.5
-  weapon: {fileID: 0}
-  defaultClip: {fileID: 0}
-  shootclip: {fileID: 0}
+  evaluateAcceleration: 3
+  evaluateDesceleration: 1.5
+--- !u!114 &639703154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2457756531301814497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 785fc2acc5bef3846bf71fb509a5b592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 8.5
 --- !u!1 &2457756531596526783
 GameObject:
   m_ObjectHideFlags: 0
@@ -9131,7 +9160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2457756531596348437
 Transform:
   m_ObjectHideFlags: 0
