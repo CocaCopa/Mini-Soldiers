@@ -1,18 +1,44 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour {
 
     private const string MOVEMENT_SPEED = "MovementSpeed";
+    private const string DRAW_RIFLE = "DrawRifle";
+    private const string DRAW_PISTOL = "DrawPistol";
+    private const string DRAW_KNIFE = "DrawKnife";
     private const string MOVEMENT_ANIMATION_SPEED = "MovementAnimationSpeed";
 
     private CharacterMovement movement;
     private CharacterOrientation orientation;
+    private CombatManager combatManager;
     private Animator animator;
 
     private void Awake() {
         movement = transform.root.GetComponent<CharacterMovement>();
         orientation = transform.root.GetComponent<CharacterOrientation>();
+        combatManager = transform.root.GetComponent<CombatManager>();
         animator = GetComponent<Animator>();
+    }
+
+    private void Start() {
+        combatManager.OnSwitchWeapons += CombatManager_OnSwitchWeapons;
+    }
+
+    private void CombatManager_OnSwitchWeapons(object sender, CombatManager.OnSwitchWeaponsEventArgs e) {
+        string drawTrigger = "";
+        switch (e.weaponType) {
+            case WeaponType.Knife:
+            drawTrigger = DRAW_KNIFE;
+            break;
+            case WeaponType.Pistol:
+            drawTrigger = DRAW_PISTOL;
+            break;
+            case WeaponType.Rifle:
+            drawTrigger = DRAW_RIFLE;
+            break;
+        }
+        animator.SetTrigger(drawTrigger);
     }
 
     private void Update() {
