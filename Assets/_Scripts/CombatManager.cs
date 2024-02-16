@@ -10,8 +10,11 @@ public class CombatManager : MonoBehaviour {
 
     public event EventHandler<OnSwitchWeaponsEventArgs> OnSwitchWeapons;
 
+    [Tooltip("The bone transform that will hold the character's weapons.")]
     [SerializeField] private Transform rightHandTransform;
+    [Tooltip("Primary / Secondary / Melee weapons of the character.")]
     [SerializeField] private GameObject[] loadoutWeapons;
+    [Tooltip("The animation clip of the 'Attack' animation state referenced in the animator controller.")]
     [SerializeField] private AnimationClip defaultShootClip;
 
     private CharacterAnimator characterAnimator;

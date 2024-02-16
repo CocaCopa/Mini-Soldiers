@@ -9,13 +9,19 @@ public enum MoveState {
 public class CharacterMovement : MonoBehaviour {
 
     [Header("--- Movement Speed ---")]
+    [Tooltip("The character's walking speed.")]
     [SerializeField] private float walkSpeed;
+    [Tooltip("The character's running speed.")]
     [SerializeField] private float runSpeed;
 
     [Header("--- Movement Curves ---")]
+    [Tooltip("Animation curve to be used when the character is accelerating.")]
     [SerializeField] private AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [Tooltip("Animation curve to be used when the character is descelerating.")]
     [SerializeField] private AnimationCurve descelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [Tooltip("The evaluation speed of the acceleration curve.")]
     [SerializeField] private float evaluateAcceleration;
+    [Tooltip("The evaluation speed of the desceleration curve.")]
     [SerializeField] private float evaluateDesceleration;
 
     private AnimationCurve movementCurve = AnimationCurve.Constant(0, 0, 0);

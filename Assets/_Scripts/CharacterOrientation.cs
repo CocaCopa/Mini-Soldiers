@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterOrientation : MonoBehaviour {
 
+    [Tooltip("The rotation speed of the character's lower body.")]
     [SerializeField] private float rotationSpeed;
 
     private Vector2 lastDirectionalInput;
