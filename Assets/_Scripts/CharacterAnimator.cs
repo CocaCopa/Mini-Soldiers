@@ -8,6 +8,8 @@ public class CharacterAnimator : MonoBehaviour {
     private const string DRAW_KNIFE = "DrawKnife";
     private const string MOVEMENT_ANIMATION_SPEED = "MovementAnimationSpeed";
 
+    private const string FIRE_WEAPON_STATE_NAME = "Attack";
+
     private CharacterMovement movement;
     private CharacterOrientation orientation;
     private CombatManager combatManager;
@@ -22,6 +24,18 @@ public class CharacterAnimator : MonoBehaviour {
 
     private void Start() {
         combatManager.OnSwitchWeapons += CombatManager_OnSwitchWeapons;
+    }
+
+    private void Update() {
+        float movementSpeed = movement.CurrentSpeed;
+        animator.SetFloat(MOVEMENT_SPEED, movementSpeed);
+
+        float playbackSpeed = orientation.MovingBackwards ? -1 : 1;
+        animator.SetFloat(MOVEMENT_ANIMATION_SPEED, playbackSpeed);
+    }
+
+    public void PlayWeaponFireAnimation() {
+        animator.Play(FIRE_WEAPON_STATE_NAME, 1, 0f);
     }
 
     private void CombatManager_OnSwitchWeapons(object sender, CombatManager.OnSwitchWeaponsEventArgs e) {
@@ -40,28 +54,15 @@ public class CharacterAnimator : MonoBehaviour {
         animator.SetTrigger(drawTrigger);
     }
 
-    private void Update() {
-        float movementSpeed = movement.CurrentSpeed;
-        animator.SetFloat(MOVEMENT_SPEED, movementSpeed);
-
-        float playbackSpeed = orientation.MovingBackwards ? -1 : 1;
-        animator.SetFloat(MOVEMENT_ANIMATION_SPEED, playbackSpeed);
-    }
-
     /// <summary>
     /// Replaces an animation clip within the runtime animator's controller.
     /// </summary>
     /// <param name="currentClip">The animation clip to be replaced.</param>
     /// <param name="newClip">The animation clip to replace the current one.</param>
     public void SetShootAnimationClip(AnimationClip currentClip, AnimationClip newClip) {
-        // Create an AnimatorOverrideController based on the existing runtime controller
-        AnimatorOverrideController aoc = new AnimatorOverrideController(animator.runtimeAnimatorController);
-
-        // Replace the animation clip of the "Attack" animation state with the provided clip.
-        aoc[currentClip] = newClip;
-
-        // Apply the overrides to the animator
-        animator.runtimeAnimatorController = aoc;
+        AnimatorOverrideController overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        overrideController[currentClip] = newClip;
+        animator.runtimeAnimatorController = overrideController;
     }
 
     /// <summary>
@@ -75,7 +76,7 @@ public class CharacterAnimator : MonoBehaviour {
         AnimatorClipInfo[] currentClipInfo = animator.GetCurrentAnimatorClipInfo(animatorLayer);
         foreach (var clipInfo in currentClipInfo) {
             if (clipInfo.clip == clip) {
-                if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= percentage)
+                if (animator.GetCurrentAnimatorStateInfo(animatorLayer).normalizedTime <= percentage)
                     return true;
             }
         }

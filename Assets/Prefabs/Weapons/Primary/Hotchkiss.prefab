@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3440096881928261115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 604574816125435433}
+  m_Layer: 0
+  m_Name: MuzzleEffectTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &604574816125435433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3440096881928261115}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.144, y: 0, z: 0.959}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7536886263425241021}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6933718053927216587
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,6 +144,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6933718053927497713}
+  - {fileID: 604574816125435433}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -130,11 +162,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_name: 
   type: 2
-  muzzleEffect: {fileID: 0}
-  muzzleFlashTransform: {fileID: 0}
-  shootAnimation: {fileID: 7400000, guid: d3c77ec88dccb7e4180fb37c756685da, type: 2}
-  rateOfFire: 0
+  mode: 0
+  offset: {x: 0.355, y: 0.779, z: 1.113}
+  bulletImpactEffect: {fileID: 151174, guid: e3c9439885f011549a6460a1f4da82dc, type: 3}
+  muzzleEffect: {fileID: 124018, guid: 1f389bb139e76154582cf3c5e4f9214b, type: 3}
+  muzzleFlashTransform: {fileID: 604574816125435433}
+  shootAnimation: {fileID: 7400000, guid: b648d7cf429cf2f4b9a579ffa83c2ba2, type: 2}
+  drawAnimation: {fileID: 7400000, guid: 2b06ec130e774544f868d940a1500b64, type: 2}
+  rateOfFire: 6
   damage: 0
+  bulletSpeed: 200
   damageDropOff:
     serializedVersion: 2
     m_Curve:

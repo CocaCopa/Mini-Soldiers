@@ -10,16 +10,19 @@ public class CombatManager : MonoBehaviour {
 
     public event EventHandler<OnSwitchWeaponsEventArgs> OnSwitchWeapons;
 
-    [Tooltip("The bone transform that will hold the character's weapons.")]
-    [SerializeField] private Transform rightHandTransform;
     [Tooltip("Primary / Secondary / Melee weapons of the character.")]
     [SerializeField] private GameObject[] loadoutWeapons;
+    [Tooltip("The bone transform that will hold the character's weapons.")]
+    [SerializeField] private Transform rightHandTransform;
     [Tooltip("The animation clip of the 'Attack' animation state referenced in the animator controller.")]
     [SerializeField] private AnimationClip defaultShootClip;
 
     private CharacterAnimator characterAnimator;
     private AnimationClip activeShootAnimation;
-    private GameObject equipedWeapon;
+    private GameObject equipedWeaponObject;
+    private Weapon equipedWeapon;
+
+    public GameObject EquipedWeapon => equipedWeaponObject;
 
     private void Awake() {
         characterAnimator = GetComponentInChildren<CharacterAnimator>();
@@ -47,21 +50,27 @@ public class CombatManager : MonoBehaviour {
     }
 
     private void SwitchWeapon(GameObject weaponObject) {
-        if (weaponObject != equipedWeapon) {
-            if (equipedWeapon != null) {
-                equipedWeapon.SetActive(false);
+        if (weaponObject != equipedWeaponObject) {
+            if (equipedWeaponObject != null) {
+                equipedWeaponObject.SetActive(false);
             }
-            equipedWeapon = weaponObject;
-            equipedWeapon.SetActive(true);
-            Weapon weapon = equipedWeapon.GetComponent<Weapon>();
-            AnimationClip weaponShootAnimation = weapon.ShootAnimationClip;
+            equipedWeaponObject = weaponObject;
+            equipedWeaponObject.SetActive(true);
+            equipedWeapon = equipedWeaponObject.GetComponent<Weapon>();
+            AnimationClip weaponShootAnimation = equipedWeapon.ShootAnimationClip;
             characterAnimator.SetShootAnimationClip(activeShootAnimation, weaponShootAnimation);
             activeShootAnimation = weaponShootAnimation;
 
             OnSwitchWeapons?.Invoke(this, new OnSwitchWeaponsEventArgs {
                 equipedWeapon = weaponObject,
-                weaponType = weapon.Type
+                weaponType = equipedWeapon.Type
             });
+        }
+    }
+
+    public void FireEquipedWeapon() {
+        if (equipedWeapon != null) {
+            StartCoroutine(equipedWeapon.Shoot());
         }
     }
 }

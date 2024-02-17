@@ -1,41 +1,44 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : Controller {
 
     private PlayerInput input;
-    private LookAtObjectAnimRig mouseAnimRig;
-    private CharacterMovement movement;
-    private CharacterOrientation orientation;
-    private CombatManager combatManager;
-    private GameObject followMouseObject;
 
-
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         input = FindObjectOfType<PlayerInput>();
-        mouseAnimRig = GetComponentInChildren<LookAtObjectAnimRig>();
-        movement = GetComponent<CharacterMovement>();
-        orientation = GetComponent<CharacterOrientation>();
-        combatManager = GetComponent<CombatManager>();
-
-        followMouseObject = new GameObject("FollowMouseObject");
+        objectToLookAt = new GameObject();
+        objectToLookAt.name = "FollowMouseObject";
     }
 
-    private void Start() {
-        mouseAnimRig.AssignObjectToLookAt(followMouseObject);
+    protected override void Start() {
+        base.Start();
+        input.OnPrimarySwitchPressed += Input_OnPrimarySwitchPressed;
+        input.OnSecondarySwitchPressed += Input_OnSecondarySwitchPressed;
+        input.OnMeleeSwitchPressed += Input_OnMeleeSwitchPressed;
+    }
+
+    private void Input_OnPrimarySwitchPressed(object sender, System.EventArgs e) {
+        combatManager.SwitchToPrimary();
+    }
+
+    private void Input_OnSecondarySwitchPressed(object sender, System.EventArgs e) {
+        combatManager.SwitchToSecondary();
+    }
+
+    private void Input_OnMeleeSwitchPressed(object sender, System.EventArgs e) {
+        combatManager.SwitchToMelee();
     }
 
     private void Update() {
-        followMouseObject.transform.position = input.MouseWorldPosition();
-        movement.MoveTowardsDirection(input.MovementInput(), input.RunKeyContinuous());
-        orientation.CharacterRotation(input.MovementInput(), followMouseObject.transform);
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            combatManager.SwitchToPrimary();
+        objectToLookAt.transform.position = input.MouseWorldPosition();
+        orientation.CharacterRotation(input.MovementInput(), objectToLookAt.transform);
+        if (input.FireInputHold()) {
+            combatManager.FireEquipedWeapon();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            combatManager.SwitchToSecondary();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            combatManager.SwitchToMelee();
-        }
+    }
+
+    private void FixedUpdate() {
+        movement.MoveTowardsDirection(input.MovementInput(), input.RunInputHold());
     }
 }

@@ -11,6 +11,11 @@ public class CharacterOrientation : MonoBehaviour {
 
     public bool MovingBackwards => movingBackwards;
 
+    /// <summary>
+    /// Rotates the character's body to always face a target object.
+    /// </summary>
+    /// <param name="directionalInput">The direction the character moves towards.</param>
+    /// <param name="relativeTransform">The target object for the character's body orientation.</param>
     public void CharacterRotation(Vector2 directionalInput, Transform relativeTransform) {
         if (directionalInput != Vector2.zero) {
             lastDirectionalInput = directionalInput;
@@ -35,7 +40,6 @@ public class CharacterOrientation : MonoBehaviour {
         }
 
         transform.forward = lookDirection;
-
         Vector3 eulerAngles = transform.eulerAngles;
         eulerAngles.x = eulerAngles.z = 0;
         transform.eulerAngles = eulerAngles;

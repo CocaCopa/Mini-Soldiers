@@ -24,7 +24,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     ""name"": ""InputActions"",
     ""maps"": [
         {
-            ""name"": ""Player"",
+            ""name"": ""Motion"",
             ""id"": ""86f45141-bc6c-4699-9d64-eeb1a73cd6ea"",
             ""actions"": [
                 {
@@ -169,14 +169,108 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Combat"",
+            ""id"": ""b31866fc-d65a-4713-99f0-d843cfdbddf7"",
+            ""actions"": [
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""fbe523e2-5e5e-42d2-ae04-b66b610e610a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrimarySwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""fa1d0591-a776-4b73-8bfd-0f1e9365a0c8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondarySwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""4498ad9f-6e2b-401b-be47-88deab091c0e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MeleeSwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""b31d0fbd-4738-4394-85a7-b0e90cd31496"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""55e40e7a-b07a-440c-91a9-3de464d21fd3"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6212d547-006d-40f9-8a31-4bc1d7406c32"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrimarySwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c52b63ab-5552-49dc-b9cf-e6675cd0ec6f"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondarySwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5090b333-59ae-4326-8749-f118fa4912b1"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MeleeSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // Player
-        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
-        m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+        // Motion
+        m_Motion = asset.FindActionMap("Motion", throwIfNotFound: true);
+        m_Motion_Movement = m_Motion.FindAction("Movement", throwIfNotFound: true);
+        m_Motion_Run = m_Motion.FindAction("Run", throwIfNotFound: true);
+        // Combat
+        m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
+        m_Combat_Fire = m_Combat.FindAction("Fire", throwIfNotFound: true);
+        m_Combat_PrimarySwitch = m_Combat.FindAction("PrimarySwitch", throwIfNotFound: true);
+        m_Combat_SecondarySwitch = m_Combat.FindAction("SecondarySwitch", throwIfNotFound: true);
+        m_Combat_MeleeSwitch = m_Combat.FindAction("MeleeSwitch", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -235,26 +329,26 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Player
-    private readonly InputActionMap m_Player;
-    private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_Movement;
-    private readonly InputAction m_Player_Run;
-    public struct PlayerActions
+    // Motion
+    private readonly InputActionMap m_Motion;
+    private List<IMotionActions> m_MotionActionsCallbackInterfaces = new List<IMotionActions>();
+    private readonly InputAction m_Motion_Movement;
+    private readonly InputAction m_Motion_Run;
+    public struct MotionActions
     {
         private @InputActions m_Wrapper;
-        public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Movement => m_Wrapper.m_Player_Movement;
-        public InputAction @Run => m_Wrapper.m_Player_Run;
-        public InputActionMap Get() { return m_Wrapper.m_Player; }
+        public MotionActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Movement => m_Wrapper.m_Motion_Movement;
+        public InputAction @Run => m_Wrapper.m_Motion_Run;
+        public InputActionMap Get() { return m_Wrapper.m_Motion; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-        public void AddCallbacks(IPlayerActions instance)
+        public static implicit operator InputActionMap(MotionActions set) { return set.Get(); }
+        public void AddCallbacks(IMotionActions instance)
         {
-            if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_MotionActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MotionActionsCallbackInterfaces.Add(instance);
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
@@ -263,7 +357,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Run.canceled += instance.OnRun;
         }
 
-        private void UnregisterCallbacks(IPlayerActions instance)
+        private void UnregisterCallbacks(IMotionActions instance)
         {
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
@@ -273,24 +367,101 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Run.canceled -= instance.OnRun;
         }
 
-        public void RemoveCallbacks(IPlayerActions instance)
+        public void RemoveCallbacks(IMotionActions instance)
         {
-            if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_MotionActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IPlayerActions instance)
+        public void SetCallbacks(IMotionActions instance)
         {
-            foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_MotionActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_MotionActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public PlayerActions @Player => new PlayerActions(this);
-    public interface IPlayerActions
+    public MotionActions @Motion => new MotionActions(this);
+
+    // Combat
+    private readonly InputActionMap m_Combat;
+    private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
+    private readonly InputAction m_Combat_Fire;
+    private readonly InputAction m_Combat_PrimarySwitch;
+    private readonly InputAction m_Combat_SecondarySwitch;
+    private readonly InputAction m_Combat_MeleeSwitch;
+    public struct CombatActions
+    {
+        private @InputActions m_Wrapper;
+        public CombatActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Fire => m_Wrapper.m_Combat_Fire;
+        public InputAction @PrimarySwitch => m_Wrapper.m_Combat_PrimarySwitch;
+        public InputAction @SecondarySwitch => m_Wrapper.m_Combat_SecondarySwitch;
+        public InputAction @MeleeSwitch => m_Wrapper.m_Combat_MeleeSwitch;
+        public InputActionMap Get() { return m_Wrapper.m_Combat; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CombatActions set) { return set.Get(); }
+        public void AddCallbacks(ICombatActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CombatActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CombatActionsCallbackInterfaces.Add(instance);
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
+            @PrimarySwitch.started += instance.OnPrimarySwitch;
+            @PrimarySwitch.performed += instance.OnPrimarySwitch;
+            @PrimarySwitch.canceled += instance.OnPrimarySwitch;
+            @SecondarySwitch.started += instance.OnSecondarySwitch;
+            @SecondarySwitch.performed += instance.OnSecondarySwitch;
+            @SecondarySwitch.canceled += instance.OnSecondarySwitch;
+            @MeleeSwitch.started += instance.OnMeleeSwitch;
+            @MeleeSwitch.performed += instance.OnMeleeSwitch;
+            @MeleeSwitch.canceled += instance.OnMeleeSwitch;
+        }
+
+        private void UnregisterCallbacks(ICombatActions instance)
+        {
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
+            @PrimarySwitch.started -= instance.OnPrimarySwitch;
+            @PrimarySwitch.performed -= instance.OnPrimarySwitch;
+            @PrimarySwitch.canceled -= instance.OnPrimarySwitch;
+            @SecondarySwitch.started -= instance.OnSecondarySwitch;
+            @SecondarySwitch.performed -= instance.OnSecondarySwitch;
+            @SecondarySwitch.canceled -= instance.OnSecondarySwitch;
+            @MeleeSwitch.started -= instance.OnMeleeSwitch;
+            @MeleeSwitch.performed -= instance.OnMeleeSwitch;
+            @MeleeSwitch.canceled -= instance.OnMeleeSwitch;
+        }
+
+        public void RemoveCallbacks(ICombatActions instance)
+        {
+            if (m_Wrapper.m_CombatActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICombatActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CombatActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CombatActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CombatActions @Combat => new CombatActions(this);
+    public interface IMotionActions
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+    }
+    public interface ICombatActions
+    {
+        void OnFire(InputAction.CallbackContext context);
+        void OnPrimarySwitch(InputAction.CallbackContext context);
+        void OnSecondarySwitch(InputAction.CallbackContext context);
+        void OnMeleeSwitch(InputAction.CallbackContext context);
     }
 }
