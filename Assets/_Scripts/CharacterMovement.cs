@@ -19,6 +19,7 @@ public class CharacterMovement : MonoBehaviour {
     [Tooltip("The evaluation speed of the desceleration curve.")]
     [SerializeField] private float evaluateDesceleration;
 
+    private Rigidbody characterRb;
     private AnimationCurve movementCurve = AnimationCurve.Constant(0, 0, 0);
     private Vector3 lastDirectionalInput;
 
@@ -36,8 +37,12 @@ public class CharacterMovement : MonoBehaviour {
 
     public float CurrentSpeed => characterSpeed;
 
+    private void Awake() {
+        characterRb = GetComponent<Rigidbody>();
+    }
+
     /// <summary>
-    /// Moves the character towards the given direction.
+    /// Moves the kinematic character towards the given direction.
     /// </summary>
     /// <param name="direction">Direction to move towards.</param>
     /// <param name="run">True, will sprint, otherwise walk.</param>
@@ -75,8 +80,9 @@ public class CharacterMovement : MonoBehaviour {
         Vector3 inputDirection = Vector3.forward * lastDirectionalInput.y + Vector3.right * lastDirectionalInput.x;
         inputDirection.Normalize();
 
-        Vector3 additivePosition = characterSpeed * Time.deltaTime * inputDirection;
-        transform.position += additivePosition;
+        Vector3 additivePosition = characterSpeed * Time.fixedDeltaTime * inputDirection;
+        Vector3 movePosition = characterRb.position + additivePosition;
+        characterRb.MovePosition(movePosition);
     }
 
     /// <summary>
