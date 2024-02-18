@@ -160,18 +160,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae387c9a657da684b82f50453078fac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_name: 
+  m_name: Hotchkiss
   type: 2
   mode: 0
-  offset: {x: 0.355, y: 0.779, z: 1.113}
-  bulletImpactEffect: {fileID: 151174, guid: e3c9439885f011549a6460a1f4da82dc, type: 3}
-  muzzleEffect: {fileID: 124018, guid: 1f389bb139e76154582cf3c5e4f9214b, type: 3}
-  muzzleFlashTransform: {fileID: 604574816125435433}
-  shootAnimation: {fileID: 7400000, guid: b648d7cf429cf2f4b9a579ffa83c2ba2, type: 2}
-  drawAnimation: {fileID: 7400000, guid: 2b06ec130e774544f868d940a1500b64, type: 2}
   rateOfFire: 6
+  bulletSpeed: 220
+  range: 0
   damage: 0
-  bulletSpeed: 200
   damageDropOff:
     serializedVersion: 2
     m_Curve:
@@ -196,3 +191,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  spreadDispersion: 2.5
+  minSpread: 0.08
+  maxSpread: 0.12
+  bulletImpactEffect: {fileID: 151174, guid: e3c9439885f011549a6460a1f4da82dc, type: 3}
+  muzzleEffect: {fileID: 124018, guid: 1f389bb139e76154582cf3c5e4f9214b, type: 3}
+  muzzleFlashTransform: {fileID: 604574816125435433}
+  shootAnimation: {fileID: 7400000, guid: b648d7cf429cf2f4b9a579ffa83c2ba2, type: 2}
+  drawAnimation: {fileID: 7400000, guid: 2b06ec130e774544f868d940a1500b64, type: 2}
