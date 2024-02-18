@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
 
+    [Tooltip("Interpolation speed of the raw directional input.")]
+    [SerializeField] private float smoothInputValue;
+
     public event EventHandler OnFirePressed;
     public event EventHandler OnPrimarySwitchPressed;
     public event EventHandler OnSecondarySwitchPressed;
@@ -12,6 +15,9 @@ public class PlayerInput : MonoBehaviour {
 
     private bool runInputHold = false;
     private bool fireInputHold = false;
+
+    private Transform playerTransform;
+    private Vector3 smoothMovementInput;
 
     private void Awake() {
         inputActions = new InputActions();
@@ -23,6 +29,18 @@ public class PlayerInput : MonoBehaviour {
         inputActions.Combat.PrimarySwitch.performed += PrimarySwitch_performed;
         inputActions.Combat.SecondarySwitch.performed += SecondarySwitch_performed;
         inputActions.Combat.MeleeSwitch.performed += MeleeSwitch_performed;
+
+        playerTransform = GameObject.Find("Player (Clean)").transform;
+        smoothMovementInput = playerTransform.forward;
+    }
+
+    private void Update() {
+        SmoothDirectionalInput();
+    }
+
+    private void SmoothDirectionalInput() {
+        Vector3 input = new(inputActions.Motion.Movement.ReadValue<Vector2>().x, 0, inputActions.Motion.Movement.ReadValue<Vector2>().y);
+        smoothMovementInput = Vector3.RotateTowards(smoothMovementInput, input, smoothInputValue * Time.deltaTime, 1);
     }
 
     private void PrimarySwitch_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
@@ -75,7 +93,7 @@ public class PlayerInput : MonoBehaviour {
     public bool RunInputHold() => runInputHold;
     public bool FireInputHold() => fireInputHold;
 
-    public Vector2 MovementInput() => inputActions.Motion.Movement.ReadValue<Vector2>();
+    public Vector2 MovementInput() => new(smoothMovementInput.x, smoothMovementInput.z);
 
     public Vector3 MouseWorldPosition() {
         Vector3 mouseScreenPosition = Input.mousePosition;

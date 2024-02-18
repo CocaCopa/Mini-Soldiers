@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class PlayerController : Controller {
-
+    
     private PlayerInput input;
 
     protected override void Awake() {

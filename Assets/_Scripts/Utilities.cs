@@ -84,23 +84,25 @@ namespace CocaCopa {
         }
 
         /// <summary>
-        /// Generate a random Vector3 inside the given circle
+        /// Generates a random point on the edge of a circle in a specified direction.
         /// </summary>
-        /// <param name="center">Center of the circle.</param>
-        /// <param name="radius">Radius of the circle.</param>
-        /// <param name="forwardDirection">Orientation of the circle.</param>
-        /// <returns>The generated Vector3</returns>
-        public static Vector3 RandomVectorPointInCircle(Vector3 center, float radius, Vector3 forwardDirection) {
-            var vector2 = Random.insideUnitCircle * radius;
-            float signedAngle = Vector3.SignedAngle(forwardDirection, vector2, Vector3.up);
-            if (signedAngle > 90 || signedAngle < -90) {
-                vector2 = -vector2;
+        /// <param name="center">Circle center point</param>
+        /// <param name="radius">Circle radius</param>
+        /// <param name="direction">Direction to align the circle with</param>
+        /// <returns>A random point on the edge of the circle</returns>
+        public static Vector3 RandomVectorPointOnCircle(Vector3 center, float radius, Vector3 direction) {
+            var randomPoint = Random.insideUnitCircle * radius;
+
+            float signedAngle = Vector3.SignedAngle(direction, randomPoint, Vector3.up);
+            if (signedAngle > 90f || signedAngle < -90f) {
+                randomPoint = -randomPoint;
             }
-            return new Vector3(vector2.x, 0, vector2.y) + center;
+
+            return new Vector3(randomPoint.x, randomPoint.y, 0f) + center;
         }
 
         /// <summary>
-        /// Checks if the given Vector3 is inside the given box.
+        /// Checks if the given Vector3 is inside of the given box.
         /// </summary>
         /// <param name="transform">Transfom of the object calling the function.</param>
         /// <param name="point">Position to check.</param>
@@ -114,6 +116,32 @@ namespace CocaCopa {
             bool outOfBoundsRight = pointWorldToLocal.x - limitsX / 2 > 0;
             bool outOfBoundsLeft  = pointWorldToLocal.x + limitsX / 2 < 0;
             return outOfBoundsUp || outOfBoundsDown || outOfBoundsRight || outOfBoundsLeft;
+        }
+
+        /// <summary>
+        /// Finds the closest position to a target in a list of positions.
+        /// </summary>
+        /// <param name="target">The position of the target.</param>
+        /// <param name="positions">A list of positions to compare against.</param>
+        /// <returns>The closest position to the provided target position.</returns>
+        public Vector3 FindClosestPosition(Vector3 target, List<Vector3> positions) {
+            if (positions == null || positions.Count == 0) {
+                Debug.LogWarning("List of positions is null or empty.");
+                return Vector3.zero;
+            }
+
+            Vector3 closestPosition = positions[0];
+            float closestDistanceSqr = (target - closestPosition).sqrMagnitude;
+
+            for (int i = 1; i < positions.Count; i++) {
+                float distanceSqr = (target - positions[i]).sqrMagnitude;
+                if (distanceSqr < closestDistanceSqr) {
+                    closestDistanceSqr = distanceSqr;
+                    closestPosition = positions[i];
+                }
+            }
+
+            return closestPosition;
         }
 
         /// <summary>

@@ -17,16 +17,4 @@ public class LookAtObjectAnimRig : MonoBehaviour {
         multiAimConstraint.data.sourceObjects = data;
         rigBuilder.Build();
     }
-
-    private void Test() {
-        Controller controller = transform.root.GetComponent<Controller>();
-        Vector3 mousePosition = controller.ObjectToLookAt.transform.position;
-        Vector3 origin = transform.position;
-        Vector3 characterToMouse = (mousePosition - transform.position).normalized;
-        Debug.DrawRay(origin, characterToMouse * 10f, Color.magenta);
-
-        if (Vector3.Dot(characterToMouse, transform.forward) < 0f) {
-            Debug.DrawRay(transform.position, -Vector3.Reflect(characterToMouse, transform.right) * 10f, Color.green);
-        }
-    }
 }

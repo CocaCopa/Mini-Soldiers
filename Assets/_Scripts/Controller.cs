@@ -6,8 +6,7 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     protected CharacterMovement movement;
     protected CharacterOrientation orientation;
     protected CombatManager combatManager;
-
-    [SerializeField] protected GameObject objectToLookAt;
+    protected GameObject objectToLookAt;
 
     public GameObject ObjectToLookAt => objectToLookAt;
 
