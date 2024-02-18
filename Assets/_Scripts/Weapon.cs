@@ -106,7 +106,7 @@ public class Weapon : MonoBehaviour {
     private void FireBulletTowardsDirection(out RaycastHit hit) {
         Vector3 origin = muzzleFlashTransform.position;
         Vector3 aimPosition = controller.ObjectToLookAt.transform.position;
-        aimPosition.y = origin.y;
+        //aimPosition.y = origin.y;
         Vector3 direction = SpreadBullet(origin, aimPosition);
         Ray ray = new Ray(origin, direction);
         float rayDistance = float.MaxValue;
