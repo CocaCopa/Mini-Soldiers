@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
 using CocaCopa;
+using UnityEngine.Animations.Rigging;
 
 public enum WeaponType {
-    Knife,
-    Pistol,
-    Rifle
+    Primary,
+    Secondary,
+    Melee
 };
 
 public enum WeaponMode {
@@ -25,6 +26,8 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private WeaponMode mode;
 
     [Header("--- Stats ---")]
+    [Header("Number of bullets in the weapon's magazine.")]
+    [SerializeField] private int magazineSize;
     [Tooltip("Rate of fire of the weapon.")]
     [SerializeField] private float rateOfFire;
     [Tooltip("Speed of the bullet.")]
@@ -35,6 +38,15 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private float damage;
     [Tooltip("Damage drop-off curve")]
     [SerializeField] private AnimationCurve damageDropOff = AnimationCurve.Linear(0, 1, 1, 0);
+
+    [Header("--- Weapon Recoil ---")]
+    [SerializeField] private AnimationCurve recoilResetCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+    [Tooltip("The speed at which the hand of the character will return to its default position after firing their weapon.")]
+    [SerializeField] private float recoilResetSpeed;
+    [Tooltip("The amount of kick in the backward direction upon firing.")]
+    [SerializeField] private float backwardsKickAmount;
+    [Tooltip("The amount of kick in the upward direction upon firing.")]
+    [SerializeField] private float upwardsKickAmount;
 
     [Header("--- Bullet Spread ---")]
     [Tooltip("Spread dispersion of the weapon. Higher values will soften the intensity of the bullet spread.")]
@@ -53,43 +65,80 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private Transform muzzleFlashTransform;
     [Tooltip("Animation for shooting.")]
     [SerializeField] private AnimationClip shootAnimation;
-    [Tooltip("Animation for drawing the weapon.")]
-    [SerializeField] private AnimationClip drawAnimation;
 
     public AnimationClip ShootAnimationClip => shootAnimation;
     public WeaponType Type => type;
 
-    private CharacterAnimator characterAnimator;
+    private OverrideTransform overrideTransform;
     private Controller controller;
+    private Quaternion kickWeaponRotation = Quaternion.identity;
+    private Quaternion defaultWeaponRotation = Quaternion.identity;
+    private Vector3 overridePosition;
     private float rpmTimer;
 
+    private float recoilPositionAnimPoints = 0f;
+
     private void OnEnable() {
-        if (characterAnimator == null) {
-            characterAnimator = transform.root.GetComponentInChildren<CharacterAnimator>();
+        if (controller == null) {
             controller = transform.root.GetComponent<Controller>();
+            overrideTransform = transform.root.GetComponentInChildren<OverrideTransform>();
+            overridePosition = new Vector3(backwardsKickAmount, 0f, 0f);
         }
     }
 
     private void OnDisable() {
         if (transform.parent == null) {
-            characterAnimator = null;
+            controller = null;
+            overrideTransform = null;
+            
         }
     }
 
-    public IEnumerator Shoot() {
-        yield return new WaitForEndOfFrame();
-        while (characterAnimator.IsClipPlaying(drawAnimation, 1, 0.8f)) {
-            yield return null;
+    private void Update() {
+        WeaponRecoilReset();
+    }
+
+    public void Shoot() {
+        if (mode == WeaponMode.Automatic) {
+            ShootAutomatic();
         }
-        if (Time.time > rpmTimer && muzzleEffect) {
+        else if (mode == WeaponMode.SemiAutomatic) {
+
+        }
+    }
+
+    private void ShootAutomatic() {
+        if (Time.time > rpmTimer) {
             GameObject muzzleEffect = Instantiate(this.muzzleEffect);
             muzzleEffect.transform.position = muzzleFlashTransform.position;
             muzzleEffect.transform.rotation = transform.rotation;
             Destroy(muzzleEffect, 5f);
-            characterAnimator.PlayWeaponFireAnimation();
+            WeaponRecoil();
             rpmTimer = Time.time + (1f / rateOfFire);
             StartCoroutine(Bullet());
         }
+    }
+        
+    private void WeaponRecoil() {
+        // Kick weapon backwards.
+        overrideTransform.data.position = overridePosition;
+        recoilPositionAnimPoints = 0f;
+
+        // Kick weapon upwards.
+        defaultWeaponRotation = transform.parent.localRotation;
+        transform.parent.Rotate(-Vector3.up * upwardsKickAmount);
+        kickWeaponRotation  = transform.parent.localRotation;
+    }
+
+    private void WeaponRecoilReset() {
+        float lerpTime = Utilities.EvaluateAnimationCurve(recoilResetCurve, ref recoilPositionAnimPoints, recoilResetSpeed, increment: true);
+        overrideTransform.data.position = Vector3.Lerp(overridePosition, Vector3.zero, lerpTime);
+
+        if (kickWeaponRotation != Quaternion.identity) {
+            transform.parent.localRotation = Quaternion.Lerp(kickWeaponRotation, defaultWeaponRotation, lerpTime);
+        }
+        
+        overrideTransform.weight = recoilPositionAnimPoints == 1f ? 0f : 1f;
     }
 
     private IEnumerator Bullet() {
@@ -109,7 +158,7 @@ public class Weapon : MonoBehaviour {
         //aimPosition.y = origin.y;
         Vector3 direction = SpreadBullet(origin, aimPosition);
         Ray ray = new Ray(origin, direction);
-        float rayDistance = float.MaxValue;
+        float rayDistance = range;
         Physics.Raycast(ray, out hit, rayDistance);
     }
 

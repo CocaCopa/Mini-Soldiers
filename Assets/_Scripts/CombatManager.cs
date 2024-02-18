@@ -1,5 +1,8 @@
+using CocaCopa;
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class CombatManager : MonoBehaviour {
 
@@ -15,18 +18,25 @@ public class CombatManager : MonoBehaviour {
     [Tooltip("The bone transform that will hold the character's weapons.")]
     [SerializeField] private Transform rightHandTransform;
     [Tooltip("The animation clip of the 'Attack' animation state referenced in the animator controller.")]
-    [SerializeField] private AnimationClip defaultShootClip;
+    [SerializeField] private AnimationClip[] drawAnimations;
+    [SerializeField] private MultiAimConstraint handAimConstraint;
 
     private CharacterAnimator characterAnimator;
-    private AnimationClip activeShootAnimation;
     private GameObject equipedWeaponObject;
     private Weapon equipedWeapon;
+    private bool isSwitchingWeapon;
+    private bool isCombatIdle;
+    private float relaxTime = 5f;
+    private float relaxTimer;
+    private float constraintAnimationPoints;
+    private AnimationCurve constraintCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
     public GameObject EquipedWeapon => equipedWeaponObject;
+    public bool IsCombatIdle => isCombatIdle;
+    public bool IsSwitchingWeapon => isSwitchingWeapon;
 
     private void Awake() {
         characterAnimator = GetComponentInChildren<CharacterAnimator>();
-        activeShootAnimation = defaultShootClip;
 
         for (int i = 0; i < loadoutWeapons.Length; i++) {
             loadoutWeapons[i] = Instantiate(loadoutWeapons[i]);
@@ -34,6 +44,29 @@ public class CombatManager : MonoBehaviour {
             loadoutWeapons[i].transform.localPosition = Vector3.zero;
             loadoutWeapons[i].transform.localEulerAngles = Vector3.zero;
             loadoutWeapons[i].SetActive(false);
+        }
+    }
+
+    private void Start() {
+        SwitchWeapon(loadoutWeapons[0]);
+    }
+
+    private void Update() {
+        if (isCombatIdle) {
+            //handAimConstraint.weight = 1f;
+            if (Utilities.TickTimer(ref relaxTimer, relaxTime, false)) {
+                isCombatIdle = false;
+                handAimConstraint.weight = 0f;
+            }
+        }
+
+        if (isSwitchingWeapon/* && handAimConstraint.weight == 1f*/) {
+            constraintAnimationPoints = 0f;
+            handAimConstraint.weight = 0f;
+        }
+        else if (isCombatIdle && handAimConstraint.weight != 1f) {
+            float lerpTime = Utilities.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, 6.75f);
+            handAimConstraint.weight = Mathf.Lerp(0f, 1f, lerpTime);
         }
     }
 
@@ -57,9 +90,10 @@ public class CombatManager : MonoBehaviour {
             equipedWeaponObject = weaponObject;
             equipedWeaponObject.SetActive(true);
             equipedWeapon = equipedWeaponObject.GetComponent<Weapon>();
-            AnimationClip weaponShootAnimation = equipedWeapon.ShootAnimationClip;
-            characterAnimator.SetShootAnimationClip(activeShootAnimation, weaponShootAnimation);
-            activeShootAnimation = weaponShootAnimation;
+            isCombatIdle = true;
+            relaxTimer = relaxTime;
+            StartCoroutine(CheckForDrawAnimation(0.55f));
+            isSwitchingWeapon = true;
 
             OnSwitchWeapons?.Invoke(this, new OnSwitchWeaponsEventArgs {
                 equipedWeapon = weaponObject,
@@ -69,8 +103,25 @@ public class CombatManager : MonoBehaviour {
     }
 
     public void FireEquipedWeapon() {
-        if (equipedWeapon != null) {
-            StartCoroutine(equipedWeapon.Shoot());
+        if (equipedWeapon) {
+            isCombatIdle = true;
+            relaxTimer = relaxTime;
+            StartCoroutine(CheckForDrawAnimation(1f));
+            if (!isSwitchingWeapon) {
+                equipedWeapon.Shoot();
+            }
         }
+    }
+
+    private IEnumerator CheckForDrawAnimation(float animationPercentage) {
+        yield return new WaitForEndOfFrame();
+
+        foreach (var animation in drawAnimations) {
+            while (characterAnimator.IsClipPlaying(animation, 1, animationPercentage)) {
+                isSwitchingWeapon = true;
+                yield return null;
+            }
+        }
+        isSwitchingWeapon = false;
     }
 }
