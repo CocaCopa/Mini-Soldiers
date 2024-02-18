@@ -20,6 +20,7 @@ public class CharacterMovement : MonoBehaviour {
     [SerializeField] private float evaluateDesceleration;
 
     private Rigidbody characterRb;
+    private CapsuleCollider characterCollider;
     private AnimationCurve movementCurve = AnimationCurve.Constant(0, 0, 0);
     private Vector3 lastDirectionalInput;
 
@@ -35,10 +36,11 @@ public class CharacterMovement : MonoBehaviour {
     private bool canSetRunParameters = true;
     private bool canSetWalkParameters = false;
 
-    public float CurrentSpeed => characterSpeed;
+    public float CurrentSpeed => characterRb.velocity.magnitude;
 
     private void Awake() {
         characterRb = GetComponent<Rigidbody>();
+        characterCollider = GetComponent<CapsuleCollider>();
     }
 
     /// <summary>
@@ -46,7 +48,7 @@ public class CharacterMovement : MonoBehaviour {
     /// </summary>
     /// <param name="direction">Direction to move towards.</param>
     /// <param name="run">True, will sprint, otherwise walk.</param>
-    public void MoveTowardsDirection(Vector3 direction, bool run) {
+    public void MoveTowardsDirection(Vector3 direction, bool run, bool handleCollisions = true) {
         if (direction != Vector3.zero) {
             lastDirectionalInput = direction;
 
@@ -79,10 +81,42 @@ public class CharacterMovement : MonoBehaviour {
 
         Vector3 inputDirection = Vector3.forward * lastDirectionalInput.y + Vector3.right * lastDirectionalInput.x;
         inputDirection.Normalize();
-
+        if (handleCollisions) {
+            inputDirection = AdjustMoveDirection(inputDirection);
+        }
         Vector3 additivePosition = characterSpeed * Time.fixedDeltaTime * inputDirection;
         Vector3 movePosition = characterRb.position + additivePosition;
         characterRb.MovePosition(movePosition);
+    }
+
+    private Vector3 AdjustMoveDirection(Vector3 moveDirection) {
+        if (!PlayerCanMove(moveDirection)) {
+            Vector3 moveDirectionX = new Vector3(moveDirection.x, 0, 0).normalized;
+            if (PlayerCanMove(moveDirectionX)) {
+                // Can move only on the X axis
+                return moveDirectionX;
+            }
+            else {
+                // Attempt only Z movement
+                Vector3 moveDirectionZ = new Vector3(0, 0, moveDirection.z).normalized;
+                if (PlayerCanMove(moveDirectionZ)) {
+                    // Can move only on the Z axis
+                    return moveDirectionZ;
+                }
+            }
+        }
+
+        return moveDirection;
+    }
+
+    private bool PlayerCanMove(Vector3 moveDir) {
+        float playerRadius = characterCollider.radius;
+        float playerHeight = characterCollider.height;
+        float moveDistance = runSpeed * Time.deltaTime;
+        Vector3 feetPosition = transform.position;
+        Vector3 headPosition = feetPosition + Vector3.up * playerHeight;
+
+        return !Physics.CapsuleCast(feetPosition, headPosition, playerRadius, moveDir, moveDistance);
     }
 
     /// <summary>
