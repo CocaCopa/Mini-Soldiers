@@ -30,7 +30,7 @@ public class PlayerInput : MonoBehaviour {
         inputActions.Combat.SecondarySwitch.performed += SecondarySwitch_performed;
         inputActions.Combat.MeleeSwitch.performed += MeleeSwitch_performed;
 
-        playerTransform = GameObject.Find("Player (Clean)").transform;
+        playerTransform = FindObjectOfType<PlayerController>().transform;
         smoothMovementInput = playerTransform.forward;
     }
 
