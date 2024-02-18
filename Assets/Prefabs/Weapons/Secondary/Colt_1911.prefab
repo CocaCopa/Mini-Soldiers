@@ -49,7 +49,7 @@ MonoBehaviour:
   m_name: 
   type: 1
   mode: 0
-  magazineSize: 0
+  magazineSize: 7
   rateOfFire: 4.5
   bulletSpeed: 150
   range: 500
@@ -111,7 +111,6 @@ MonoBehaviour:
   bulletImpactEffect: {fileID: 151174, guid: e3c9439885f011549a6460a1f4da82dc, type: 3}
   muzzleEffect: {fileID: 179846, guid: a7730127594a3ad46a512f70521a6446, type: 3}
   muzzleFlashTransform: {fileID: 8619680541198919679}
-  shootAnimation: {fileID: 7400000, guid: 2a2f6fc4f5ff96a4cb84e8bb8691e1fe, type: 2}
 --- !u!1 &849166041485738393
 GameObject:
   m_ObjectHideFlags: 0

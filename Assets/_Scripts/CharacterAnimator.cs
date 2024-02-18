@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour {
@@ -14,8 +13,6 @@ public class CharacterAnimator : MonoBehaviour {
     private const string IS_COMBAT_IDLE = "IsCombatIdle";
     private const string IS_SWITCHING_WEAPON = "IsSwitchingWeapon";
 
-    private const string FIRE_WEAPON_STATE_NAME = "Attack";
-
     private CharacterMovement movement;
     private CharacterOrientation orientation;
     private CombatManager combatManager;
@@ -30,6 +27,11 @@ public class CharacterAnimator : MonoBehaviour {
 
     private void Start() {
         combatManager.OnSwitchWeapons += CombatManager_OnSwitchWeapons;
+        combatManager.OnInitiateWeaponReload += CombatManager_OnInitiateWeaponReload;
+    }
+
+    private void CombatManager_OnInitiateWeaponReload(object sender, System.EventArgs e) {
+        animator.SetTrigger("Reload");
     }
 
     private void Update() {
@@ -42,10 +44,6 @@ public class CharacterAnimator : MonoBehaviour {
         animator.SetFloat(MOVEMENT_SPEED, movementSpeed);
         animator.SetBool(IS_COMBAT_IDLE, isCombatIdle);
         animator.SetBool(IS_SWITCHING_WEAPON, isSwitchingWeapon);
-    }
-
-    public void PlayWeaponFireAnimation() {
-        animator.Play(FIRE_WEAPON_STATE_NAME, 1, 0f);
     }
 
     private void CombatManager_OnSwitchWeapons(object sender, CombatManager.OnSwitchWeaponsEventArgs e) {
@@ -71,17 +69,6 @@ public class CharacterAnimator : MonoBehaviour {
             break;
         }
         animator.SetTrigger(drawTrigger);
-    }
-
-    /// <summary>
-    /// Replaces an animation clip within the runtime animator's controller.
-    /// </summary>
-    /// <param name="currentClip">The animation clip to be replaced.</param>
-    /// <param name="newClip">The animation clip to replace the current one.</param>
-    public void SetShootAnimationClip(AnimationClip currentClip, AnimationClip newClip) {
-        AnimatorOverrideController overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
-        overrideController[currentClip] = newClip;
-        animator.runtimeAnimatorController = overrideController;
     }
 
     /// <summary>

@@ -26,7 +26,7 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private WeaponMode mode;
 
     [Header("--- Stats ---")]
-    [Header("Number of bullets in the weapon's magazine.")]
+    [Tooltip("Number of bullets in the weapon's magazine.")]
     [SerializeField] private int magazineSize;
     [Tooltip("Rate of fire of the weapon.")]
     [SerializeField] private float rateOfFire;
@@ -63,10 +63,7 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private GameObject muzzleEffect;
     [Tooltip("Spawn transform for muzzle flash.")]
     [SerializeField] private Transform muzzleFlashTransform;
-    [Tooltip("Animation for shooting.")]
-    [SerializeField] private AnimationClip shootAnimation;
 
-    public AnimationClip ShootAnimationClip => shootAnimation;
     public WeaponType Type => type;
 
     private OverrideTransform overrideTransform;
@@ -75,6 +72,7 @@ public class Weapon : MonoBehaviour {
     private Quaternion defaultWeaponRotation = Quaternion.identity;
     private Vector3 overridePosition;
     private float rpmTimer;
+    private int bulletsInMagazine;
 
     private float recoilPositionAnimPoints = 0f;
 
@@ -83,6 +81,7 @@ public class Weapon : MonoBehaviour {
             controller = transform.root.GetComponent<Controller>();
             overrideTransform = transform.root.GetComponentInChildren<OverrideTransform>();
             overridePosition = new Vector3(backwardsKickAmount, 0f, 0f);
+            bulletsInMagazine = magazineSize;
         }
     }
 
@@ -98,7 +97,19 @@ public class Weapon : MonoBehaviour {
         WeaponRecoilReset();
     }
 
-    public void Shoot() {
+    public void Reload() {
+        bulletsInMagazine = magazineSize;
+    }
+
+    /// <summary>
+    /// Shoots the weapon.
+    /// </summary>
+    /// <param name="stopAllShootRoutines">Stops all the coroutines started </param>
+    public void Shoot(bool stopAllShootRoutines) {
+        if (stopAllShootRoutines) {
+            //StopAllCoroutines();
+            return;
+        }
         if (mode == WeaponMode.Automatic) {
             ShootAutomatic();
         }
@@ -108,12 +119,13 @@ public class Weapon : MonoBehaviour {
     }
 
     private void ShootAutomatic() {
-        if (Time.time > rpmTimer) {
+        if (Time.time > rpmTimer && bulletsInMagazine > 0) {
             GameObject muzzleEffect = Instantiate(this.muzzleEffect);
             muzzleEffect.transform.position = muzzleFlashTransform.position;
             muzzleEffect.transform.rotation = transform.rotation;
             Destroy(muzzleEffect, 5f);
             WeaponRecoil();
+            bulletsInMagazine--;
             rpmTimer = Time.time + (1f / rateOfFire);
             StartCoroutine(Bullet());
         }

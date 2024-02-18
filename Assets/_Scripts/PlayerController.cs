@@ -34,7 +34,11 @@ public class PlayerController : Controller {
         objectToLookAt.transform.position = input.MouseWorldPosition();
         orientation.CharacterRotation(input.MovementInput(), objectToLookAt.transform);
         if (input.FireInputHold()) {
-            combatManager.FireEquipedWeapon();
+            combatManager.FireEquippedWeapon();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            combatManager.ReloadEquippedWeapon();
         }
     }
 

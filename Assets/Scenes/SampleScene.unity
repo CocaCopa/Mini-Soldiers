@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 159238856}
   - component: {fileID: 159238857}
   m_Layer: 0
-  m_Name: Recoil
+  m_Name: Recoil IK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 314917268}
   - component: {fileID: 314917269}
   m_Layer: 0
-  m_Name: Recoil_1
+  m_Name: Recoil Override Transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7555,13 +7555,13 @@ MonoBehaviour:
   - {fileID: 753385500144784950, guid: 5143e980e2ebe6d4dac69bda96bf51bb, type: 3}
   - {fileID: 1788837982872976861, guid: 6233f32a3ecfe674ca2948ca20ee4626, type: 3}
   rightHandTransform: {fileID: 1922026613}
-  defaultShootClip: {fileID: 7400000, guid: b52eaa91ecca9f54ab7a5d96c28ad9c7, type: 2}
+  handAimConstraint: {fileID: 1136592065}
   drawAnimations:
   - {fileID: 7400000, guid: 2b06ec130e774544f868d940a1500b64, type: 2}
   - {fileID: 7400000, guid: ee5a8604c8ea9cb46ba3943dc4700508, type: 2}
   - {fileID: 7400000, guid: e5c4828cdd000c544b998d91b2517630, type: 2}
   - {fileID: 7400000, guid: e93f4ab103d7a0e499456a8b54ec4932, type: 2}
-  handAimConstraint: {fileID: 1136592065}
+  reloadAnimation: {fileID: 7400000, guid: 6a66333ff1c1d1547800ea18589234e9, type: 2}
 --- !u!54 &7994436524022961148
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -163,7 +163,7 @@ MonoBehaviour:
   m_name: Hotchkiss
   type: 0
   mode: 0
-  magazineSize: 0
+  magazineSize: 45
   rateOfFire: 6
   bulletSpeed: 220
   range: 500
@@ -225,4 +225,3 @@ MonoBehaviour:
   bulletImpactEffect: {fileID: 151174, guid: e3c9439885f011549a6460a1f4da82dc, type: 3}
   muzzleEffect: {fileID: 124018, guid: 1f389bb139e76154582cf3c5e4f9214b, type: 3}
   muzzleFlashTransform: {fileID: 604574816125435433}
-  shootAnimation: {fileID: 7400000, guid: b648d7cf429cf2f4b9a579ffa83c2ba2, type: 2}

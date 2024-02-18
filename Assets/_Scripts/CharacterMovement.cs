@@ -48,34 +48,9 @@ public class CharacterMovement : MonoBehaviour {
     /// </summary>
     /// <param name="direction">Direction to move towards.</param>
     /// <param name="run">True, will sprint, otherwise walk.</param>
+    /// <param name="handleCollisions"></param>
     public void MoveTowardsDirection(Vector3 direction, bool run, bool handleCollisions = true) {
-        if (direction != Vector3.zero) {
-            lastDirectionalInput = direction;
-
-            if (run && canSetRunParameters) {
-                SetRunParameters();
-                canSetWalkParameters = true;
-                canSetRunParameters = false;
-            }
-            else if (!run) {
-                if (canSetWalkParameters) {
-                    DescelerateToWalkSpeed();
-                    canSetWalkParameters = false;
-                    canSetRunParameters = true;
-                }
-                else if (characterSpeed < walkSpeed) {
-                    SetWalkParameters();
-                }
-            }
-            canSetStopParameters = true;
-        }
-        else if (canSetStopParameters) {
-            StopMoving();
-            canSetRunParameters = true;
-            canSetStopParameters = false;
-        }
-        
-
+        CalculateCharacterSpeed(direction, run);
         float interpolationTime = Utilities.EvaluateAnimationCurve(movementCurve, ref accelerationPoints, moveCurveEvaluationSpeed, accelerateCurve);
         characterSpeed = Mathf.Lerp(minMoveSpeed, maxMoveSpeed, interpolationTime);
 
@@ -86,6 +61,7 @@ public class CharacterMovement : MonoBehaviour {
         }
         Vector3 additivePosition = characterSpeed * Time.fixedDeltaTime * inputDirection;
         Vector3 movePosition = characterRb.position + additivePosition;
+
         characterRb.MovePosition(movePosition);
     }
 
@@ -117,6 +93,34 @@ public class CharacterMovement : MonoBehaviour {
         Vector3 headPosition = feetPosition + Vector3.up * playerHeight;
 
         return !Physics.CapsuleCast(feetPosition, headPosition, playerRadius, moveDir, moveDistance);
+    }
+
+    private void CalculateCharacterSpeed(Vector3 direction, bool run) {
+        if (direction != Vector3.zero) {
+            lastDirectionalInput = direction;
+
+            if (run && canSetRunParameters) {
+                SetRunParameters();
+                canSetWalkParameters = true;
+                canSetRunParameters = false;
+            }
+            else if (!run) {
+                if (canSetWalkParameters) {
+                    DescelerateToWalkSpeed();
+                    canSetWalkParameters = false;
+                    canSetRunParameters = true;
+                }
+                else if (characterSpeed < walkSpeed) {
+                    SetWalkParameters();
+                }
+            }
+            canSetStopParameters = true;
+        }
+        else if (canSetStopParameters) {
+            StopMoving();
+            canSetRunParameters = true;
+            canSetStopParameters = false;
+        }
     }
 
     /// <summary>
