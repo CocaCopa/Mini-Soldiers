@@ -1012,6 +1012,7 @@ MonoBehaviour:
   - {fileID: 7825215386473370778, guid: 5c063ca9a5bba7e4faea4fb7eaba3b62, type: 3}
   - {fileID: 753385500144784950, guid: 5143e980e2ebe6d4dac69bda96bf51bb, type: 3}
   - {fileID: 1788837982872976861, guid: 6233f32a3ecfe674ca2948ca20ee4626, type: 3}
+  autoReloadDelay: 0.4
   rightHandTransform: {fileID: 6742364200238448036}
   handAimConstraint: {fileID: 6742364199419458832}
   drawAnimations:

@@ -7,11 +7,16 @@ public class CharacterAnimator : MonoBehaviour {
     private const string DRAW_RIFLE = "DrawRifle";
     private const string DRAW_PISTOL = "DrawPistol";
     private const string DRAW_KNIFE = "DrawKnife";
+    private const string RELOAD = "Reload";
     private const string PRIMARY_IDLE = "PrimaryIdle";
     private const string SECONDARY_IDLE = "SecondaryIdle";
     private const string MELEE_IDLE = "MeleeIdle";
     private const string IS_COMBAT_IDLE = "IsCombatIdle";
     private const string IS_SWITCHING_WEAPON = "IsSwitchingWeapon";
+
+    private const string STATE_NAME_RELOAD = "m_weapon_reload";
+    private const string STATE_NAME_DRAW_WEAPON = "m_weapon_draw";
+    private const string STATE_NAME_DRAW_PISTOL = "m_pistol_draw";
 
     private Controller controller;
     private CharacterOrientation orientation;
@@ -23,15 +28,15 @@ public class CharacterAnimator : MonoBehaviour {
         orientation = transform.root.GetComponent<CharacterOrientation>();
         combatManager = transform.root.GetComponent<CombatManager>();
         animator = GetComponent<Animator>();
-    }
-
-    private void Start() {
         combatManager.OnSwitchWeapons += CombatManager_OnSwitchWeapons;
         combatManager.OnInitiateWeaponReload += CombatManager_OnInitiateWeaponReload;
     }
 
+    private void Start() {
+    }
+
     private void CombatManager_OnInitiateWeaponReload(object sender, System.EventArgs e) {
-        animator.SetTrigger("Reload");
+        animator.Play(STATE_NAME_RELOAD, 1, 0f);
     }
 
     private void Update() {
@@ -47,28 +52,25 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     private void CombatManager_OnSwitchWeapons(object sender, CombatManager.OnSwitchWeaponsEventArgs e) {
-        string drawTrigger = "";
         switch (e.weaponType) {
             case WeaponType.Primary:
-            drawTrigger = DRAW_RIFLE;
+            animator.Play(STATE_NAME_DRAW_WEAPON, 1, 0f);
             animator.SetBool(PRIMARY_IDLE, true);
             animator.SetBool(SECONDARY_IDLE, false);
             animator.SetBool(MELEE_IDLE, false);
             break;
             case WeaponType.Secondary:
-            drawTrigger = DRAW_PISTOL;
+            animator.Play(STATE_NAME_DRAW_PISTOL, 1, 0f);
             animator.SetBool(PRIMARY_IDLE, false);
             animator.SetBool(SECONDARY_IDLE, true);
             animator.SetBool(MELEE_IDLE, false);
             break;
             case WeaponType.Melee:
-            drawTrigger = DRAW_KNIFE;
             animator.SetBool(PRIMARY_IDLE, false);
             animator.SetBool(SECONDARY_IDLE, false);
             animator.SetBool(MELEE_IDLE, true);
             break;
         }
-        animator.SetTrigger(drawTrigger);
     }
 
     /// <summary>
