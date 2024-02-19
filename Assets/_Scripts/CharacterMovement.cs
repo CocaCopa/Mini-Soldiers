@@ -88,7 +88,7 @@ public class CharacterMovement : MonoBehaviour {
     private bool PlayerCanMove(Vector3 moveDir) {
         float playerRadius = characterCollider.radius;
         float playerHeight = characterCollider.height;
-        float moveDistance = runSpeed * Time.deltaTime;
+        float moveDistance = 20 * Time.deltaTime;
         Vector3 feetPosition = transform.position;
         Vector3 headPosition = feetPosition + Vector3.up * playerHeight;
 
