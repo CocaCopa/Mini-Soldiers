@@ -7641,6 +7641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63c8132fb90722d4cb5a4d6dd9a1b0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onGameStart: 0
 --- !u!195 &9190162453845422723
 NavMeshAgent:
   m_ObjectHideFlags: 0
