@@ -34,7 +34,7 @@ public class CombatManager : MonoBehaviour {
     private AnimationCurve constraintCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
     private bool isReloading;
 
-    public GameObject EquippedWeapon => equippedWeaponObject;
+    public Weapon EquippedWeapon => equippedWeapon;
     public bool IsCombatIdle => isCombatIdle;
     public bool IsSwitchingWeapon => isSwitchingWeapon;
     public bool IsReloading => isReloading;
@@ -45,7 +45,7 @@ public class CombatManager : MonoBehaviour {
     }
 
     private void Start() {
-        SwitchWeapon(loadoutWeapons[0]);
+        SwitchToPrimary();
     }
 
     private void Update() {
