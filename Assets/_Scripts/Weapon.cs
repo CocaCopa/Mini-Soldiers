@@ -91,7 +91,9 @@ public class Weapon : MonoBehaviour {
         if (transform.parent == null) {
             controller = null;
             overrideTransform = null;
-            
+        }
+        if (recoilPositionAnimPoints != 1 && defaultWeaponRotation != Quaternion.identity) {
+            transform.parent.localRotation = defaultWeaponRotation;
         }
     }
 
@@ -103,10 +105,6 @@ public class Weapon : MonoBehaviour {
         bulletsInMagazine = magazineSize;
     }
 
-    /// <summary>
-    /// Shoots the weapon.
-    /// </summary>
-    /// <param name="stopAllShootRoutines">Stops all the coroutines started </param>
     public void Shoot() {
         if (mode == WeaponMode.Automatic) {
             ShootAutomatic();
