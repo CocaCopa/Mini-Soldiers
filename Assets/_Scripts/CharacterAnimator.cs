@@ -13,13 +13,13 @@ public class CharacterAnimator : MonoBehaviour {
     private const string IS_COMBAT_IDLE = "IsCombatIdle";
     private const string IS_SWITCHING_WEAPON = "IsSwitchingWeapon";
 
-    private CharacterMovement movement;
+    private Controller controller;
     private CharacterOrientation orientation;
     private CombatManager combatManager;
     private Animator animator;
 
     private void Awake() {
-        movement = transform.root.GetComponent<CharacterMovement>();
+        controller = transform.root.GetComponent<Controller>();
         orientation = transform.root.GetComponent<CharacterOrientation>();
         combatManager = transform.root.GetComponent<CombatManager>();
         animator = GetComponent<Animator>();
@@ -36,7 +36,7 @@ public class CharacterAnimator : MonoBehaviour {
 
     private void Update() {
         float playbackSpeed = orientation.MovingBackwards ? -1 : 1;
-        float movementSpeed = movement.CurrentSpeed;
+        float movementSpeed = controller.CurrentMovementSpeed;
         bool isCombatIdle = combatManager.IsCombatIdle;
         bool isSwitchingWeapon = combatManager.IsSwitchingWeapon;
 
