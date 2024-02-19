@@ -26,6 +26,7 @@ public class CombatManager : MonoBehaviour {
     private CharacterAnimator characterAnimator;
     private GameObject equippedWeaponObject;
     private Weapon equippedWeapon;
+    private Coroutine reloadRoutine;
     private bool isSwitchingWeapon;
     private bool isCombatIdle;
     private float relaxTime = 5f;
@@ -70,6 +71,11 @@ public class CombatManager : MonoBehaviour {
             equippedWeapon = equippedWeaponObject.GetComponent<Weapon>();
             isCombatIdle = true;
             relaxTimer = relaxTime;
+            if (reloadRoutine != null) {
+                StopCoroutine(reloadRoutine);
+                isReloading = false;
+                reloadRoutine = null;
+            }
             StartCoroutine(CheckForDrawAnimation(0.55f));
 
             OnSwitchWeapons?.Invoke(this, new OnSwitchWeaponsEventArgs {
@@ -88,6 +94,9 @@ public class CombatManager : MonoBehaviour {
             StartCoroutine(CheckForDrawAnimation(1f));
             if (!isSwitchingWeapon) {
                 equippedWeapon.Shoot();
+                if (equippedWeapon.RemainingBullets == 0) {
+                    ReloadEquippedWeapon();
+                }
             }
         }
     }
@@ -96,7 +105,7 @@ public class CombatManager : MonoBehaviour {
         if (isReloading == false) {
             isReloading = true;
             OnInitiateWeaponReload?.Invoke(this, EventArgs.Empty);
-            StartCoroutine(ReloadRoutine());
+            reloadRoutine = StartCoroutine(ReloadRoutine());
         }
     }
 
