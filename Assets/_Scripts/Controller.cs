@@ -2,6 +2,11 @@ using UnityEngine;
 
 public abstract class Controller : MonoBehaviour, IDamageable {
 
+    private enum OnGameStart { SwitchToPrimary, SwitchToSecondary, SwitchToMelee }
+
+    [Tooltip("When the game starts, the selected weapon will be automatically equipped.")]
+    [SerializeField] private OnGameStart onGameStart;
+
     private LookAtObjectAnimRig objectAnimRig;
     protected CharacterMovement movement;
     protected CharacterOrientation orientation;
@@ -9,6 +14,7 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     protected GameObject objectToLookAt;
 
     public GameObject ObjectToLookAt => objectToLookAt;
+    public float CurrentMovementSpeed => movement.CurrentSpeed;
 
     protected virtual void Awake() {
         objectAnimRig = GetComponentInChildren<LookAtObjectAnimRig>();
@@ -19,6 +25,21 @@ public abstract class Controller : MonoBehaviour, IDamageable {
 
     protected virtual void Start() {
         objectAnimRig.AssignObjectToLookAt(objectToLookAt);
+        EquipWeaponOnGameStart();
+    }
+
+    private void EquipWeaponOnGameStart() {
+        switch (onGameStart) {
+            case OnGameStart.SwitchToPrimary:
+            combatManager.SwitchToPrimary();
+            break;
+            case OnGameStart.SwitchToSecondary:
+            combatManager.SwitchToSecondary();
+            break;
+            case OnGameStart.SwitchToMelee:
+            combatManager.SwitchToMelee();
+            break;
+        }
     }
 
     public virtual void TakeDamage(float amount) {

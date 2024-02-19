@@ -44,10 +44,6 @@ public class CombatManager : MonoBehaviour {
         InitializeEquippedWeapons();
     }
 
-    private void Start() {
-        SwitchToPrimary();
-    }
-
     private void Update() {
         ManageIdleState();
     }
@@ -75,26 +71,27 @@ public class CombatManager : MonoBehaviour {
             isCombatIdle = true;
             relaxTimer = relaxTime;
             StartCoroutine(CheckForDrawAnimation(0.55f));
-            isSwitchingWeapon = true;
 
             OnSwitchWeapons?.Invoke(this, new OnSwitchWeaponsEventArgs {
                 equipedWeapon = weaponObject,
                 weaponType = equippedWeapon.Type
             });
+
+            isSwitchingWeapon = true;
         }
     }
 
     public void FireEquippedWeapon() {
-        if (equippedWeapon) {
+        if (equippedWeapon && !isReloading) {
             isCombatIdle = true;
             relaxTimer = relaxTime;
             StartCoroutine(CheckForDrawAnimation(1f));
             if (!isSwitchingWeapon) {
-                equippedWeapon.Shoot(isReloading);
+                equippedWeapon.Shoot();
             }
         }
     }
-
+    
     public void ReloadEquippedWeapon() {
         if (isReloading == false) {
             isReloading = true;

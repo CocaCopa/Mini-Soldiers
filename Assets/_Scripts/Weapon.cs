@@ -76,6 +76,8 @@ public class Weapon : MonoBehaviour {
 
     private float recoilPositionAnimPoints = 0f;
 
+    public int RemainingBullets => bulletsInMagazine;
+
     private void OnEnable() {
         if (controller == null) {
             controller = transform.root.GetComponent<Controller>();
@@ -105,11 +107,7 @@ public class Weapon : MonoBehaviour {
     /// Shoots the weapon.
     /// </summary>
     /// <param name="stopAllShootRoutines">Stops all the coroutines started </param>
-    public void Shoot(bool stopAllShootRoutines) {
-        if (stopAllShootRoutines) {
-            //StopAllCoroutines();
-            return;
-        }
+    public void Shoot() {
         if (mode == WeaponMode.Automatic) {
             ShootAutomatic();
         }

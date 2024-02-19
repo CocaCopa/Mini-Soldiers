@@ -49,7 +49,7 @@ public class CharacterMovement : MonoBehaviour {
     /// <param name="direction">Direction to move towards.</param>
     /// <param name="run">True, will sprint, otherwise walk.</param>
     /// <param name="handleCollisions"></param>
-    public void MoveTowardsDirection(Vector3 direction, bool run, bool handleCollisions = true) {
+    public void MoveTowardsDirection(Vector2 direction, bool run, bool handleCollisions = true) {
         CalculateCharacterSpeed(direction, run);
         float interpolationTime = Utilities.EvaluateAnimationCurve(movementCurve, ref accelerationPoints, moveCurveEvaluationSpeed, accelerateCurve);
         characterSpeed = Mathf.Lerp(minMoveSpeed, maxMoveSpeed, interpolationTime);
