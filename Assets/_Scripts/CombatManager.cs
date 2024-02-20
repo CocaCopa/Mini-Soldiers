@@ -127,14 +127,13 @@ public class CombatManager : MonoBehaviour {
 
     private IEnumerator ReloadRoutine(float delayReload) {
         yield return new WaitForSeconds(delayReload);
-        print(delayReload);
         isReloading = true;
         isCombatIdle = true;
         relaxTimer = relaxTime;
         OnInitiateWeaponReload?.Invoke(this, EventArgs.Empty);
 
         yield return new WaitForEndOfFrame();
-        while (characterAnimator.IsClipPlaying(reloadAnimation, 1, 1)) {
+        while (characterAnimator.IsTransitioningToClip(reloadAnimation, 1) || characterAnimator.IsClipPlaying(reloadAnimation, 1, 1)) {
             yield return null;
         }
         isReloading = false;

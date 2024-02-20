@@ -92,13 +92,12 @@ public class CharacterMovement : MonoBehaviour {
         Vector3 feetPosition = transform.position;
         Vector3 headPosition = feetPosition + Vector3.up * playerHeight;
 
-        return !Physics.CapsuleCast(feetPosition, headPosition, playerRadius, moveDir, moveDistance);
+        return !Physics.CapsuleCast(feetPosition, headPosition, playerRadius, moveDir, moveDistance, ~LayerMask.GetMask("BulletShell"));
     }
 
     private void CalculateCharacterSpeed(Vector3 direction, bool run) {
         if (direction != Vector3.zero) {
             lastDirectionalInput = direction;
-
             if (run && canSetRunParameters) {
                 SetRunParameters();
                 canSetWalkParameters = true;

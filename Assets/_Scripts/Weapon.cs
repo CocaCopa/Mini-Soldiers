@@ -57,6 +57,10 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private float maxSpread;
 
     [Header("--- Visuals ---")]
+    [Tooltip("Game object that will spawn of the chamber upon firing the weapon.")]
+    [SerializeField] private GameObject bulletShellPrefab;
+    [Tooltip("Spawn transform for the bullet shell.")]
+    [SerializeField] private Transform bulletShellTransform;
     [Tooltip("Effect for bullet impact.")]
     [SerializeField] private GameObject bulletImpactEffect;
     [Tooltip("Effect for muzzle flash.")]
@@ -117,8 +121,12 @@ public class Weapon : MonoBehaviour {
     private void ShootAutomatic() {
         if (Time.time > rpmTimer && bulletsInMagazine > 0) {
             GameObject muzzleEffect = Instantiate(this.muzzleEffect);
-            muzzleEffect.transform.position = muzzleFlashTransform.position;
-            muzzleEffect.transform.rotation = transform.rotation;
+            muzzleEffect.transform.SetPositionAndRotation(muzzleFlashTransform.position, transform.rotation);
+            if (bulletShellPrefab) {
+                GameObject bulletShell = Instantiate(bulletShellPrefab);
+                bulletShell.transform.SetPositionAndRotation(bulletShellTransform.position, Quaternion.identity);
+                bulletShell.GetComponent<BulletShell>().ThrowBulletShell(bulletShellTransform);
+            }
             Destroy(muzzleEffect, 5f);
             WeaponRecoil();
             bulletsInMagazine--;
@@ -171,11 +179,11 @@ public class Weapon : MonoBehaviour {
     }
 
     private Vector3 SpreadBullet(Vector3 origin, Vector3 aimPosition) {
-        Vector3 aimDirection = (aimPosition - muzzleFlashTransform.position).normalized;
+        Vector3 aimDirection = (aimPosition - origin).normalized;
         Vector3 newOrigin = origin + aimDirection * spreadDispersion;
         float bulletSpread = Random.Range(minSpread, maxSpread);
         Vector3 driftetTargetPosition = Utilities.RandomVectorPointOnCircle(newOrigin, bulletSpread, aimDirection);
-        return (driftetTargetPosition - muzzleFlashTransform.position).normalized;
+        return (driftetTargetPosition - origin).normalized;
     }
 
     private float BulletTravelTime(Vector3 impactPosition) {

@@ -14,7 +14,6 @@ public class CharacterAnimator : MonoBehaviour {
     private const string IS_COMBAT_IDLE = "IsCombatIdle";
     private const string IS_SWITCHING_WEAPON = "IsSwitchingWeapon";
 
-    private const string STATE_NAME_RELOAD = "m_weapon_reload";
     private const string STATE_NAME_DRAW_WEAPON = "m_weapon_draw";
     private const string STATE_NAME_DRAW_PISTOL = "m_pistol_draw";
 
@@ -36,7 +35,7 @@ public class CharacterAnimator : MonoBehaviour {
     }
 
     private void CombatManager_OnInitiateWeaponReload(object sender, System.EventArgs e) {
-        animator.Play(STATE_NAME_RELOAD, 1, 0f);
+        animator.SetTrigger(RELOAD);
     }
 
     private void Update() {
@@ -84,8 +83,25 @@ public class CharacterAnimator : MonoBehaviour {
         AnimatorClipInfo[] currentClipInfo = animator.GetCurrentAnimatorClipInfo(animatorLayer);
         foreach (var clipInfo in currentClipInfo) {
             if (clipInfo.clip == clip) {
-                if (animator.GetCurrentAnimatorStateInfo(animatorLayer).normalizedTime <= percentage)
+                if (animator.GetCurrentAnimatorStateInfo(animatorLayer).normalizedTime <= percentage) {
                     return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if the Animator component is transitioning to a specific animation clip on a given layer.
+    /// </summary>
+    /// <param name="clip">The animation clip to check for transition.</param>
+    /// <param name="animatorLayer">The layer index of the Animator to check.</param>
+    /// <returns>True if the Animator is transitioning to the specified clip on the specified layer, otherwise false.</returns>
+    public bool IsTransitioningToClip(AnimationClip clip, int animatorLayer) {
+        AnimatorClipInfo[] nextClipInfo = animator.GetNextAnimatorClipInfo(animatorLayer);
+        foreach(var clipInfo in nextClipInfo) {
+            if (clipInfo.clip == clip) {
+                return true;
             }
         }
         return false;

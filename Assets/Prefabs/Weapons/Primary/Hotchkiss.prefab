@@ -130,7 +130,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7536886263425241021
 Transform:
   m_ObjectHideFlags: 0
@@ -163,8 +163,8 @@ MonoBehaviour:
   m_name: Hotchkiss
   type: 0
   mode: 0
-  magazineSize: 45
-  rateOfFire: 6
+  magazineSize: 10
+  rateOfFire: 6.5
   bulletSpeed: 220
   range: 500
   damage: 0

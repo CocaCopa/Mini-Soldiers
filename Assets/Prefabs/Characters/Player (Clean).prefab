@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa1b0fbe6aaf384e817a6cef214bb41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onGameStart: 0
 --- !u!114 &6043125065343608608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,9 +171,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadoutWeapons:
-  - {fileID: 7825215386473370778, guid: 5c063ca9a5bba7e4faea4fb7eaba3b62, type: 3}
+  - {fileID: 8183123559616575557, guid: 5dbe4f71ef56b264d87e49afb700404e, type: 3}
   - {fileID: 753385500144784950, guid: 5143e980e2ebe6d4dac69bda96bf51bb, type: 3}
   - {fileID: 1788837982872976861, guid: 6233f32a3ecfe674ca2948ca20ee4626, type: 3}
+  autoReloadDelay: 0.35
   rightHandTransform: {fileID: 6182997562093739222}
   handAimConstraint: {fileID: 6182997562342298722}
   drawAnimations:
