@@ -3,6 +3,8 @@ using CocaCopa;
 
 public class BulletShell : MonoBehaviour {
 
+    [SerializeField] private bool debugShellDirection;
+    [Space(10)]
     [SerializeField] private float minForceAmount;
     [SerializeField] private float maxForceAmount;
     [SerializeField] private float minTorqueAmount;
@@ -14,7 +16,6 @@ public class BulletShell : MonoBehaviour {
 
     private void Awake() {
         m_rigidbody = GetComponent<Rigidbody>();
-        //Time.timeScale = 0.4f;
     }
 
     public void ThrowBulletShell(Transform relativeTransform) {
@@ -22,7 +23,9 @@ public class BulletShell : MonoBehaviour {
         Vector3 origin = transform.position;
         Vector3 aimPosition = origin + direction * 50f;
         Vector3 forceDirection = SpreadBullet(origin, aimPosition, transform.right);
-        Debug.DrawRay(origin, forceDirection * 10f, Color.magenta, 2.5f);
+        if (debugShellDirection) {
+            Debug.DrawRay(origin, forceDirection * 10f, Color.magenta, 2.5f);
+        }
         float forceAmount = Random.Range(minForceAmount, maxForceAmount);
         Vector3 force = forceDirection * forceAmount;
         m_rigidbody.AddForce(force, ForceMode.Impulse);
