@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &857233001693030488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3803952461396585067}
+  m_Layer: 0
+  m_Name: BulletShellTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3803952461396585067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857233001693030488}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.215, y: 0.128, z: 0.283}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7536886263425241021}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3440096881928261115
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,7 +161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7536886263425241021
 Transform:
   m_ObjectHideFlags: 0
@@ -145,6 +176,7 @@ Transform:
   m_Children:
   - {fileID: 6933718053927497713}
   - {fileID: 604574816125435433}
+  - {fileID: 3803952461396585067}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -163,7 +195,7 @@ MonoBehaviour:
   m_name: Hotchkiss
   type: 0
   mode: 0
-  magazineSize: 10
+  magazineSize: 15
   rateOfFire: 6.5
   bulletSpeed: 220
   range: 500
@@ -222,6 +254,8 @@ MonoBehaviour:
   spreadDispersion: 2.5
   minSpread: 0.08
   maxSpread: 0.12
+  bulletShellPrefab: {fileID: 3928940940500490471, guid: 018da3630d0b33b42aab9258d45edfeb, type: 3}
+  bulletShellTransform: {fileID: 3803952461396585067}
   bulletImpactEffect: {fileID: 151174, guid: e3c9439885f011549a6460a1f4da82dc, type: 3}
   muzzleEffect: {fileID: 124018, guid: 1f389bb139e76154582cf3c5e4f9214b, type: 3}
   muzzleFlashTransform: {fileID: 604574816125435433}

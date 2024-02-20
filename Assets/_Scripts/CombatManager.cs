@@ -80,13 +80,14 @@ public class CombatManager : MonoBehaviour {
             isCombatIdle = true;
             relaxTimer = relaxTime;
             isSwitchingWeapon = true;
-            StartCoroutine(CheckForDrawAnimation(0.55f));
+            allowAutoReload = true;
 
             OnSwitchWeapons?.Invoke(this, new OnSwitchWeaponsEventArgs {
                 equipedWeapon = weaponObject,
                 weaponType = equippedWeapon.Type
             });
-            allowAutoReload = true;
+
+            StartCoroutine(CheckForDrawAnimation(1));
         }
     }
 
@@ -160,7 +161,6 @@ public class CombatManager : MonoBehaviour {
 
     private IEnumerator CheckForDrawAnimation(float animationPercentage) {
         yield return new WaitForEndOfFrame();
-
         foreach (var animation in drawAnimations) {
             while (characterAnimator.IsClipPlaying(animation, 1, animationPercentage)) {
                 isSwitchingWeapon = true;
