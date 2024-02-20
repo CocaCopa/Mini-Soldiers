@@ -1,6 +1,6 @@
-using CocaCopa;
 using UnityEngine;
 using UnityEngine.AI;
+using CocaCopa;
 
 public class AIController : Controller {
 
@@ -27,35 +27,19 @@ public class AIController : Controller {
     private void Update() {
         objectToLookAt.transform.position = playerTransform.position + Vector3.up * 1.2f;
         orientation.CharacterRotation(inputDirection, objectToLookAt.transform);
-        SetNewPath(playerTransform.position);
-        DebugAIWeaponShoot();
+        if (GetComponent<AIStimulus>().CanSeeTarget(playerTransform)) {
+            //SetNewPath(playerTransform.position);
+            combatManager.FireEquippedWeapon();
+            if (combatManager.EquippedWeapon.RemainingBullets == 0) {
+                combatManager.SwitchToSecondary();
+            }
+        }
     }
-
-    float time = 1f;
-    float timer = 0f;
-    int index;
 
     private void FixedUpdate() {
         if (FollowNavMeshPath(playerTransform.position, out inputDirection)) {
             movement.MoveTowardsDirection(inputDirection, false);
         }
-    }
-
-    private void DebugAIWeaponShoot() {
-        if (Utilities.TickTimer(ref timer, time) && combatManager.EquippedWeapon.RemainingBullets != 0) {
-            if (index > 1) {
-                index = 0;
-            }
-            if (index == 0) {
-                combatManager.SwitchToPrimary();
-            }
-            if (index == 1) {
-                combatManager.SwitchToSecondary();
-            }
-            index++;
-        }
-        if (!combatManager.IsSwitchingWeapon)
-            combatManager.FireEquippedWeapon(autoReload: true);
     }
 
     private void SetNewPath(Vector3 targetPosition) {
@@ -70,30 +54,32 @@ public class AIController : Controller {
         }
     }
 
-    /// <summary>
-    /// Guides the agent along a NavMesh path, providing the direction of movement.
-    /// </summary>
-    /// <param name="direction">Out parameter for the direction of movement.</param>
-    /// <returns>True if the entity should continue following the path, false otherwise.</returns>
     private bool FollowNavMeshPath(Vector3 targetPosition, out Vector2 direction) {
+        direction = Vector2.zero;
+
         if (waypoints.Length == 0) {
-            direction = Vector2.zero;
             Debug.LogError("No path has been calculated but the AI is trying to follow one.");
             return false;
         }
-        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) < 0.1f) {
-            currentWaypointIndex++;
-            if (currentWaypointIndex >= waypoints.Length) {
-                
-            }
-        }
 
-        Vector3 moveDirection = (waypoints[currentWaypointIndex] - transform.position).normalized;
-        if (Vector3.Distance(transform.position, targetPosition) <= 5) {
-            direction = Vector3.zero;
-        }
-        else {
-            direction = new Vector2(moveDirection.x, moveDirection.z).normalized;
+        if (currentWaypointIndex < waypoints.Length) {
+            if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) < 0.1f) {
+                currentWaypointIndex++;
+                if (currentWaypointIndex >= waypoints.Length) {
+                    print("Reached the end of the path. Calculate a new path for the AI to start moving again.");
+                }
+            }
+
+            if (currentWaypointIndex <= waypoints.Length - 1) {
+                Vector3 moveDirection = (waypoints[currentWaypointIndex] - transform.position).normalized;
+
+                if (Vector3.Distance(transform.position, targetPosition) <= 5) {
+                    direction = Vector3.zero;
+                }
+                else {
+                    direction = new Vector2(moveDirection.x, moveDirection.z).normalized;
+                }
+            }
         }
         return true;
     }
