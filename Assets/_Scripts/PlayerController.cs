@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerController : Controller {
+public class PlayerController : Controller, AITarget {
     
     private PlayerInput input;
 

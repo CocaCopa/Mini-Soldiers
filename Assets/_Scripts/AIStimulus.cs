@@ -46,9 +46,11 @@ public class AIStimulus : MonoBehaviour {
         origin.y += eyesPositionY;
         targetPosition.y += eyesPositionY;
         Vector3 direction = (targetPosition - origin).normalized;
-        float distance = Vector3.Distance(origin, targetPosition);
-
-        Debug.DrawRay(origin, direction * distance, Color.magenta);
-        return true;
+        float distance = Vector3.Distance(origin, targetPosition) + 0.5f; // 0.5f ensures that the raycast will reach the target.
+        Physics.Raycast(origin, direction, out RaycastHit hitInfo, distance);
+        if (hitInfo.transform != null && hitInfo.transform.TryGetComponent<AITarget>(out _)) {
+            return true;
+        }
+        return false;
     }
 }
