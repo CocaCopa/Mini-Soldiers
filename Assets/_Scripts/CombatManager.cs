@@ -1,7 +1,7 @@
-using CocaCopa;
 using System;
 using System.Collections;
 using UnityEngine;
+using CocaCopa.Utilities;
 using UnityEngine.Animations.Rigging;
 
 public class CombatManager : MonoBehaviour {
@@ -143,7 +143,7 @@ public class CombatManager : MonoBehaviour {
 
     private void ManageIdleState() {
         if (isCombatIdle) {
-            if (Utilities.TickTimer(ref relaxTimer, relaxTime)) {
+            if (Common.TickTimer(ref relaxTimer, relaxTime)) {
                 isCombatIdle = false;
                 handAimConstraint.weight = 0f;
             }
@@ -154,7 +154,7 @@ public class CombatManager : MonoBehaviour {
             handAimConstraint.weight = 0f;
         }
         else if (isCombatIdle && handAimConstraint.weight != 1f) {
-            float lerpTime = Utilities.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, 6.75f);
+            float lerpTime = Common.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, 6.75f);
             handAimConstraint.weight = Mathf.Lerp(0f, 1f, lerpTime);
         }
     }

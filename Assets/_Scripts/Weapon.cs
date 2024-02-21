@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using CocaCopa;
+using CocaCopa.Utilities;
 using UnityEngine.Animations.Rigging;
 
 public enum WeaponType {
@@ -147,7 +147,7 @@ public class Weapon : MonoBehaviour {
     }
 
     private void WeaponRecoilReset() {
-        float lerpTime = Utilities.EvaluateAnimationCurve(recoilResetCurve, ref recoilPositionAnimPoints, recoilResetSpeed, increment: true);
+        float lerpTime = Common.EvaluateAnimationCurve(recoilResetCurve, ref recoilPositionAnimPoints, recoilResetSpeed, increment: true);
         overrideTransform.data.position = Vector3.Lerp(overridePosition, Vector3.zero, lerpTime);
 
         if (kickWeaponRotation != Quaternion.identity) {
@@ -182,7 +182,7 @@ public class Weapon : MonoBehaviour {
         Vector3 aimDirection = (aimPosition - origin).normalized;
         Vector3 newOrigin = origin + aimDirection * spreadDispersion;
         float bulletSpread = Random.Range(minSpread, maxSpread);
-        Vector3 driftetTargetPosition = Utilities.RandomVectorPointOnCircle(newOrigin, bulletSpread, aimDirection);
+        Vector3 driftetTargetPosition = Environment.RandomVectorPointOnCircle(newOrigin, bulletSpread, aimDirection);
         return (driftetTargetPosition - origin).normalized;
     }
 

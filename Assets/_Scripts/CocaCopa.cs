@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CocaCopa {
-    public class Utilities {
-
+namespace CocaCopa.Utilities {
+    public static class Common {
         /// <summary>
         /// Start a timer with the specified values
         /// </summary>
@@ -14,7 +13,7 @@ namespace CocaCopa {
         public static bool TickTimer(ref float waitTimer, float waitTime, bool autoReset = true) {
             if (waitTimer == 0) {
                 if (autoReset)
-                waitTimer = waitTime;
+                    waitTimer = waitTime;
                 return true;
             }
             else {
@@ -82,7 +81,9 @@ namespace CocaCopa {
             float_1 = float_2;
             float_2 = temp;
         }
+    }
 
+    public static class Environment {
         /// <summary>
         /// Generates a random point on the edge of a circle in a specified direction.
         /// </summary>
@@ -124,7 +125,7 @@ namespace CocaCopa {
         /// <param name="target">The position of the target.</param>
         /// <param name="positions">A list of positions to compare against.</param>
         /// <returns>The closest position to the provided target position.</returns>
-        public Vector3 FindClosestPosition(Vector3 target, List<Vector3> positions) {
+        public static Vector3 FindClosestPosition(Vector3 target, List<Vector3> positions) {
             if (positions == null || positions.Count == 0) {
                 Debug.LogWarning("List of positions is null or empty.");
                 return Vector3.zero;
@@ -179,13 +180,15 @@ namespace CocaCopa {
             }
             return tooClose;
         }
+    }
 
+    public static class AudioUtils {
         /// <summary>
         /// Plays a random sound picked from the given sound array.
         /// </summary>
-        /// <param name="audioSource">Target audio source</param>
-        /// <param name="soundsArray">List to choose sound from</param>
-        /// <param name="setAudioClip">Set to 'true' if you want to set the selected clip as the audioSource's clip</param>
+        /// <param name="audioSource">Target audio source.</param>
+        /// <param name="soundsArray">List to choose sound from.</param>
+        /// <param name="setAudioClip">Set to 'true' if you want to set the selected clip as the audioSource's clip.</param>
         public static void PlayRandomSound(AudioSource audioSource, AudioClip[] soundsArray, bool setAudioClip = false) {
             if (soundsArray.Length > 0) {
                 int randomIndex = Random.Range(0, soundsArray.Length);
@@ -195,6 +198,16 @@ namespace CocaCopa {
                 }
                 audioSource.PlayOneShot(audioClip);
             }
+        }
+
+        /// <summary>
+        /// Plays a random sound picked from the given sound array.
+        /// </summary>
+        /// <param name="soundsArray">List to choose sound from.</param>
+        /// <param name="position">Target position to play the audio clip.</param>
+        public static void PlayRandomSoundAtPoint(AudioClip[] soundsArray, Vector3 position) {
+            int randomIndex = Random.Range(0, soundsArray.Length);
+            AudioSource.PlayClipAtPoint(soundsArray[randomIndex], position);
         }
     }
 }

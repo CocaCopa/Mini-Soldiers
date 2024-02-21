@@ -1,5 +1,5 @@
 using UnityEngine;
-using CocaCopa;
+using CocaCopa.Utilities;
 
 public class CharacterMovement : MonoBehaviour {
 
@@ -51,7 +51,7 @@ public class CharacterMovement : MonoBehaviour {
     /// <param name="handleCollisions"></param>
     public void MoveTowardsDirection(Vector2 direction, bool run, bool handleCollisions = true) {
         CalculateCharacterSpeed(direction, run);
-        float interpolationTime = Utilities.EvaluateAnimationCurve(movementCurve, ref accelerationPoints, moveCurveEvaluationSpeed, accelerateCurve);
+        float interpolationTime = Common.EvaluateAnimationCurve(movementCurve, ref accelerationPoints, moveCurveEvaluationSpeed, accelerateCurve);
         characterSpeed = Mathf.Lerp(minMoveSpeed, maxMoveSpeed, interpolationTime);
 
         Vector3 inputDirection = Vector3.forward * lastDirectionalInput.y + Vector3.right * lastDirectionalInput.x;

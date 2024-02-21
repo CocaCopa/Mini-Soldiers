@@ -1,5 +1,5 @@
 using UnityEngine;
-using CocaCopa;
+using CocaCopa.Utilities;
 
 public class BulletShell : MonoBehaviour {
 
@@ -40,7 +40,7 @@ public class BulletShell : MonoBehaviour {
         Vector3 aimDirection = (aimPosition - origin).normalized;
         Vector3 newOrigin = origin + aimDirection * spreadDispersion;
         float bulletSpread = Random.Range(minSpread, maxSpread);
-        Vector3 driftetTargetPosition = Utilities.RandomVectorPointOnCircle(newOrigin, bulletSpread, spreadAroundDirection);
+        Vector3 driftetTargetPosition = Environment.RandomVectorPointOnCircle(newOrigin, bulletSpread, spreadAroundDirection);
         return (driftetTargetPosition - origin).normalized;
     }
 }
