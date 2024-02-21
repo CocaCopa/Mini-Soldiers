@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a140b8c1cbf2e08449f892c3bd9f77dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugShellDirection: 0
   minForceAmount: 4
   maxForceAmount: 5
   minTorqueAmount: 120
