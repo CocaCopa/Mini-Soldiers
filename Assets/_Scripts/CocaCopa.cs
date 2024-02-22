@@ -84,23 +84,21 @@ namespace CocaCopa.Utilities {
     }
 
     public static class Environment {
+
         /// <summary>
-        /// Generates a random point on the edge of a circle in a specified direction.
+        /// Generates a random point on a circle in a plane perpendicular to a given forward direction.
         /// </summary>
-        /// <param name="center">Circle center point</param>
-        /// <param name="radius">Circle radius</param>
-        /// <param name="direction">Direction to align the circle with</param>
-        /// <returns>A random point on the edge of the circle</returns>
-        public static Vector3 RandomVectorPointOnCircle(Vector3 center, float radius, Vector3 direction) {
-            var randomPoint = Random.insideUnitCircle * radius;
-
-            float signedAngle = Vector3.SignedAngle(direction, randomPoint, Vector3.up);
-            if (signedAngle > 90f || signedAngle < -90f) {
-                randomPoint = -randomPoint;
-            }
-
-            return new Vector3(randomPoint.x, randomPoint.y, 0f) + center;
+        /// <param name="center">The center of the circle.</param>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="forwardDirection">The direction perpendicular to the plane in which the circle lies.</param>
+        /// <returns>A random point on the circle.</returns>
+        public static Vector3 RandomVectorPointOnCircle(Vector3 center, float radius, Vector3 forwardDirection) {
+            Vector3 perpendicular = Vector3.Cross(forwardDirection.normalized, Vector3.up).normalized;
+            Vector3 randomPoint = Random.insideUnitCircle * radius;
+            randomPoint += perpendicular * Vector2.Dot(randomPoint, forwardDirection.normalized);
+            return center + randomPoint;
         }
+
 
         /// <summary>
         /// Checks if the given Vector3 is inside of the given box.
