@@ -123,6 +123,20 @@ namespace CocaCopa.Utilities {
         /// Finds the closest position to a target in a list of positions.
         /// </summary>
         /// <param name="target">The position of the target.</param>
+        /// <param name="transforms">A list of transforms to compare against.</param>
+        /// <returns>The closest position to the provided target position.</returns>
+        public static Vector3 FindClosestPosition(Vector3 target, List<Transform> transforms) {
+            List<Vector3> positions = new List<Vector3>();
+            foreach (var transform in transforms) {
+                positions.Add(transform.position);
+            }
+            return FindClosestPosition(target, positions);
+        }
+
+        /// <summary>
+        /// Finds the closest position to a target in a list of positions.
+        /// </summary>
+        /// <param name="target">The position of the target.</param>
         /// <param name="positions">A list of positions to compare against.</param>
         /// <returns>The closest position to the provided target position.</returns>
         public static Vector3 FindClosestPosition(Vector3 target, List<Vector3> positions) {
