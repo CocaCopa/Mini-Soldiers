@@ -34,7 +34,9 @@ public class PlayerController : Controller, AITarget {
 
     private void Update() {
         objectToLookAt.transform.position = input.MouseWorldPosition();
-        orientation.CharacterRotation(input.MovementInput(), objectToLookAt.transform);
+        Vector3 relativeForward = customCamera.CameraPivot.forward;
+        Vector3 relativeRight = customCamera.CameraPivot.right;
+        orientation.CharacterRotation(input.MovementInput(), objectToLookAt.transform, relativeForward, relativeRight);
         if (input.FireInputHold()) {
             combatManager.FireEquippedWeapon();
         }

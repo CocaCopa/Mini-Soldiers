@@ -16,14 +16,21 @@ public class CharacterOrientation : MonoBehaviour {
     /// </summary>
     /// <param name="directionalInput">The direction the character moves towards.</param>
     /// <param name="relativeTransform">The target object for the character's body orientation.</param>
-    public void CharacterRotation(Vector2 directionalInput, Transform relativeTransform) {
+    public void CharacterRotation(Vector2 directionalInput, Transform relativeTransform, Vector3 relativeForward = default, Vector3 relativeRight = default) {
+        if (relativeForward == default) {
+            relativeForward = Vector3.forward;
+        }
+        if (relativeRight == default) {
+            relativeRight = Vector3.right;
+        }
+
         if (directionalInput != Vector2.zero) {
             lastDirectionalInput = directionalInput;
         }
 
         Vector3 inputDirection = lastDirectionalInput == Vector2.zero
             ? Vector3.forward
-            : Vector3.forward * lastDirectionalInput.y + Vector3.right * lastDirectionalInput.x;
+            : relativeForward * lastDirectionalInput.y + relativeRight * lastDirectionalInput.x;
         inputDirection.Normalize();
 
         Vector3 characterToMouseDirection = (relativeTransform.position - transform.position).normalized;
