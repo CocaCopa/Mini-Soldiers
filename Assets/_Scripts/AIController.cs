@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 using CocaCopa;
 
 public class AIController : Controller {
+
+    [SerializeField] private List<Transform> hideSpots;
 
     private Transform playerTransform;
     private Vector2 inputDirection;
@@ -33,6 +36,13 @@ public class AIController : Controller {
             if (combatManager.EquippedWeapon.RemainingBullets == 0) {
                 combatManager.SwitchToSecondary();
             }
+
+            Vector3 position = CocaCopa.Utilities.Environment.FindClosestPosition(transform.position, hideSpots);
+            SetNewPath(position);
+        }
+        if (Input.GetKeyDown(KeyCode.V)) {
+            Vector3 position = CocaCopa.Utilities.Environment.FindClosestPosition(transform.position, hideSpots);
+            SetNewPath(position);
         }
     }
 

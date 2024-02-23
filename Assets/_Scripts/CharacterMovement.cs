@@ -36,6 +36,9 @@ public class CharacterMovement : MonoBehaviour {
     private bool canSetRunParameters = true;
     private bool canSetWalkParameters = false;
 
+    private readonly Vector3 defaultForward = Vector3.forward;
+    private static readonly Vector3 defaultRight = Vector3.right;
+
     public float CurrentSpeed => characterRb.velocity.magnitude;
 
     private void Awake() {
@@ -49,12 +52,19 @@ public class CharacterMovement : MonoBehaviour {
     /// <param name="direction">Direction to move towards.</param>
     /// <param name="run">True, will sprint, otherwise walk.</param>
     /// <param name="handleCollisions"></param>
-    public void MoveTowardsDirection(Vector2 direction, bool run, bool handleCollisions = true) {
+    public void MoveTowardsDirection(Vector2 direction, bool run, bool handleCollisions = true, Vector3 relativeForward = default, Vector3 relativeRight = default) {
+        if (relativeForward == default) {
+            relativeForward = Vector3.forward;
+        }
+        if (relativeRight == default) {
+            relativeRight = Vector3.right;
+        }
+
         CalculateCharacterSpeed(direction, run);
         float interpolationTime = Common.EvaluateAnimationCurve(movementCurve, ref accelerationPoints, moveCurveEvaluationSpeed, accelerateCurve);
         characterSpeed = Mathf.Lerp(minMoveSpeed, maxMoveSpeed, interpolationTime);
 
-        Vector3 inputDirection = Vector3.forward * lastDirectionalInput.y + Vector3.right * lastDirectionalInput.x;
+        Vector3 inputDirection = relativeForward * lastDirectionalInput.y + relativeRight * lastDirectionalInput.x;
         inputDirection.Normalize();
         if (handleCollisions) {
             inputDirection = AdjustMoveDirection(inputDirection);

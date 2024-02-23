@@ -3,10 +3,12 @@ using UnityEngine;
 public class PlayerController : Controller, AITarget {
     
     private PlayerInput input;
+    private CustomCamera customCamera;
 
     protected override void Awake() {
         base.Awake();
         input = FindObjectOfType<PlayerInput>();
+        customCamera = FindObjectOfType<CustomCamera>();
         objectToLookAt = new GameObject();
         objectToLookAt.name = "FollowMouseObject";
     }
@@ -43,6 +45,8 @@ public class PlayerController : Controller, AITarget {
     }
 
     private void FixedUpdate() {
-        movement.MoveTowardsDirection(input.MovementInput(), input.RunInputHold());
+        Vector3 relativeForward = customCamera.CameraPivot.forward;
+        Vector3 relativeRight = customCamera.CameraPivot.right;
+        movement.MoveTowardsDirection(input.MovementInput(), input.RunInputHold(), handleCollisions: false, relativeForward, relativeRight);
     }
 }
