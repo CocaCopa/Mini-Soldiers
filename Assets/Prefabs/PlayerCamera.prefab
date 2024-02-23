@@ -246,7 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followTransform: {fileID: 0}
   cameraPivot: {fileID: 9058399928615715864}
-  sensitivity: 50
+  sensitivity: 170
 --- !u!1 &9058399928778989202
 GameObject:
   m_ObjectHideFlags: 0
