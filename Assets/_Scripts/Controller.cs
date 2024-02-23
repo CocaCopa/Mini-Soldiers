@@ -1,6 +1,10 @@
+using System;
 using UnityEngine;
 
 public abstract class Controller : MonoBehaviour, IDamageable {
+
+    public event EventHandler OnCharacterTakeDamage;
+    public event EventHandler OnCharacterRespawn;
 
     private enum OnGameStart { SwitchToPrimary, SwitchToSecondary, SwitchToMelee }
 
@@ -43,8 +47,10 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     }
 
     public virtual void TakeDamage(float amount) {
-
+        OnCharacterTakeDamage?.Invoke(this, EventArgs.Empty);
     }
 
-
+    public virtual void Respawn() {
+        OnCharacterRespawn?.Invoke(this, EventArgs.Empty);
+    }
 }

@@ -97,12 +97,16 @@ public class CombatManager : MonoBehaviour {
             relaxTimer = relaxTime;
             StartCoroutine(CheckForDrawAnimation(1f));
             if (!isSwitchingWeapon) {
-                equippedWeapon.Shoot();
+                equippedWeapon.PullGunTrigger();
                 if (autoReload && CanAutoReload()) {
                     ReloadEquippedWeapon(autoReloadDelay);
                 }
             }
         }
+    }
+
+    public void ReleaseGunTrigger() {
+        equippedWeapon.ReleaseGunTrigger();
     }
 
     private bool CanAutoReload() {

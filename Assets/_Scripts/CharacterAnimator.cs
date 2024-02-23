@@ -27,11 +27,15 @@ public class CharacterAnimator : MonoBehaviour {
         orientation = transform.root.GetComponent<CharacterOrientation>();
         combatManager = transform.root.GetComponent<CombatManager>();
         animator = GetComponent<Animator>();
+
+        controller.OnCharacterTakeDamage += Controller_OnTakeDamage;
         combatManager.OnSwitchWeapons += CombatManager_OnSwitchWeapons;
         combatManager.OnInitiateWeaponReload += CombatManager_OnInitiateWeaponReload;
     }
 
-    private void Start() {
+    private void Controller_OnTakeDamage(object sender, System.EventArgs e) {
+        //animator.SetTrigger("Damage");
+        animator.Play("m_weapon_damage", 2, 0);
     }
 
     private void CombatManager_OnInitiateWeaponReload(object sender, System.EventArgs e) {

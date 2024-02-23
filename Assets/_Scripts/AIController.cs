@@ -31,6 +31,7 @@ public class AIController : Controller {
         objectToLookAt.transform.position = playerTransform.position + Vector3.up * 1.2f;
         orientation.CharacterRotation(inputDirection, objectToLookAt.transform);
         if (GetComponent<AIStimulus>().CanSeeTarget(playerTransform)) {
+            combatManager.ReleaseGunTrigger();
             //SetNewPath(playerTransform.position);
             combatManager.FireEquippedWeapon();
             if (combatManager.EquippedWeapon.RemainingBullets == 0) {

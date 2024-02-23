@@ -37,8 +37,12 @@ public class PlayerController : Controller, AITarget {
         Vector3 relativeForward = customCamera.CameraPivot.forward;
         Vector3 relativeRight = customCamera.CameraPivot.right;
         orientation.CharacterRotation(input.MovementInput(), objectToLookAt.transform, relativeForward, relativeRight);
+
         if (input.FireInputHold()) {
             combatManager.FireEquippedWeapon();
+        }
+        else if (input.FireInputReleased()) {
+            combatManager.ReleaseGunTrigger();
         }
 
         if (Input.GetKeyDown(KeyCode.R)) {

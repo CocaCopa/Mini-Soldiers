@@ -77,7 +77,7 @@ public class Weapon : MonoBehaviour {
     private Vector3 overridePosition;
     private float rpmTimer;
     private int bulletsInMagazine;
-
+    private bool isTriggerPulled = false;
     private float recoilPositionAnimPoints = 0f;
 
     public int RemainingBullets => bulletsInMagazine;
@@ -109,33 +109,49 @@ public class Weapon : MonoBehaviour {
         bulletsInMagazine = magazineSize;
     }
 
-    public void Shoot() {
+    public void PullGunTrigger() {
         if (mode == WeaponMode.Automatic) {
-            ShootAutomatic();
+            Shoot();
         }
-        else if (mode == WeaponMode.SemiAutomatic) {
+        else if (mode == WeaponMode.SemiAutomatic && isTriggerPulled == false) {
+            Shoot();
+        }
+        isTriggerPulled = true;
+    }
 
+    public void ReleaseGunTrigger() {
+        isTriggerPulled = false;
+    }
+
+    private void Shoot() {
+        if (Time.time > rpmTimer && bulletsInMagazine > 0) {
+            rpmTimer = Time.time + (1f / rateOfFire);
+            MuzzleEffect();
+            SpawnBulletShell();
+            WeaponRecoil();
+            StartCoroutine(Bullet());
         }
     }
 
-    private void ShootAutomatic() {
-        if (Time.time > rpmTimer && bulletsInMagazine > 0) {
-            GameObject muzzleEffect = Instantiate(this.muzzleEffect);
-            muzzleEffect.transform.SetPositionAndRotation(muzzleFlashTransform.position, transform.rotation);
-            if (bulletShellPrefab) {
-                GameObject bulletShell = Instantiate(bulletShellPrefab);
-                bulletShell.transform.SetPositionAndRotation(bulletShellTransform.position, Quaternion.identity);
-                bulletShell.GetComponent<BulletShell>().ThrowBulletShell(bulletShellTransform);
-            }
-            Destroy(muzzleEffect, 5f);
-            WeaponRecoil();
-            bulletsInMagazine--;
-            rpmTimer = Time.time + (1f / rateOfFire);
-            StartCoroutine(Bullet());
+    private void MuzzleEffect() {
+        GameObject muzzleEffect = Instantiate(this.muzzleEffect);
+        muzzleEffect.transform.SetPositionAndRotation(muzzleFlashTransform.position, transform.rotation);
+        Destroy(muzzleEffect, 5f);
+    }
+
+    private void SpawnBulletShell() {
+        if (bulletShellPrefab) {
+            GameObject bulletShell = Instantiate(bulletShellPrefab);
+            bulletShell.transform.SetPositionAndRotation(bulletShellTransform.position, Quaternion.identity);
+            bulletShell.GetComponent<BulletShell>().ThrowBulletShell(bulletShellTransform);
         }
     }
         
     private void WeaponRecoil() {
+        // Reset recoil.
+        if (defaultWeaponRotation != Quaternion.identity) {
+            transform.parent.localRotation = defaultWeaponRotation;
+        }
         // Kick weapon backwards.
         overrideTransform.data.position = overridePosition;
         recoilPositionAnimPoints = 0f;
@@ -159,6 +175,7 @@ public class Weapon : MonoBehaviour {
 
     private IEnumerator Bullet() {
         FireBulletTowardsDirection(out RaycastHit hit);
+        bulletsInMagazine--;
         if (hit.transform != null) {
             yield return new WaitForSeconds(BulletTravelTime(hit.point));
             SpawnImpactEffect(hit);
@@ -200,6 +217,6 @@ public class Weapon : MonoBehaviour {
     }
 
     private void DealDamageToTarget(IDamageable target) {
-
+        target.TakeDamage(damage);
     }
 }

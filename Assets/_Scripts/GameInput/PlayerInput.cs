@@ -15,6 +15,7 @@ public class PlayerInput : MonoBehaviour {
 
     private bool runInputHold = false;
     private bool fireInputHold = false;
+    private bool fireInputReleased = false;
 
     private Transform playerTransform;
     private Vector3 smoothMovementInput;
@@ -36,6 +37,12 @@ public class PlayerInput : MonoBehaviour {
 
     private void Update() {
         SmoothDirectionalInput();
+        if (inputActions.FindAction(nameof(inputActions.Combat.Fire)).WasReleasedThisFrame()) {
+            fireInputReleased = true;
+        }
+        else {
+            fireInputReleased = false;
+        }
     }
 
     private void SmoothDirectionalInput() {
@@ -92,6 +99,7 @@ public class PlayerInput : MonoBehaviour {
 
     public bool RunInputHold() => runInputHold;
     public bool FireInputHold() => fireInputHold;
+    public bool FireInputReleased() => fireInputReleased;
 
     public Vector2 MovementInput() => new(smoothMovementInput.x, smoothMovementInput.z);
 

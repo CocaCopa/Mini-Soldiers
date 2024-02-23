@@ -49,9 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_name: 
   type: 1
-  mode: 0
+  mode: 1
   magazineSize: 10
-  rateOfFire: 4.5
+  rateOfFire: 5.5
   bulletSpeed: 150
   range: 500
   damage: 0
