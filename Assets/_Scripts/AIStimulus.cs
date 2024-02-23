@@ -34,21 +34,22 @@ public class AIStimulus : MonoBehaviour {
             float dotProduct = Vector3.Dot(eyesTransform.forward, toTargetVector.normalized);
             float FOV = Mathf.Cos(fieldOfView * 0.5f * Mathf.Deg2Rad);
             if (dotProduct > FOV) {
-                return ClearLineOfSight(targetTransform.position);
+                return ClearLineOfSight(targetTransform);
             }
         }
         return false;
     }
 
-    private bool ClearLineOfSight(Vector3 targetPosition) {
+    private bool ClearLineOfSight(Transform targetTransform) {
         Vector3 origin = transform.position;
         // The character animations affect the position/height of the eyes. Changes to the Y positions help stabilize the height of the direction.
         origin.y += eyesPositionY;
+        Vector3 targetPosition = targetTransform.position;
         targetPosition.y += eyesPositionY;
         Vector3 direction = (targetPosition - origin).normalized;
         float distance = Vector3.Distance(origin, targetPosition) + 0.5f; // 0.5f ensures that the raycast will reach the target.
         Physics.Raycast(origin, direction, out RaycastHit hitInfo, sightRadius);
-        if (hitInfo.transform != null && hitInfo.transform.TryGetComponent<AITarget>(out _)) {
+        if (hitInfo.transform != null && hitInfo.transform.gameObject == targetTransform.gameObject) {
             return true;
         }
         return false;

@@ -27,6 +27,5 @@ public class CustomCameraEditor : Editor {
                 Debug.LogError("FollowTransform and/or CameraPivot reference(s) have not been assigned.");
             }
         }
-
     }
 }

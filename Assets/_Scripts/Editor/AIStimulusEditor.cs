@@ -15,12 +15,9 @@ public class AIStimulusEditor : Editor {
     private const string ColorAlphaKey = "ColorAlpha";
     private const string TargetTransformKey = "TargetTransform";
 
-    private float height;
-
     private void OnEnable() {
         aiStimulus = target as AIStimulus;
         LoadInspectorValues();
-        height = aiStimulus.EyesTransform.position.y;
     }
 
     public override void OnInspectorGUI() {
