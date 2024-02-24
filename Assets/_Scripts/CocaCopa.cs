@@ -94,8 +94,12 @@ namespace CocaCopa.Utilities {
         /// <returns>A random point on the circle.</returns>
         public static Vector3 RandomVectorPointOnCircle(Vector3 center, float radius, Vector3 forwardDirection) {
             Vector3 perpendicular = Vector3.Cross(forwardDirection.normalized, Vector3.up).normalized;
-            Vector3 randomPoint = Random.insideUnitCircle * radius;
-            randomPoint += perpendicular * Vector2.Dot(randomPoint, forwardDirection.normalized);
+            if (perpendicular == Vector3.zero) {
+                perpendicular = Vector3.Cross(forwardDirection.normalized, Vector3.right).normalized;
+            }
+            Vector2 randomPoint2D = Random.insideUnitCircle * radius;
+            Vector3 randomPoint = new Vector3(randomPoint2D.x, randomPoint2D.y);
+            randomPoint = Quaternion.LookRotation(forwardDirection) * randomPoint;
             return center + randomPoint;
         }
 
