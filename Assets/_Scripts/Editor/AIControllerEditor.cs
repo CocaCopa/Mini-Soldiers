@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
 
-[CustomEditor(typeof(AIController))]
+[CustomEditor(typeof(AIController), true)]
 public class AIControllerEditor : Editor {
 
     private const string buttonName = "Assign Hide Spots";

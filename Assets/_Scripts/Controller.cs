@@ -13,10 +13,10 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     [SerializeField] private OnGameStart onGameStart;
 
     private LookAtObjectAnimRig objectAnimRig;
+    private GameObject objectToLookAt;
     protected CharacterMovement movement;
     protected CharacterOrientation orientation;
     protected CombatManager combatManager;
-    protected GameObject objectToLookAt;
 
     public GameObject ObjectToLookAt => objectToLookAt;
     public float CurrentMovementSpeed => movement.CurrentSpeed;
@@ -29,6 +29,7 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     }
 
     protected virtual void Start() {
+        objectToLookAt = new GameObject(gameObject.name + " LookAtObject");
         objectAnimRig.AssignObjectToLookAt(objectToLookAt);
         EquipWeaponOnGameStart();
     }
@@ -45,6 +46,13 @@ public abstract class Controller : MonoBehaviour, IDamageable {
             combatManager.SwitchToMelee();
             break;
         }
+    }
+
+    /// <summary>
+    /// Sets the position of the object that the character is set to look at.
+    /// </summary>
+    protected void SetLookAtObjectPosition(Vector3 position) {
+        objectToLookAt.transform.position = position;
     }
 
     public virtual void TakeDamage(float amount) {

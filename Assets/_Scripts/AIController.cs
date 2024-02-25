@@ -12,19 +12,17 @@ public class AIController : Controller {
 
     [SerializeField] private List<Transform> hideSpots;
 
-    private Transform playerTransform;
-    private Vector2 inputDirection;
-
     private NavMeshPath navMeshPath;
     private Vector3[] waypoints;
     private int currentWaypointIndex;
-    private Vector3 targetPosition;
+
+    protected AIStimulus Stimulus { get; private set; }
+    protected Vector2 InputDirection { get; private set; }
+    protected float StoppingDistance { get; set; }
 
     protected new virtual void Awake() {
         base.Awake();
-        playerTransform = FindObjectOfType<PlayerController>().transform;
-        objectToLookAt = new GameObject();
-        objectToLookAt.name = "AI Look At";
+        Stimulus = GetComponent<AIStimulus>();
     }
 
     protected new virtual void Start() {
@@ -33,46 +31,18 @@ public class AIController : Controller {
         waypoints = new Vector3[0];
     }
 
-    private void Update() {
-        objectToLookAt.transform.position = playerTransform.position + Vector3.up * 1.2f;
-        orientation.CharacterRotation(inputDirection, objectToLookAt.transform);
-        if (GetComponent<AIStimulus>().CanSeeTarget(playerTransform)) {
-            combatManager.ReleaseGunTrigger();
-            combatManager.PullGunTrigger();
-            if (combatManager.EquippedWeapon.RemainingBullets == 0) {
-                combatManager.SwitchToSecondary();
-            }
-            
-            targetPosition = FindHideSpot();
-            SetNewPath(targetPosition);
-        }
+    protected virtual void Update() {
+        InputDirection = NavMeshMovementDirection(StoppingDistance);
+        orientation.CharacterRotation(InputDirection, ObjectToLookAt.transform);
     }
 
-    private void FixedUpdate() {
-        if (FollowNavMeshPath(targetPosition, distanceFromTarget: 0f, out inputDirection)) {
-            movement.MoveTowardsDirection(inputDirection, run: false);
-        }
-    }
-
-    private void SetNewPath(Vector3 targetPosition) {
-        if (Vector3.Distance(transform.position, targetPosition) > 0.1f) {
-            if (NavMesh.CalculatePath(transform.position, targetPosition, NavMesh.AllAreas, navMeshPath)) {
-                waypoints = navMeshPath.corners;
-                currentWaypointIndex = 0;
-            }
-            else {
-                Debug.LogError("Error calculating path for agent.");
-            }
-        }
-    }
-
-    private bool FollowNavMeshPath(Vector3 targetPosition, float distanceFromTarget, out Vector2 direction) {
-        direction = Vector2.zero;
-
-        if (waypoints.Length == 0) {
-            Debug.LogError("No path has been calculated but the AI is trying to follow one.");
-            return false;
-        }
+    /// <summary>
+    /// Calculates the movement direction for navigating on the NavMesh towards the next waypoint.
+    /// </summary>
+    /// <param name="distanceFromTarget">Stop within the specified distance from the target position.</param>
+    /// <returns>The normalized movement direction vector towards the next waypoint.</returns>
+    private Vector3 NavMeshMovementDirection(float distanceFromTarget) {
+        Vector3 direction = Vector2.zero;
 
         if (currentWaypointIndex < waypoints.Length) {
             if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) < 0.1f) {
@@ -85,7 +55,7 @@ public class AIController : Controller {
             if (currentWaypointIndex <= waypoints.Length - 1) {
                 Vector3 moveDirection = (waypoints[currentWaypointIndex] - transform.position).normalized;
 
-                if (Vector3.Distance(transform.position, targetPosition) <= distanceFromTarget) {
+                if (Vector3.Distance(transform.position, waypoints[^1]) <= distanceFromTarget) {
                     direction = Vector3.zero;
                 }
                 else {
@@ -93,15 +63,27 @@ public class AIController : Controller {
                 }
             }
         }
-        return true;
+        return direction;
     }
 
-    private Vector3 FindHideSpot() {
-        List<Transform> targetDistanceFilter = AIPositionFinder.FilterByDistance(hideSpots, playerTransform, 20f);
+    protected void SetNewDestination(Vector3 targetPosition) {
+        if (Vector3.Distance(transform.position, targetPosition) > 0.1f) {
+            if (NavMesh.CalculatePath(transform.position, targetPosition, NavMesh.AllAreas, navMeshPath)) {
+                waypoints = navMeshPath.corners;
+                currentWaypointIndex = 0;
+            }
+            else {
+                Debug.LogError("Error calculating path for agent.");
+            }
+        }
+    }
+
+    protected Vector3 FindHideSpot(Transform againstTarget) {
+        List<Transform> targetDistanceFilter = AIPositionFinder.FilterByDistance(hideSpots, againstTarget, 20f);
         List<Transform> myDistanceFilter = AIPositionFinder.FilterByDistance(targetDistanceFilter, transform, 10f);
-        List<Transform> dotFilter = AIPositionFinder.FilterByDotProduct(myDistanceFilter, transform, playerTransform);
-        List<Transform> losFilter = AIPositionFinder.FilterByLineOfSight(dotFilter, playerTransform);
-        List<Transform> positionFilter = AIPositionFinder.FilterByObjectTowardsTarget(losFilter, playerTransform, 2f);
+        List<Transform> dotFilter = AIPositionFinder.FilterByDotProduct(myDistanceFilter, transform, againstTarget);
+        List<Transform> losFilter = AIPositionFinder.FilterByLineOfSight(dotFilter, againstTarget);
+        List<Transform> positionFilter = AIPositionFinder.FilterByObjectTowardsTarget(losFilter, againstTarget, 2f);
         return Environment.FindClosestPosition(transform.position, positionFilter);
     }
 

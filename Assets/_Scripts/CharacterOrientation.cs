@@ -5,11 +5,16 @@ public class CharacterOrientation : MonoBehaviour {
     [Tooltip("The rotation speed of the character's lower body.")]
     [SerializeField] private float rotationSpeed;
 
+    private Controller controller;
     private Vector2 lastDirectionalInput;
     private Vector3 lookDirection;
     private bool movingBackwards;
 
     public bool MovingBackwards => movingBackwards;
+
+    private void Awake() {
+        controller = GetComponent<Controller>();
+    }
 
     /// <summary>
     /// Rotates the character's body to always face a target object.

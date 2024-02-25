@@ -9,8 +9,6 @@ public class PlayerController : Controller, AITarget {
         base.Awake();
         input = FindObjectOfType<PlayerInput>();
         customCamera = FindObjectOfType<CustomCamera>();
-        objectToLookAt = new GameObject();
-        objectToLookAt.name = "FollowMouseObject";
     }
 
     protected override void Start() {
@@ -33,10 +31,10 @@ public class PlayerController : Controller, AITarget {
     }
 
     private void Update() {
-        objectToLookAt.transform.position = input.MouseWorldPosition();
+        SetLookAtObjectPosition(input.MouseWorldPosition());
         Vector3 relativeForward = customCamera.CameraPivot.forward;
         Vector3 relativeRight = customCamera.CameraPivot.right;
-        orientation.CharacterRotation(input.MovementInput(), objectToLookAt.transform, relativeForward, relativeRight);
+        orientation.CharacterRotation(input.MovementInput(), ObjectToLookAt.transform, relativeForward, relativeRight);
 
         if (input.FireInputHold()) {
             combatManager.PullGunTrigger();
