@@ -5,6 +5,7 @@ public abstract class Controller : MonoBehaviour, IDamageable {
 
     public event EventHandler OnCharacterTakeDamage;
     public event EventHandler OnCharacterRespawn;
+    public event EventHandler OnCharacterDeath;
 
     private enum OnGameStart { SwitchToPrimary, SwitchToSecondary, SwitchToMelee }
 
