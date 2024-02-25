@@ -49,6 +49,7 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private float upwardsKickAmount;
 
     [Header("--- Bullet Spread ---")]
+    [SerializeField] private bool debugBulletSpread;
     [Tooltip("Spread dispersion of the weapon. Higher values will soften the intensity of the bullet spread.")]
     [SerializeField] private float spreadDispersion;
     [Tooltip("Minimum spread of the weapon.")]
@@ -199,8 +200,12 @@ public class Weapon : MonoBehaviour {
         Vector3 aimDirection = (aimPosition - origin).normalized;
         Vector3 newOrigin = origin + aimDirection * spreadDispersion;
         float bulletSpread = Random.Range(minSpread, maxSpread);
-        Vector3 driftetTargetPosition = Environment.RandomVectorPointOnCircle(newOrigin, bulletSpread, aimDirection);
-        return (driftetTargetPosition - origin).normalized;
+        Vector3 driftedTargetPosition = Environment.RandomVectorPointOnCircle(newOrigin, bulletSpread, aimDirection);
+        Vector3 newDirection = (driftedTargetPosition - origin).normalized;
+        if (debugBulletSpread) {
+            Debug.DrawRay(origin, newDirection * 10f, Color.magenta, 5f);
+        }
+        return newDirection;
     }
 
     private float BulletTravelTime(Vector3 impactPosition) {
