@@ -47,7 +47,6 @@ public class AIStimulus : MonoBehaviour {
         Vector3 targetPosition = targetTransform.position;
         targetPosition.y += eyesPositionY;
         Vector3 direction = (targetPosition - origin).normalized;
-        float distance = Vector3.Distance(origin, targetPosition) + 0.5f; // 0.5f ensures that the raycast will reach the target.
         Physics.Raycast(origin, direction, out RaycastHit hitInfo, sightRadius);
         if (hitInfo.transform != null && hitInfo.transform.gameObject == targetTransform.gameObject) {
             return true;
