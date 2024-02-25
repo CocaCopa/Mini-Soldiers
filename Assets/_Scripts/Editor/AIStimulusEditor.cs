@@ -1,19 +1,18 @@
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
-using System.Drawing.Printing;
 
 [CustomEditor(typeof(AIStimulus))]
 public class AIStimulusEditor : Editor {
 
-    private AIStimulus aiStimulus;
-    private bool debugSense = true;
-    private float colorAlpha = 0.1f;
-    private Transform targetTransform;
-
     private const string DebugSenseKey = "DebugSense";
     private const string ColorAlphaKey = "ColorAlpha";
     private const string TargetTransformKey = "TargetTransform";
+
+    private AIStimulus aiStimulus;
+    private Transform targetTransform;
+    private bool foldout;
+    private bool debugSense = true;
+    private float colorAlpha = 0.1f;
 
     private void OnEnable() {
         aiStimulus = target as AIStimulus;
@@ -23,12 +22,7 @@ public class AIStimulusEditor : Editor {
     public override void OnInspectorGUI() {
         DisplayScriptReference();
         EditorGUI.BeginChangeCheck();
-        debugSense = EditorGUILayout.Toggle("Debug Sense", debugSense);
-        if (debugSense) {
-            GUIContent targetTransformLabel = new GUIContent("Target Transform", "The transform of the target to check visibility for.\n\nThis value is intended for debugging purposes only and does not impact the game logic.");
-            targetTransform = EditorGUILayout.ObjectField(targetTransformLabel, targetTransform, typeof(Transform), true) as Transform;
-            colorAlpha = EditorGUILayout.Slider("Arc Opacity", colorAlpha, 0f, 1f);
-        }
+        DrawDebugSettingsFoldout();
         if (EditorGUI.EndChangeCheck()) {
             SceneView.RepaintAll();
             SaveInspectorValues();
@@ -47,6 +41,20 @@ public class AIStimulusEditor : Editor {
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.PropertyField(scriptProperty, true, new GUILayoutOption[0]);
         EditorGUI.EndDisabledGroup();
+    }
+
+    private void DrawDebugSettingsFoldout() {
+        foldout = EditorGUILayout.BeginFoldoutHeaderGroup(foldout, "Debug Settings");
+        if (foldout) {
+            EditorGUI.indentLevel++;
+            debugSense = EditorGUILayout.Toggle("Debug Sense", debugSense);
+            if (debugSense) {
+                GUIContent targetTransformLabel = new GUIContent("Target Transform", "The transform of the target to check visibility for.\n\nThis value is intended for debugging purposes only and does not impact the game logic.");
+                targetTransform = EditorGUILayout.ObjectField(targetTransformLabel, targetTransform, typeof(Transform), true) as Transform;
+                colorAlpha = EditorGUILayout.Slider("Arc Opacity", colorAlpha, 0f, 1f);
+            }
+            EditorGUI.indentLevel--;
+        }
     }
 
     private void DrawDefaultExcludingCustomFields() {
