@@ -91,7 +91,7 @@ public class CombatManager : MonoBehaviour {
         }
     }
 
-    public void FireEquippedWeapon(bool autoReload = true) {
+    public void PullGunTrigger(bool autoReload = true) {
         if (equippedWeapon && !isReloading) {
             isCombatIdle = true;
             relaxTimer = relaxTime;

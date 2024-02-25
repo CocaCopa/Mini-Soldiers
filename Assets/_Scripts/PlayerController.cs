@@ -39,7 +39,7 @@ public class PlayerController : Controller, AITarget {
         orientation.CharacterRotation(input.MovementInput(), objectToLookAt.transform, relativeForward, relativeRight);
 
         if (input.FireInputHold()) {
-            combatManager.FireEquippedWeapon();
+            combatManager.PullGunTrigger();
         }
         else if (input.FireInputReleased()) {
             combatManager.ReleaseGunTrigger();

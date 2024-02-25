@@ -38,7 +38,7 @@ public class AIController : Controller {
         orientation.CharacterRotation(inputDirection, objectToLookAt.transform);
         if (GetComponent<AIStimulus>().CanSeeTarget(playerTransform)) {
             combatManager.ReleaseGunTrigger();
-            combatManager.FireEquippedWeapon();
+            combatManager.PullGunTrigger();
             if (combatManager.EquippedWeapon.RemainingBullets == 0) {
                 combatManager.SwitchToSecondary();
             }

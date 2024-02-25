@@ -24,7 +24,7 @@ public abstract class AIPositionFinder : MonoBehaviour {
             }
         }
         if (filteredTransforms == null || filteredTransforms.Count == 0) {
-            Debug.LogWarning(nameof(FilterByDistance) + ": All positions were marked as invalid.");
+            Debug.LogWarning(nameof(FilterByDistance) + ": No valid positions found.");
         }
         return filteredTransforms;
     }
@@ -47,7 +47,7 @@ public abstract class AIPositionFinder : MonoBehaviour {
             }
         }
         if (filteredTransforms == null || filteredTransforms.Count == 0) {
-            Debug.LogWarning(nameof(FilterByLineOfSight) + ": All positions were marked as invalid.");
+            Debug.LogWarning(nameof(FilterByLineOfSight) + ": No valid positions found.");
         }
         return filteredTransforms;
     }
@@ -71,16 +71,17 @@ public abstract class AIPositionFinder : MonoBehaviour {
             }
         }
         if (filteredTransforms == null ||  filteredTransforms.Count == 0) {
-            Debug.LogWarning(nameof(FilterByObjectTowardsTarget) + ": All positions were marked as invalid.");
+            Debug.LogWarning(nameof(FilterByObjectTowardsTarget) + ": No valid positions found.");
         }
         return filteredTransforms;
     }
 
     /// <summary>
-    /// Filters a list of transforms based on the dot product of their direction vectors with the direction vector towards the target.
+    /// Filters a list of transforms based on the dot product of their positions with respect to two reference transforms.
     /// </summary>
     /// <param name="transforms">The list of transforms to filter.</param>
-    /// <param name="target">The target Transform to calculate dot product with.</param>
+    /// <param name="transform_1">The first reference transform.</param>
+    /// <param name="transform_2">The second reference transform.</param>
     /// <returns>The filtered list of transforms.</returns>
     public static List<Transform> FilterByDotProduct(List<Transform> transforms, Transform transform_1, Transform transform_2) {
         List<Transform> filteredTransforms = new List<Transform>();
@@ -94,7 +95,7 @@ public abstract class AIPositionFinder : MonoBehaviour {
             }
         }
         if (filteredTransforms == null || filteredTransforms.Count == 0) {
-            Debug.LogWarning(nameof(FilterByDotProduct) + ": All positions were marked as invalid.");
+            Debug.LogWarning(nameof(FilterByDotProduct) + ": No valid positions found.");
         }
         return filteredTransforms;
     }

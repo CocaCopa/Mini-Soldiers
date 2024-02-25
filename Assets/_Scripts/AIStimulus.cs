@@ -22,6 +22,7 @@ public class AIStimulus : MonoBehaviour {
 
     /// <summary>
     /// Determines whether the AI has a clear line of sight to the specified target.
+    /// Assumes that both the AI and the target object are humanoids and their pivot point is located at their feet.
     /// </summary>
     /// <param name="targetTransform">The transform of the target.</param>
     /// <returns>True if the AI has a clear line of sight to the target; otherwise, false.</returns>
