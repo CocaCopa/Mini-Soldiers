@@ -11,8 +11,8 @@ public class AIStimulus : MonoBehaviour {
     [SerializeField,Range(0f, 360f)] float fieldOfView = 90.0f;
 
     public Transform EyesTransform => eyesTransform;
-    public float SightRadius => sightRadius;
-    public float FieldOfView => fieldOfView;
+    public float SightRadius { get => sightRadius; set => sightRadius = value; }
+    public float FieldOfView { get => fieldOfView; set => fieldOfView = value; }
 
     private float eyesPositionY;
 
