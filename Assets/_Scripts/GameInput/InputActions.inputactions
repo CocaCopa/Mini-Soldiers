@@ -162,6 +162,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "b387b7b7-178a-49c0-8903-dd8ee28e81ca",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "PrimarySwitch",
                     "type": "Button",
                     "id": "fa1d0591-a776-4b73-8bfd-0f1e9365a0c8",
@@ -231,6 +240,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MeleeSwitch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a05b39f-81e2-4b6c-8de0-85b4362b6ca3",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

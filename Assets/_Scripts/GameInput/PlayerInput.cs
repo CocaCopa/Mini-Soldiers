@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour {
     private bool runInputHold = false;
     private bool fireInputHold = false;
     private bool fireInputReleased = false;
+    private bool reloadInputPerformed = false;
 
     private Transform playerTransform;
     private Vector3 smoothMovementInput;
@@ -25,6 +26,7 @@ public class PlayerInput : MonoBehaviour {
         inputActions.Enable();
         inputActions.Motion.Run.performed += Run_performed;
         inputActions.Motion.Run.canceled += Run_canceled;
+
         inputActions.Combat.Fire.performed += Fire_performed;
         inputActions.Combat.Fire.canceled += Fire_canceled;
         inputActions.Combat.PrimarySwitch.performed += PrimarySwitch_performed;
@@ -40,8 +42,14 @@ public class PlayerInput : MonoBehaviour {
         if (inputActions.FindAction(nameof(inputActions.Combat.Fire)).WasReleasedThisFrame()) {
             fireInputReleased = true;
         }
-        else {
+        else if (fireInputReleased) {
             fireInputReleased = false;
+        }
+        if (inputActions.FindAction(nameof(inputActions.Combat.Reload)).WasPerformedThisFrame()) {
+            reloadInputPerformed = true;
+        }
+        else if (reloadInputPerformed) {
+            reloadInputPerformed = false;
         }
     }
 
@@ -100,6 +108,7 @@ public class PlayerInput : MonoBehaviour {
     public bool RunInputHold() => runInputHold;
     public bool FireInputHold() => fireInputHold;
     public bool FireInputReleased() => fireInputReleased;
+    public bool ReloadInputPerformed() => reloadInputPerformed;
 
     public Vector2 MovementInput() => new(smoothMovementInput.x, smoothMovementInput.z);
 

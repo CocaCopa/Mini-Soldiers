@@ -184,6 +184,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""b387b7b7-178a-49c0-8903-dd8ee28e81ca"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""PrimarySwitch"",
                     ""type"": ""Button"",
                     ""id"": ""fa1d0591-a776-4b73-8bfd-0f1e9365a0c8"",
@@ -255,6 +264,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""MeleeSwitch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a05b39f-81e2-4b6c-8de0-85b4362b6ca3"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -268,6 +288,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // Combat
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_Fire = m_Combat.FindAction("Fire", throwIfNotFound: true);
+        m_Combat_Reload = m_Combat.FindAction("Reload", throwIfNotFound: true);
         m_Combat_PrimarySwitch = m_Combat.FindAction("PrimarySwitch", throwIfNotFound: true);
         m_Combat_SecondarySwitch = m_Combat.FindAction("SecondarySwitch", throwIfNotFound: true);
         m_Combat_MeleeSwitch = m_Combat.FindAction("MeleeSwitch", throwIfNotFound: true);
@@ -387,6 +408,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Combat;
     private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
     private readonly InputAction m_Combat_Fire;
+    private readonly InputAction m_Combat_Reload;
     private readonly InputAction m_Combat_PrimarySwitch;
     private readonly InputAction m_Combat_SecondarySwitch;
     private readonly InputAction m_Combat_MeleeSwitch;
@@ -395,6 +417,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         private @InputActions m_Wrapper;
         public CombatActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Fire => m_Wrapper.m_Combat_Fire;
+        public InputAction @Reload => m_Wrapper.m_Combat_Reload;
         public InputAction @PrimarySwitch => m_Wrapper.m_Combat_PrimarySwitch;
         public InputAction @SecondarySwitch => m_Wrapper.m_Combat_SecondarySwitch;
         public InputAction @MeleeSwitch => m_Wrapper.m_Combat_MeleeSwitch;
@@ -410,6 +433,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Fire.started += instance.OnFire;
             @Fire.performed += instance.OnFire;
             @Fire.canceled += instance.OnFire;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
             @PrimarySwitch.started += instance.OnPrimarySwitch;
             @PrimarySwitch.performed += instance.OnPrimarySwitch;
             @PrimarySwitch.canceled += instance.OnPrimarySwitch;
@@ -426,6 +452,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Fire.started -= instance.OnFire;
             @Fire.performed -= instance.OnFire;
             @Fire.canceled -= instance.OnFire;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
             @PrimarySwitch.started -= instance.OnPrimarySwitch;
             @PrimarySwitch.performed -= instance.OnPrimarySwitch;
             @PrimarySwitch.canceled -= instance.OnPrimarySwitch;
@@ -460,6 +489,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     public interface ICombatActions
     {
         void OnFire(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
         void OnPrimarySwitch(InputAction.CallbackContext context);
         void OnSecondarySwitch(InputAction.CallbackContext context);
         void OnMeleeSwitch(InputAction.CallbackContext context);
