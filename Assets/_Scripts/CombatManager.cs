@@ -38,6 +38,7 @@ public class CombatManager : MonoBehaviour {
     private bool allowAutoReload = true;
     private bool isReloading;
 
+    public Transform RightHandTransform => rightHandTransform;
     public Weapon EquippedWeapon => equippedWeapon;
     public bool IsCombatIdle => isCombatIdle;
     public bool IsSwitchingWeapon => isSwitchingWeapon;

@@ -35,6 +35,7 @@ public class PlayerController : Controller, AITarget {
     protected override void Update() {
         base.Update();
         SetLookAtObjectPosition(input.MouseWorldPosition());
+        ManageLaserSight();
         DirectionalInput = input.MovementInput();
         RelativeForwardDir = customCamera.CameraPivot.forward;
         RelativeRightDir = customCamera.CameraPivot.right;
@@ -49,6 +50,23 @@ public class PlayerController : Controller, AITarget {
 
         if (input.ReloadInputPerformed()) {
             combatManager.ReloadEquippedWeapon();
+        }
+    }
+
+    private void ManageLaserSight() {
+        laserSight.gameObject.SetActive(combatManager.IsCombatIdle);
+        Vector3 laserOrigin = combatManager.RightHandTransform.position;
+        Vector3 aimPosition = ObjectToLookAt.transform.position;
+        Vector3 dirToAimPosition = (aimPosition - laserOrigin).normalized;
+        laserSight.transform.SetPositionAndRotation(laserOrigin, Quaternion.LookRotation(dirToAimPosition));
+        CalculateLaserLength();
+
+        void CalculateLaserLength() {
+            bool objectFound = Physics.Raycast(laserOrigin, dirToAimPosition, out RaycastHit hit, float.MaxValue);
+            Vector3 endPosition = objectFound ? hit.point : aimPosition;
+            Vector3 laserLength = laserSight.GetPosition(1);
+            laserLength.z = (endPosition - laserOrigin).magnitude;
+            laserSight.SetPosition(1, laserLength);
         }
     }
 }
