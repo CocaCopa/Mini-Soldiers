@@ -3,12 +3,12 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using CocaCopa.Utilities;
 
-public class AIController : Controller {
+public enum AI_State {
+    Patrol,
+    Investigate,
+};
 
-    private enum AI_State {
-        Patrol,
-        Investigate,
-    };
+public class AIController : Controller {
 
     [SerializeField] private List<Transform> hideSpots;
 
@@ -17,12 +17,15 @@ public class AIController : Controller {
     private int currentWaypointIndex;
 
     protected AIStimulus Stimulus { get; private set; }
-    protected Vector2 InputDirection { get; private set; }
     protected float StoppingDistance { get; set; }
+    protected AI_State State { get; set; }
+    protected Transform PlayerTransform { get; private set; }
+    protected bool ReachedPathDestination { get; private set; }
 
     protected new virtual void Awake() {
         base.Awake();
         Stimulus = GetComponent<AIStimulus>();
+        PlayerTransform = FindObjectOfType<PlayerController>().transform;
     }
 
     protected new virtual void Start() {
@@ -31,9 +34,11 @@ public class AIController : Controller {
         waypoints = new Vector3[0];
     }
 
-    protected virtual void Update() {
-        InputDirection = NavMeshMovementDirection(StoppingDistance);
-        orientation.CharacterRotation(InputDirection, ObjectToLookAt.transform);
+    protected new virtual void Update() {
+        base.Update();
+        DirectionalInput = NavMeshMovementDirection(StoppingDistance);
+        RelativeForwardDir = Vector3.forward;
+        RelativeRightDir = Vector3.right;
     }
 
     /// <summary>
@@ -48,7 +53,11 @@ public class AIController : Controller {
             if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) < 0.1f) {
                 currentWaypointIndex++;
                 if (currentWaypointIndex >= waypoints.Length) {
+                    ReachedPathDestination = true;
                     print("Reached the end of the path. Calculate a new path for the AI to start moving again.");
+                }
+                else {
+                    ReachedPathDestination = false;
                 }
             }
 

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public abstract class Controller : MonoBehaviour, IDamageable {
 
@@ -11,12 +12,19 @@ public abstract class Controller : MonoBehaviour, IDamageable {
 
     [Tooltip("When the game starts, the selected weapon will be automatically equipped.")]
     [SerializeField] private OnGameStart onGameStart;
+    [Tooltip("How fast should the character turn their head to look at the 'ObjectToLookAt' target.")]
+    [SerializeField] private float lookAtTargetObjectSpeed = 10f;
 
     private LookAtObjectAnimRig objectAnimRig;
     private GameObject objectToLookAt;
     protected CharacterMovement movement;
     protected CharacterOrientation orientation;
     protected CombatManager combatManager;
+
+    protected Vector2 DirectionalInput { get; set; }
+    protected bool IsRunning { get; set; }
+    protected Vector3 RelativeForwardDir { get; set; }
+    protected Vector3 RelativeRightDir { get; set; }
 
     public GameObject ObjectToLookAt => objectToLookAt;
     public float CurrentMovementSpeed => movement.CurrentSpeed;
@@ -32,6 +40,14 @@ public abstract class Controller : MonoBehaviour, IDamageable {
         objectToLookAt = new GameObject(gameObject.name + " LookAtObject");
         objectAnimRig.AssignObjectToLookAt(objectToLookAt);
         EquipWeaponOnGameStart();
+    }
+
+    protected virtual void Update() {
+        orientation.CharacterRotation(DirectionalInput, objectToLookAt.transform, RelativeForwardDir, RelativeRightDir);
+    }
+
+    protected virtual void FixedUpdate() {
+        movement.MoveTowardsDirection(DirectionalInput, IsRunning, handleCollisions: false, RelativeForwardDir, RelativeRightDir);
     }
 
     private void EquipWeaponOnGameStart() {
@@ -52,7 +68,10 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     /// Sets the position of the object that the character is set to look at.
     /// </summary>
     protected void SetLookAtObjectPosition(Vector3 position) {
-        objectToLookAt.transform.position = position;
+        Vector3 currentPosition = objectToLookAt.transform.position;
+        Vector3 targetPosition = position;
+        Vector3 newPosition = Vector3.Lerp(currentPosition, targetPosition, 10f * Time.deltaTime);
+        objectToLookAt.transform.position = newPosition;
     }
 
     public virtual void TakeDamage(float amount) {

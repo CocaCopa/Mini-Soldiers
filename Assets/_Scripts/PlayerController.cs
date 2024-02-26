@@ -1,7 +1,8 @@
 using UnityEngine;
 
 public class PlayerController : Controller, AITarget {
-    
+
+    private LineRenderer laserSight;
     private PlayerInput input;
     private CustomCamera customCamera;
 
@@ -9,6 +10,7 @@ public class PlayerController : Controller, AITarget {
         base.Awake();
         input = FindObjectOfType<PlayerInput>();
         customCamera = FindObjectOfType<CustomCamera>();
+        laserSight = GetComponentInChildren<LineRenderer>(true);
     }
 
     protected override void Start() {
@@ -30,11 +32,13 @@ public class PlayerController : Controller, AITarget {
         combatManager.SwitchToMelee();
     }
 
-    private void Update() {
+    protected override void Update() {
+        base.Update();
         SetLookAtObjectPosition(input.MouseWorldPosition());
-        Vector3 relativeForward = customCamera.CameraPivot.forward;
-        Vector3 relativeRight = customCamera.CameraPivot.right;
-        orientation.CharacterRotation(input.MovementInput(), ObjectToLookAt.transform, relativeForward, relativeRight);
+        DirectionalInput = input.MovementInput();
+        RelativeForwardDir = customCamera.CameraPivot.forward;
+        RelativeRightDir = customCamera.CameraPivot.right;
+        IsRunning = input.RunInputHold();
 
         if (input.FireInputHold()) {
             combatManager.PullGunTrigger();
@@ -43,14 +47,8 @@ public class PlayerController : Controller, AITarget {
             combatManager.ReleaseGunTrigger();
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) {
+        if (input.ReloadInputPerformed()) {
             combatManager.ReloadEquippedWeapon();
         }
-    }
-
-    private void FixedUpdate() {
-        Vector3 relativeForward = customCamera.CameraPivot.forward;
-        Vector3 relativeRight = customCamera.CameraPivot.right;
-        movement.MoveTowardsDirection(input.MovementInput(), input.RunInputHold(), handleCollisions: false, relativeForward, relativeRight);
     }
 }
