@@ -6,6 +6,7 @@ using CocaCopa.Utilities;
 public enum AI_State {
     Patrol,
     Investigate,
+    PlayerSpotted,
 };
 
 public class AIController : Controller {
