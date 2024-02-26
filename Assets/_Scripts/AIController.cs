@@ -7,6 +7,7 @@ public enum AI_State {
     Patrol,
     Investigate,
     PlayerSpotted,
+    Combat,
 };
 
 public abstract class AIController : Controller {
@@ -76,6 +77,10 @@ public abstract class AIController : Controller {
         return direction;
     }
 
+    /// <summary>
+    /// Sets a new destination for the agent to navigate towards on the NavMesh.
+    /// </summary>
+    /// <param name="targetPosition">The position to navigate towards.</param>
     protected void SetNewDestination(Vector3 targetPosition) {
         if (Vector3.Distance(transform.position, targetPosition) > 0.1f) {
             if (NavMesh.CalculatePath(transform.position, targetPosition, NavMesh.AllAreas, navMeshPath)) {
@@ -88,6 +93,11 @@ public abstract class AIController : Controller {
         }
     }
 
+    /// <summary>
+    /// Filters the provided hide spots and picks the best position to hide from the provided target.
+    /// </summary>
+    /// <param name="againstTarget">Target transform to filter the environment against.</param>
+    /// <returns></returns>
     protected Vector3 FindHideSpot(Transform againstTarget) {
         List<Transform> targetDistanceFilter = AIPositionFinder.FilterByDistance(hideSpots, againstTarget, 20f);
         List<Transform> myDistanceFilter = AIPositionFinder.FilterByDistance(targetDistanceFilter, transform, 10f);

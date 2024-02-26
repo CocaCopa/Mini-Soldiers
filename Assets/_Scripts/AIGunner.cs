@@ -40,6 +40,9 @@ public class AIGunner : AIController {
             case AI_State.PlayerSpotted:
             StatePlayerSpotted();
             break;
+            case AI_State.Combat:
+            StateCombat();
+            break;
         }
     }
 
@@ -66,14 +69,18 @@ public class AIGunner : AIController {
 
     }
 
-    bool flag = true;
     private void StatePlayerSpotted() {
-        if (flag) {
-            flag = false;
-            Vector3 hideSpot = FindHideSpot(PlayerTransform);
-            SetNewDestination(hideSpot);
-            combatManager.PullGunTrigger(true);
-            SetLookAtObjectPosition(PlayerTransform.position);
+        Vector3 hideSpot = FindHideSpot(PlayerTransform);
+        SetNewDestination(hideSpot);
+        SetLookAtObjectPosition(PlayerTransform.position);
+        State = AI_State.Combat;
+    }
+
+    private void StateCombat() {
+        if (Stimulus.CanSeeTarget(PlayerTransform)) {
+            combatManager.ReleaseGunTrigger();
+            combatManager.PullGunTrigger();
         }
+        SetLookAtObjectPosition(PlayerTransform.position + Vector3.up);
     }
 }

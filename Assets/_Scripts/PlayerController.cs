@@ -35,12 +35,19 @@ public class PlayerController : Controller {
     protected override void Update() {
         base.Update();
         SetLookAtObjectPosition(input.MouseWorldPosition());
+        HandleMovementParameters();
+        HandleCombatInput();
         ManageLaserSight();
+    }
+
+    private void HandleMovementParameters() {
         DirectionalInput = input.MovementInput();
         RelativeForwardDir = customCamera.CameraPivot.forward;
         RelativeRightDir = customCamera.CameraPivot.right;
         IsRunning = input.RunInputHold();
+    }
 
+    private void HandleCombatInput() {
         if (input.FireInputHold()) {
             combatManager.PullGunTrigger();
         }
