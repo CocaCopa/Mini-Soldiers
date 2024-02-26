@@ -54,7 +54,7 @@ public class PlayerController : Controller, AITarget {
     }
 
     private void ManageLaserSight() {
-        laserSight.gameObject.SetActive(combatManager.IsCombatIdle);
+        laserSight.gameObject.SetActive(combatManager.IsCombatIdle && !combatManager.IsSwitchingWeapon);
         Vector3 laserOrigin = combatManager.RightHandTransform.position;
         Vector3 aimPosition = ObjectToLookAt.transform.position;
         Vector3 dirToAimPosition = (aimPosition - laserOrigin).normalized;
