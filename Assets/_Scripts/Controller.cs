@@ -17,8 +17,8 @@ public abstract class Controller : MonoBehaviour, IDamageable {
 
     private LookAtObjectAnimRig objectAnimRig;
     private GameObject objectToLookAt;
-    protected CharacterMovement movement;
-    protected CharacterOrientation orientation;
+    private CharacterMovement movement;
+    private CharacterOrientation orientation;
     protected CombatManager combatManager;
 
     protected Vector2 DirectionalInput { get; set; }
@@ -70,7 +70,8 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     protected void SetLookAtObjectPosition(Vector3 position) {
         Vector3 currentPosition = objectToLookAt.transform.position;
         Vector3 targetPosition = position;
-        Vector3 newPosition = Vector3.Lerp(currentPosition, targetPosition, 10f * Time.deltaTime);
+        float lerpTime = lookAtTargetObjectSpeed * Time.deltaTime;
+        Vector3 newPosition = Vector3.Lerp(currentPosition, targetPosition, lerpTime);
         objectToLookAt.transform.position = newPosition;
     }
 

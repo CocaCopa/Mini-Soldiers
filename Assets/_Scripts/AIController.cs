@@ -9,7 +9,7 @@ public enum AI_State {
     PlayerSpotted,
 };
 
-public class AIController : Controller {
+public abstract class AIController : Controller {
 
     [SerializeField] private List<Transform> hideSpots;
 

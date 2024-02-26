@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerController : Controller, AITarget {
+public class PlayerController : Controller {
 
     private LineRenderer laserSight;
     private PlayerInput input;
