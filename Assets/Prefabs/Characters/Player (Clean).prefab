@@ -74,7 +74,7 @@ LineRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0.25}
   - {x: 0, y: 0, z: 50}
   m_Parameters:
     serializedVersion: 3
@@ -529,7 +529,6 @@ MonoBehaviour:
   - {fileID: 7400000, guid: e5c4828cdd000c544b998d91b2517630, type: 2}
   - {fileID: 7400000, guid: e93f4ab103d7a0e499456a8b54ec4932, type: 2}
   reloadAnimation: {fileID: 7400000, guid: 6a66333ff1c1d1547800ea18589234e9, type: 2}
-  laser: {fileID: 4755060024548687162}
 --- !u!1 &4755060025444893352
 GameObject:
   m_ObjectHideFlags: 0
