@@ -251,7 +251,8 @@ MonoBehaviour:
   recoilResetSpeed: 7.5
   backwardsKickAmount: 0.165
   upwardsKickAmount: 15
-  spreadDispersion: 2.5
+  debugBulletSpread: 0
+  spreadDispersion: 2
   minSpread: 0.08
   maxSpread: 0.12
   bulletShellPrefab: {fileID: 3928940940500490471, guid: 018da3630d0b33b42aab9258d45edfeb, type: 3}

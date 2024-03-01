@@ -465,7 +465,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  descelerationCurve:
+  decelerationCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -490,7 +490,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   evaluateAcceleration: 3.2
-  evaluateDesceleration: 4
+  evaluateDeceleration: 4
 --- !u!114 &7198697709872186881
 MonoBehaviour:
   m_ObjectHideFlags: 0

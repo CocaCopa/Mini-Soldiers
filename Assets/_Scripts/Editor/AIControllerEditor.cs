@@ -1,49 +1,101 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(AIController), true)]
+[CustomEditor(typeof(AIController))]
 public class AIControllerEditor : Editor {
 
-    private const string buttonName = "Assign Hide Spots";
+    private const string AUTO_ASSIGN_HOLDER = "Auto Assign Holder";
+    private const string ASSIGN_HIDE_SPOTS = "Assign Hide Spots";
 
     SerializedProperty hideSpots;
+    SerializedProperty onGameStart;
+    SerializedProperty lookAtTargetObjectSpeed;
+
+    private bool autoAssignFailed = false;
     private bool hideSpotsHelper = false;
     private Transform hideSpotsHolderTransform;
 
-    private void OnEnable() {
-        hideSpots = serializedObject.FindProperty(nameof(hideSpots));
+    public virtual void OnEnable() {
         LoadInspectorValues();
+        onGameStart = serializedObject.FindProperty(nameof(onGameStart));
+        lookAtTargetObjectSpeed = serializedObject.FindProperty(nameof(lookAtTargetObjectSpeed));
+        hideSpots = serializedObject.FindProperty(nameof(hideSpots));
     }
 
     public override void OnInspectorGUI() {
-        base.OnInspectorGUI();
-        GUILayout.Space(10);
+        DisplayScriptReference();
+        EditorGUILayout.PropertyField(onGameStart);
+        EditorGUILayout.PropertyField(lookAtTargetObjectSpeed);
+    }
+
+    protected void DisplayHideSpotsHelperButton() {
         EditorGUI.BeginChangeCheck();
         hideSpotsHelper = EditorGUILayout.Toggle("Hide Spots Helper", hideSpotsHelper);
         if (hideSpotsHelper) {
             hideSpotsHolderTransform = EditorGUILayout.ObjectField("Hide Spots Holder", hideSpotsHolderTransform, typeof(Transform), true) as Transform;
-            if (GUILayout.Button(buttonName)) {
-                AssignHideSpots();
-            }
+
+            Button_AutoAssignHolder();
+            Button_AssignHideSpots();
         }
         if (EditorGUI.EndChangeCheck()) {
             SaveInspectorValues();
         }
     }
 
-    private void AssignHideSpots() {
-        // Clear the existing hide spots
-        hideSpots.ClearArray();
+    private void DisplayScriptReference() {
+        MonoBehaviour scriptComponent = target as MonoBehaviour;
+        SerializedObject m_serializedObject = new SerializedObject(scriptComponent);
+        SerializedProperty scriptProperty = m_serializedObject.FindProperty("m_Script");
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.PropertyField(scriptProperty, true, new GUILayoutOption[0]);
+        EditorGUI.EndDisabledGroup();
+    }
 
-        // Iterate through each hide spot in the holder and assign them to the serialized property
-        for (int i = 0; i < hideSpotsHolderTransform.childCount; i++) {
-            Transform hideSpot = hideSpotsHolderTransform.GetChild(i);
-            hideSpots.InsertArrayElementAtIndex(i);
-            hideSpots.GetArrayElementAtIndex(i).objectReferenceValue = hideSpot;
+    private void Button_AutoAssignHolder() {
+        if (autoAssignFailed && hideSpotsHolderTransform == null) {
+            EditorGUILayout.HelpBox("Attempt to auto assign holder reference failed. Assign the 'Hide Spots Holder' reference manually.", MessageType.Info);
         }
+        if (hideSpotsHolderTransform == null) {
+            if (GUILayout.Button(AUTO_ASSIGN_HOLDER)) {
+                if (AttemptToFindHideSpotsHolderObject(out GameObject holder)) {
+                    hideSpotsHolderTransform = holder.transform;
+                    autoAssignFailed = false;
+                }
+                if (hideSpotsHolderTransform == null) {
+                    autoAssignFailed = true;
+                }
+            }
+        }
+        else {
+            autoAssignFailed = false;
+        }
+    }
 
-        // Apply modifications
-        serializedObject.ApplyModifiedProperties();
+    private void Button_AssignHideSpots() {
+        if (hideSpotsHolderTransform != null) {
+            if (GUILayout.Button(ASSIGN_HIDE_SPOTS)) {
+                hideSpots.ClearArray();
+
+                for (int i = 0; i < hideSpotsHolderTransform.childCount; i++) {
+                    Transform hideSpot = hideSpotsHolderTransform.GetChild(i);
+                    hideSpots.InsertArrayElementAtIndex(i);
+                    hideSpots.GetArrayElementAtIndex(i).objectReferenceValue = hideSpot;
+                }
+            }
+        }
+    }
+
+    private bool AttemptToFindHideSpotsHolderObject(out GameObject hideSpotsHolder) {
+        string[] holderPossibleNames = new string[] { "Hide", "HideSpots", "HideSpotsHolder", "Hide Spots", "Hide Spots Holder" };
+        hideSpotsHolder = null;
+
+        foreach (string name in holderPossibleNames) {
+            hideSpotsHolder = GameObject.Find(name);
+            if (hideSpotsHolder != null) {
+                break;
+            }
+        }
+        return hideSpotsHolder;
     }
 
     private string GetTransformPath(Transform transform) {
@@ -64,7 +116,7 @@ public class AIControllerEditor : Editor {
     }
 
     private void LoadInspectorValues() {
-        hideSpotsHelper = EditorPrefs.GetBool(nameof(hideSpotsHolderTransform) + "Key", false);
+        hideSpotsHelper = EditorPrefs.GetBool(nameof(hideSpotsHelper) + "Key", false);
         string holderPath = EditorPrefs.GetString(nameof(hideSpotsHolderTransform) + "Key");
         if (!string.IsNullOrEmpty(holderPath)) {
             hideSpotsHolderTransform = GameObject.Find(holderPath)?.transform;

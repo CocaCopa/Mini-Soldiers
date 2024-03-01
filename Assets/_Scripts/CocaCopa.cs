@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace CocaCopa.Utilities {
     public static class Common {
@@ -195,6 +196,50 @@ namespace CocaCopa.Utilities {
                 }
             }
             return tooClose;
+        }
+
+        /// <summary>
+        /// Retrieves the world space positions of the four corners of the mesh rendered by the specified object's transform.
+        /// </summary>
+        /// <param name="objectTransform">The transform of the object whose mesh corners are to be determined.</param>
+        /// <returns>A list containing the world space positions of the four corners of the mesh.</returns>
+        public static List<Vector3> GetObjectEdges(Transform objectTransform, bool debugCalculatedEdges = false) {
+            //Mesh mesh = objectTransform.GetComponent<MeshFilter>().mesh;
+            Mesh mesh;
+            if (!objectTransform.TryGetComponent<MeshFilter>(out var meshFilter)) {
+                mesh = meshFilter.mesh;
+            }
+            else {
+                mesh = objectTransform.GetComponentInChildren<MeshFilter>().mesh;
+            }
+
+            if (mesh == null) {
+                Debug.LogError("Could not get a 'MeshFilter' component from the provided object.");
+                return new List<Vector3>();
+            }
+
+            // Get the bounds of the mesh
+            Bounds bounds = mesh.bounds;
+
+            // Calculate the corners of the bounding box
+            Vector3 frontBottomLeft = objectTransform.TransformPoint(bounds.min);
+            Vector3 frontBottomRight = objectTransform.TransformPoint(new Vector3(bounds.max.x, bounds.min.y, bounds.min.z));
+            Vector3 backBottomLeft = objectTransform.TransformPoint(new Vector3(bounds.min.x, bounds.min.y, bounds.max.z));
+            Vector3 backBottomRight = objectTransform.TransformPoint(new Vector3(bounds.max.x, bounds.min.y, bounds.max.z));
+
+            if (debugCalculatedEdges) {
+                Debug.DrawRay(frontBottomLeft, Vector3.up * 5f, Color.red, float.MaxValue);
+                Debug.DrawRay(frontBottomRight, Vector3.up * 5f, Color.red, float.MaxValue);
+                Debug.DrawRay(backBottomLeft, Vector3.up * 5f, Color.red, float.MaxValue);
+                Debug.DrawRay(backBottomRight, Vector3.up * 5f, Color.red, float.MaxValue);
+            }
+
+            return new List<Vector3> {
+                frontBottomLeft,
+                frontBottomRight,
+                backBottomLeft,
+                backBottomRight
+            };
         }
     }
 
