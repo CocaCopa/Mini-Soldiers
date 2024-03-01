@@ -13,11 +13,11 @@ public class CharacterMovement : MonoBehaviour {
     [Tooltip("Animation curve to be used when the character is accelerating.")]
     [SerializeField] private AnimationCurve accelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
     [Tooltip("Animation curve to be used when the character is descelerating.")]
-    [SerializeField] private AnimationCurve descelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
+    [SerializeField] private AnimationCurve decelerationCurve = AnimationCurve.Linear(0, 0, 1, 1);
     [Tooltip("The evaluation speed of the acceleration curve.")]
     [SerializeField] private float evaluateAcceleration;
     [Tooltip("The evaluation speed of the desceleration curve.")]
-    [SerializeField] private float evaluateDesceleration;
+    [SerializeField] private float evaluateDeceleration;
 
     private Rigidbody characterRb;
     private CapsuleCollider characterCollider;
@@ -36,9 +36,7 @@ public class CharacterMovement : MonoBehaviour {
     private bool canSetRunParameters = true;
     private bool canSetWalkParameters = false;
 
-    private readonly Vector3 defaultForward = Vector3.forward;
-    private static readonly Vector3 defaultRight = Vector3.right;
-
+    public AnimationCurve DecelerationCurve => decelerationCurve;
     public float CurrentSpeed => characterRb.velocity.magnitude;
 
     private void Awake() {
@@ -161,8 +159,8 @@ public class CharacterMovement : MonoBehaviour {
     private void DescelerateToWalkSpeed() {
         minMoveSpeed = walkSpeed;
         maxMoveSpeed = characterSpeed;
-        movementCurve = descelerationCurve;
-        moveCurveEvaluationSpeed = evaluateDesceleration;
+        movementCurve = decelerationCurve;
+        moveCurveEvaluationSpeed = evaluateDeceleration;
         accelerateCurve = false;
     }
 
@@ -176,8 +174,8 @@ public class CharacterMovement : MonoBehaviour {
         canSetStopParameters = false;
         minMoveSpeed = 0f;
         maxMoveSpeed = characterSpeed;
-        movementCurve = descelerationCurve;
-        moveCurveEvaluationSpeed = evaluateDesceleration;
+        movementCurve = decelerationCurve;
+        moveCurveEvaluationSpeed = evaluateDeceleration;
         accelerateCurve = false;
     }
 }
