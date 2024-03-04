@@ -20,8 +20,8 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     private CharacterOrientation orientation;
     protected CombatManager combatManager;
 
-    protected Vector2 DirectionalInput { get; set; }
     protected bool IsRunning { get; set; }
+    protected Vector2 DirectionalInput { get; set; }
     protected Vector3 RelativeForwardDir { get; set; }
     protected Vector3 RelativeRightDir { get; set; }
 
@@ -46,7 +46,7 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     }
 
     protected virtual void FixedUpdate() {
-        movement.MoveTowardsDirection(DirectionalInput, IsRunning, handleCollisions: false, RelativeForwardDir, RelativeRightDir);
+        movement.MoveTowardsDirection(DirectionalInput, IsRunning, RelativeForwardDir, RelativeRightDir);
     }
 
     private void EquipWeaponOnGameStart() {

@@ -41,7 +41,7 @@ public class AIStimulus : MonoBehaviour {
         return false;
     }
 
-    private bool ClearLineOfSight(Transform targetTransform) {
+    public bool ClearLineOfSight(Transform targetTransform) {
         Vector3 origin = transform.position;
         // The character animations affect the position/height of the eyes. Changes to the Y positions help stabilize the height of the direction.
         origin.y += eyesPositionY;

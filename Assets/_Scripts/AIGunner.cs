@@ -1,42 +1,47 @@
 using CocaCopa.Utilities;
-using System.Linq;
 using UnityEngine;
 
 public class AIGunner : AIController {
 
     [SerializeField] private Transform[] patrolPoints;
     [SerializeField] private float patrolTime;
+    [SerializeField] private float timeToSpotPlayer;
     [SerializeField] private float timeToPeekMin;
     [SerializeField] private float timeToPeekMax;
     [SerializeField] private float keepPeekingTimeMin;
     [SerializeField] private float keepPeekingTimeMax;
     [SerializeField] private float peekCornerDistance;
+    [SerializeField] private float delayBeforeShootingMin;
+    [SerializeField] private float delayBeforeShootingMax;
 
-    private readonly Vector3 RESET_PEEK_POSITION = Vector3.zero;
+    private readonly Vector3 RAISE_POSITION_TO_EYES_LEVEL = Vector3.up;
 
     private bool isOnHideSpot;
     private bool isPeekingCorner;
+
     private float patrolTimer;
+    private float timeToSpotPlayerTimer;
+    private float delayBeforeShootingTimer;
     private float timeToPeekTimer;
-    private float timeToPeek;
     private float keepPeekingTimer;
-    private float keepPeekingTime;
-    private Vector3 moveDirection;
-    private Vector3 targetLookAtPosition;
-    private Vector3 nextMovePosition;
+
+    [HideInInspector] private float delayBeforeShootingTime;
+    [HideInInspector] private float timeToPeek;
+    [HideInInspector] private float keepPeekingTime;
+    
     private int patrolPointIndex = 0;
     private Vector3[] wallEdges;
+    private Vector3 moveDirection;
+    private Vector3 targetLookAtPosition;
     private Vector3 hideSpotPosition;
+    private Vector3 nextMovePosition;
     private Vector3 peekPosition;
+    private Vector3 peekDirection;
 
 
     protected override void Awake() {
         base.Awake();
-        patrolTimer = patrolTime;
-        keepPeekingTime = Random.Range(keepPeekingTimeMin, keepPeekingTimeMax);
-        keepPeekingTimer = keepPeekingTime;
-        timeToPeek = Random.Range(timeToPeekMin, timeToPeekMax);
-        timeToPeekTimer = timeToPeek;
+        InitializeTimers();
     }
 
     protected override void Start() {
@@ -50,6 +55,18 @@ public class AIGunner : AIController {
         base.Update();
         StateManager();
         SetLookAtObjectPosition(targetLookAtPosition);
+        moveDirection = new Vector3(DirectionalInput.x, 0f, DirectionalInput.y);
+    }
+
+    private void InitializeTimers() {
+        patrolTimer = patrolTime;
+        timeToSpotPlayerTimer = timeToSpotPlayer;
+        keepPeekingTime = Random.Range(keepPeekingTimeMin, keepPeekingTimeMax);
+        keepPeekingTimer = keepPeekingTime;
+        timeToPeek = Random.Range(timeToPeekMin, timeToPeekMax);
+        timeToPeekTimer = timeToPeek;
+        delayBeforeShootingTime = Random.Range(delayBeforeShootingMin, delayBeforeShootingMax);
+        delayBeforeShootingTimer = delayBeforeShootingTime;
     }
 
     private void StateManager() {
@@ -67,6 +84,7 @@ public class AIGunner : AIController {
     }
 
     private void StatePatrol() {
+        IsRunning = false;
         if (ReachedPathDestination && Common.TickTimer(ref patrolTimer, patrolTime)) {
             if (patrolPointIndex >= patrolPoints.Length) {
                 patrolPointIndex = 0;
@@ -75,15 +93,19 @@ public class AIGunner : AIController {
             SetNewDestination(patrolPoints[patrolPointIndex].position);
             patrolPointIndex++;
         }
-        if (DirectionalInput != Vector2.zero)
-        moveDirection = new Vector3(DirectionalInput.x, 0f, DirectionalInput.y) * 2f;
-        Vector3 eyesLevel = Vector3.up;
-        targetLookAtPosition = transform.position + moveDirection + eyesLevel;
-        IsRunning = false;
+        if (DirectionalInput != Vector2.zero) {
+            targetLookAtPosition = transform.position + moveDirection * 2f + RAISE_POSITION_TO_EYES_LEVEL;
+        }
 
         if (Stimulus.CanSeeTarget(PlayerTransform)) {
-            State = AI_State.PlayerSpotted;
-            PlayerSpottedState = PlayerSpotted_SubState.FindNewHideSpot;
+            targetLookAtPosition = PlayerTransform.position;
+            if (Common.TickTimer(ref timeToSpotPlayerTimer, timeToSpotPlayer)) {
+                State = AI_State.PlayerSpotted;
+                PlayerSpottedState = PlayerSpotted_SubState.FindNewHideSpot;
+            }
+        }
+        else if (timeToSpotPlayerTimer != timeToSpotPlayer) {
+            timeToSpotPlayerTimer = timeToSpotPlayer;
         }
     }
 
@@ -93,9 +115,16 @@ public class AIGunner : AIController {
 
     private void StatePlayerSpotted() {
         if (Stimulus.CanSeeTarget(PlayerTransform)) {
-            targetLookAtPosition = PlayerTransform.position + Vector3.up;
-            combatManager.PullGunTrigger();
+            targetLookAtPosition = PlayerTransform.position + RAISE_POSITION_TO_EYES_LEVEL;
+            if (Common.TickTimer(ref delayBeforeShootingTimer, delayBeforeShootingTime, false)) {
+                combatManager.PullGunTrigger();
+            }
         }
+        else if (!Stimulus.CanSeeTarget(PlayerTransform) && delayBeforeShootingTimer == 0) {
+            delayBeforeShootingTime = Random.Range(delayBeforeShootingMin, delayBeforeShootingMax);
+            delayBeforeShootingTimer = delayBeforeShootingTime;
+        }
+
         switch (PlayerSpottedState) {
             case PlayerSpotted_SubState.FindNewHideSpot:
             PlayerSpotted_FindNewHideSpot();
@@ -118,7 +147,7 @@ public class AIGunner : AIController {
 
     private void PlayerSpotted_Hide() {
         if (ReachedPathDestination) {
-            peekPosition = CalculatePeekPosition(peekCornerDistance);
+            peekPosition = CalculatePeekPosition(peekCornerDistance, out peekDirection);
             nextMovePosition = peekPosition;
             PlayerSpottedState = PlayerSpotted_SubState.PeekCorner;
         }

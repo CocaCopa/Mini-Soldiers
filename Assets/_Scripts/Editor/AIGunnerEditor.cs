@@ -1,3 +1,4 @@
+using PlasticPipe.PlasticProtocol.Messages;
 using UnityEditor;
 
 [CustomEditor(typeof(AIGunner))]
@@ -7,12 +8,18 @@ public class AIGunnerEditor : AIControllerEditor {
     
     SerializedProperty patrolPoints;
     SerializedProperty patrolTime;
+    SerializedProperty timeToSpotPlayer;
+
+    SerializedProperty peekCornerDistance;
+
+    SerializedProperty delayBeforeShootingMin;
+    SerializedProperty delayBeforeShootingMax;
 
     SerializedProperty timeToPeekMin;
     SerializedProperty timeToPeekMax;
+
     SerializedProperty keepPeekingTimeMin;
     SerializedProperty keepPeekingTimeMax;
-    SerializedProperty peekCornerDistance;
 
     private bool foldoutPatrolSettings;
     private bool foldoutHideSpotSettings;
@@ -24,12 +31,15 @@ public class AIGunnerEditor : AIControllerEditor {
         
         patrolPoints = serializedObject.FindProperty(nameof(patrolPoints));
         patrolTime = serializedObject.FindProperty(nameof(patrolTime));
+        timeToSpotPlayer = serializedObject.FindProperty(nameof(timeToSpotPlayer));
 
+        peekCornerDistance = serializedObject.FindProperty(nameof(peekCornerDistance));
+        delayBeforeShootingMin = serializedObject.FindProperty(nameof(delayBeforeShootingMin));
+        delayBeforeShootingMax = serializedObject.FindProperty(nameof(delayBeforeShootingMax));
         timeToPeekMin = serializedObject.FindProperty(nameof(timeToPeekMin));
         timeToPeekMax = serializedObject.FindProperty(nameof(timeToPeekMax));
         keepPeekingTimeMin = serializedObject.FindProperty(nameof(keepPeekingTimeMin));
         keepPeekingTimeMax = serializedObject.FindProperty(nameof(keepPeekingTimeMax));
-        peekCornerDistance = serializedObject.FindProperty(nameof(peekCornerDistance));
     }
 
     public override void OnInspectorGUI() {
@@ -55,6 +65,7 @@ public class AIGunnerEditor : AIControllerEditor {
         if (foldoutPatrolSettings) {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(patrolTime);
+            EditorGUILayout.PropertyField(timeToSpotPlayer);
             EditorGUI.indentLevel--;
         }
         EditorGUILayout.EndFoldoutHeaderGroup();
@@ -70,6 +81,9 @@ public class AIGunnerEditor : AIControllerEditor {
         if (foldoutCombatSettings) {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(peekCornerDistance);
+            EditorGUILayout.Space(5);
+            EditorGUILayout.PropertyField(delayBeforeShootingMin);
+            EditorGUILayout.PropertyField(delayBeforeShootingMax);
             EditorGUILayout.Space(5);
             EditorGUILayout.PropertyField(timeToPeekMin);
             EditorGUILayout.PropertyField(timeToPeekMax);

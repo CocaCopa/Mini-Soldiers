@@ -77,13 +77,13 @@ public abstract class AIController : Controller {
     /// </summary>
     /// <param name="peekCornerDistance">The distance the AI should extend from the corner.</param>
     /// <returns>The calculated position for peeking around the corner.</returns>
-    protected Vector3 CalculatePeekPosition(float peekCornerDistance) {
-        Vector3[] wallEdges = FindClosestWall();
+    protected Vector3 CalculatePeekPosition(float peekCornerDistance, out Vector3 peekDirection) {
+        Vector3[] wallEdges = FindClosestWall(true);
         Vector3 closestEdge = Environment.FindClosestPosition(transform.position, wallEdges.ToList());
         closestEdge.y = transform.position.y;
         Vector3 edgeToEdgeDirection = (wallEdges[0] - wallEdges[1]).normalized;
         Vector3 directionToEdge = (closestEdge - transform.position).normalized;
-        Vector3 peekDirection = Vector3.Dot(edgeToEdgeDirection, directionToEdge) > 0f
+        peekDirection = Vector3.Dot(edgeToEdgeDirection, directionToEdge) > 0f
                 ? edgeToEdgeDirection
                 : -edgeToEdgeDirection;
         float distanceToEdge = (closestEdge - transform.position).magnitude;
@@ -98,11 +98,10 @@ public abstract class AIController : Controller {
     private Vector3 NavMeshMovementDirection(float distanceFromTarget) {
         Vector3 direction = Vector2.zero;
         if (currentWaypointIndex < waypoints.Length) {
-            if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) < 0.1f) {
+            if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) <= 0.1f) {
                 currentWaypointIndex++;
                 if (currentWaypointIndex >= waypoints.Length) {
                     ReachedPathDestination = true;
-                    print("Reached the end of the path. Calculate a new path for the AI to start moving again.");
                 }
                 else {
                     ReachedPathDestination = false;
