@@ -15,6 +15,8 @@ public class CollisionDetection : MonoBehaviour {
     [SerializeField] private LayerMask collisionLayers;
 
     [Header("--- Movement Check ---")]
+    [Tooltip("")]
+    [SerializeField] private float stepHeight = 0.15f;
     [Tooltip("Standing in a slope with an angle greater than this value will cause the character to slide.")]
     [SerializeField] private float maxSlopeAngle = 55f;
     [Tooltip("Maximum number of recursive bounces allowed during collision handling.")]
@@ -68,7 +70,7 @@ public class CollisionDetection : MonoBehaviour {
                 snapToSurface = Vector3.zero;
             }
 
-            if (angle <= maxSlopeAngle) {
+            if (angle <= maxSlopeAngle || (StepHeight(velocity) && !gravityPass)) {
                 if (gravityPass) {
                     return snapToSurface;
                 }
@@ -110,19 +112,33 @@ public class CollisionDetection : MonoBehaviour {
         return Physics.CapsuleCast(bottomPoint, topPoint, radius, direction, out hitInfo, distance, layerMask);
     }
 
-    private Vector3 ProjectAndScale(Vector3 leftover, Vector3 normal) {
-        float magnitude = leftover.magnitude;
-        leftover = Vector3.ProjectOnPlane(leftover, normal);
-        leftover.Normalize();
-        leftover *= magnitude;
-        return leftover;
-    }
-
     private void VerticalCollision() {
         Bounds colliderBounds = m_Collider.bounds;
         Vector3 origin = colliderBounds.center - Vector3.up * (m_Collider.height * 0.5f - m_Collider.radius);
         Vector3 direction = Vector3.down;
         Ray ray = new Ray(origin, direction);
         isGrounded = Physics.SphereCast(ray, m_Collider.radius, groundCheckDistance, collisionLayers);
+    }
+
+    private bool StepHeight(Vector3 moveDirection) {
+        Vector3 origin = moveDirection.normalized * 0.5f + m_Collider.bounds.center + Vector3.up * m_Collider.height * 0.5f;
+        Vector3 direction = Vector3.down;
+        Ray ray = new Ray(origin, direction);
+        float distance = m_Collider.height;
+        Debug.DrawRay(origin, direction * distance, Color.yellow);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, distance, collisionLayers)) {
+            if (hitInfo.transform.TryGetComponent<Collider>(out var hitCollider)) {
+                return hitCollider.bounds.max.y - m_Collider.bounds.min.y <= stepHeight || hitInfo.point.y - transform.position.y <= stepHeight;
+            }
+        }
+        return false;
+    }
+
+    private Vector3 ProjectAndScale(Vector3 leftover, Vector3 normal) {
+        float magnitude = leftover.magnitude;
+        leftover = Vector3.ProjectOnPlane(leftover, normal);
+        leftover.Normalize();
+        leftover *= magnitude;
+        return leftover;
     }
 }

@@ -36,8 +36,10 @@ public class AIGunnerEditor : AIControllerEditor {
         peekCornerDistance = serializedObject.FindProperty(nameof(peekCornerDistance));
         delayBeforeShootingMin = serializedObject.FindProperty(nameof(delayBeforeShootingMin));
         delayBeforeShootingMax = serializedObject.FindProperty(nameof(delayBeforeShootingMax));
+
         timeToPeekMin = serializedObject.FindProperty(nameof(timeToPeekMin));
         timeToPeekMax = serializedObject.FindProperty(nameof(timeToPeekMax));
+
         keepPeekingTimeMin = serializedObject.FindProperty(nameof(keepPeekingTimeMin));
         keepPeekingTimeMax = serializedObject.FindProperty(nameof(keepPeekingTimeMax));
     }

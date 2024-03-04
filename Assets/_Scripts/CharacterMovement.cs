@@ -40,7 +40,7 @@ public class CharacterMovement : MonoBehaviour {
     private bool canSetRunParameters = true;
     private bool canSetWalkParameters = false;
 
-    public float CurrentSpeed => characterRb.velocity.magnitude;
+    public float CurrentSpeed => characterSpeed;
 
     private void Awake() {
         characterRb = GetComponent<Rigidbody>();
