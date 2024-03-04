@@ -429,12 +429,11 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 65
-  stepHeight: 0.1
   maxSlopeAngle: 55
-  maxBounces: 2
+  maxBounces: 5
   skinWidth: 0.015
+  minSpeedScale: 0.15
   groundCheckDistance: 0.2
-  isGrounded: 1
 --- !u!114 &4755060025152278165
 MonoBehaviour:
   m_ObjectHideFlags: 0
