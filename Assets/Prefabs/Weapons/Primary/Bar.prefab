@@ -195,8 +195,8 @@ MonoBehaviour:
   m_name: Hotchkiss
   type: 0
   mode: 0
-  magazineSize: 30
-  rateOfFire: 6.5
+  magazineSize: 20
+  rateOfFire: 10.9
   bulletSpeed: 220
   range: 500
   damage: 0
@@ -251,6 +251,7 @@ MonoBehaviour:
   recoilResetSpeed: 7.5
   backwardsKickAmount: 0.165
   upwardsKickAmount: 15
+  debugBulletSpread: 0
   spreadDispersion: 2.5
   minSpread: 0.08
   maxSpread: 0.12
