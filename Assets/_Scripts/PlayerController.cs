@@ -6,6 +6,8 @@ public class PlayerController : Controller {
     private PlayerInput input;
     private CustomCamera customCamera;
 
+    public Vector3 MoveDirection => (customCamera.CameraPivot.forward * DirectionalInput.y + customCamera.CameraPivot.right * DirectionalInput.x).normalized;
+
     protected override void Awake() {
         base.Awake();
         input = FindObjectOfType<PlayerInput>();
