@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 4755060025152278164}
   - component: {fileID: 3390274077708588717}
   - component: {fileID: 6323258439567198574}
+  - component: {fileID: 7573996434786444581}
   - component: {fileID: 4755060025152278165}
   - component: {fileID: 5183159776375108306}
   - component: {fileID: 7198697709872186881}
@@ -394,7 +395,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 0
@@ -413,6 +414,27 @@ CapsuleCollider:
   m_Height: 1.671502
   m_Direction: 1
   m_Center: {x: 0, y: 0.84, z: 0}
+--- !u!114 &7573996434786444581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755060025152278162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76036f70852b9bd43864cbc054baa266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 65
+  stepHeight: 0.1
+  maxSlopeAngle: 55
+  maxBounces: 2
+  skinWidth: 0.015
+  groundCheckDistance: 0.2
+  isGrounded: 1
 --- !u!114 &4755060025152278165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,6 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70a16175840e334c97631b0c8f4720c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handleCollisions: 1
   walkSpeed: 3.5
   runSpeed: 8
   accelerationCurve:
@@ -518,7 +541,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadoutWeapons:
   - {fileID: 8183123559616575557, guid: 5dbe4f71ef56b264d87e49afb700404e, type: 3}
-  - {fileID: 753385500144784950, guid: 5143e980e2ebe6d4dac69bda96bf51bb, type: 3}
+  - {fileID: 753385500144784950, guid: 71b6af9048acdda4a936d2916f62353b, type: 3}
   - {fileID: 1788837982872976861, guid: 6233f32a3ecfe674ca2948ca20ee4626, type: 3}
   autoReloadDelay: 0.35
   rightHandTransform: {fileID: 4755060025444714788}
