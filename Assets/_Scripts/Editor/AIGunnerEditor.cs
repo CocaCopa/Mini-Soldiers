@@ -21,6 +21,8 @@ public class AIGunnerEditor : AIControllerEditor {
     SerializedProperty keepPeekingTimeMin;
     SerializedProperty keepPeekingTimeMax;
 
+    SerializedProperty repositionDistance;
+
     private bool foldoutPatrolSettings;
     private bool foldoutHideSpotSettings;
     private bool foldoutCombatSettings;
@@ -42,6 +44,8 @@ public class AIGunnerEditor : AIControllerEditor {
 
         keepPeekingTimeMin = serializedObject.FindProperty(nameof(keepPeekingTimeMin));
         keepPeekingTimeMax = serializedObject.FindProperty(nameof(keepPeekingTimeMax));
+
+        repositionDistance = serializedObject.FindProperty(nameof(repositionDistance));
     }
 
     public override void OnInspectorGUI() {
@@ -92,6 +96,8 @@ public class AIGunnerEditor : AIControllerEditor {
             EditorGUILayout.Space(5);
             EditorGUILayout.PropertyField(keepPeekingTimeMin);
             EditorGUILayout.PropertyField(keepPeekingTimeMax);
+            EditorGUILayout.Space(5);
+            EditorGUILayout.PropertyField(repositionDistance);
             EditorGUI.indentLevel--;
         }
         EditorGUILayout.EndFoldoutHeaderGroup();

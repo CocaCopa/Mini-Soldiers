@@ -19,6 +19,7 @@ public abstract class AIController : Controller {
 
     protected AI_State State { get; set; }
     protected PlayerSpotted_SubState PlayerSpottedState { get; set; }
+    protected PeekCorner_SubState PeekCornerState { get; set; }
     protected AIStimulus Stimulus { get; private set; }
     protected Collider MyCollider => m_Collider;
     protected float StoppingDistance { get; set; }

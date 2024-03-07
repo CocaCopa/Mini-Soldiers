@@ -9,3 +9,9 @@ public enum PlayerSpotted_SubState {
     Hide,
     PeekCorner,
 }
+
+public enum PeekCorner_SubState {
+    Cover,
+    Peek,
+    Reload
+}

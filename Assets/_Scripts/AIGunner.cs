@@ -3,16 +3,28 @@ using UnityEngine;
 
 public class AIGunner : AIController {
 
+    [Tooltip("The patrol route of the AI.")]
     [SerializeField] private Transform[] patrolPoints;
+    [Tooltip("Specify the wait time before the AI moves to the next patrol point.")]
     [SerializeField] private float patrolTime;
+    [Tooltip("The time in seconds before the AI can spot the player character.")]
     [SerializeField] private float timeToSpotPlayer;
+    [Tooltip("The minimum time in seconds before the AI starts peeking from cover.")]
     [SerializeField] private float timeToPeekMin;
+    [Tooltip("The maximum time in seconds before the AI starts peeking from cover.")]
     [SerializeField] private float timeToPeekMax;
+    [Tooltip("The minimum time in seconds the AI keeps peeking from cover.")]
     [SerializeField] private float keepPeekingTimeMin;
+    [Tooltip("The maximum time in seconds the AI keeps peeking from cover.")]
     [SerializeField] private float keepPeekingTimeMax;
+    [Tooltip("Determine how far from the corner the AI will extend when peeking.")]
     [SerializeField] private float peekCornerDistance;
+    [Tooltip("Minimum delay before the AI will start shooting when the player is in range.")]
     [SerializeField] private float delayBeforeShootingMin;
+    [Tooltip("Maximum delay before the AI will start shooting when the player is in range.")]
     [SerializeField] private float delayBeforeShootingMax;
+    [Tooltip("The AI will go to a new hide spot if its distance with the player character is less than the determined value.")]
+    [SerializeField] private float repositionDistance;
 
     private readonly Vector3 RAISE_POSITION_TO_EYES_LEVEL = Vector3.up;
 
@@ -150,11 +162,27 @@ public class AIGunner : AIController {
             peekPosition = CalculatePeekPosition(peekCornerDistance, out peekDirection);
             nextMovePosition = peekPosition;
             PlayerSpottedState = PlayerSpotted_SubState.PeekCorner;
+            PeekCornerState = PeekCorner_SubState.Cover;
         }
     }
 
     private void PlayerSpotted_PeekCorner() {
-        IsRunning = false;
+        if (Stimulus.CanSeeTarget(PlayerTransform) && Vector3.Distance(PlayerTransform.position, transform.position) < repositionDistance) {
+            PlayerSpottedState = PlayerSpotted_SubState.FindNewHideSpot;
+        }
+        switch (PeekCornerState) {
+            case PeekCorner_SubState.Cover:
+            PeekCorner_Cover();
+            break;
+            case PeekCorner_SubState.Peek:
+            PeekCorner_Peek();
+            break;
+            case PeekCorner_SubState.Reload:
+            break;
+        }
+    }
+
+    private void PeekCorner_Cover() {
         // Is hiding and will peek the corner.
         if (ReachedPathDestination && nextMovePosition == peekPosition && !combatManager.IsReloading) {
             isOnHideSpot = true;
@@ -164,8 +192,13 @@ public class AIGunner : AIController {
                 timeToPeekTimer = timeToPeek;
                 nextMovePosition = hideSpotPosition;
                 SetNewDestination(peekPosition);
+                PeekCornerState = PeekCorner_SubState.Peek;
+                IsRunning = false;
             }
         }
+    }
+
+    private void PeekCorner_Peek() {
         // Is peeking the corner and will hide.
         if (ReachedPathDestination && nextMovePosition == hideSpotPosition) {
             isPeekingCorner = true;
@@ -178,6 +211,8 @@ public class AIGunner : AIController {
                 keepPeekingTimer = keepPeekingTime;
                 nextMovePosition = peekPosition;
                 SetNewDestination(hideSpotPosition);
+                PeekCornerState = PeekCorner_SubState.Cover;
+                IsRunning = true;
             }
         }
     }

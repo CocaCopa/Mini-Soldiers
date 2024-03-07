@@ -327,11 +327,12 @@ MonoBehaviour:
   timeToSpotPlayer: 2
   timeToPeekMin: 1
   timeToPeekMax: 3
-  keepPeekingTimeMin: 3
-  keepPeekingTimeMax: 5
+  keepPeekingTimeMin: 1.5
+  keepPeekingTimeMax: 3
   peekCornerDistance: 0.55
   delayBeforeShootingMin: 0.25
   delayBeforeShootingMax: 0.4
+  repositionDistance: 15
 --- !u!114 &7313499653278246517
 MonoBehaviour:
   m_ObjectHideFlags: 0
