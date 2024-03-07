@@ -206,7 +206,7 @@ namespace CocaCopa.Utilities {
         public static List<Vector3> GetObjectEdges(Transform objectTransform, bool debugCalculatedEdges = false) {
             //Mesh mesh = objectTransform.GetComponent<MeshFilter>().mesh;
             Mesh mesh;
-            if (!objectTransform.TryGetComponent<MeshFilter>(out var meshFilter)) {
+            if (objectTransform.TryGetComponent<MeshFilter>(out var meshFilter)) {
                 mesh = meshFilter.mesh;
             }
             else {
