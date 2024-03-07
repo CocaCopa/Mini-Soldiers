@@ -13,18 +13,21 @@ public abstract class AIController : Controller {
     private const string GROUND_LAYER_NAME = "Ground";
 
     private NavMeshPath navMeshPath;
+    private Collider m_Collider;
     private Vector3[] waypoints;
     private int currentWaypointIndex;
 
     protected AI_State State { get; set; }
     protected PlayerSpotted_SubState PlayerSpottedState { get; set; }
     protected AIStimulus Stimulus { get; private set; }
+    protected Collider MyCollider => m_Collider;
     protected float StoppingDistance { get; set; }
     protected Transform PlayerTransform { get; private set; }
     protected bool ReachedPathDestination { get; private set; }
 
     protected new virtual void Awake() {
         base.Awake();
+        m_Collider = GetComponent<Collider>();
         Stimulus = GetComponent<AIStimulus>();
         PlayerTransform = FindObjectOfType<PlayerController>().transform;
     }
@@ -123,58 +126,71 @@ public abstract class AIController : Controller {
     }
 
     /// <summary>
-    /// Finds the closest wall to the AI from its standing position.
+    /// Finds the closest collider to the AI from its standing position.
     /// </summary>
-    /// <param name="debugWallEdges">True, will draw rays from the detected edges to the upward direction.</param>
-    /// <returns>The an array containing the edges of the found wall as vectors.</returns>
-    private Vector3[] FindClosestWall(bool debugWallEdges = false) {
+    /// <param name="debugColliderEdges">True, will draw rays from the detected edges to the upward direction.</param>
+    /// <returns>An array containing the edges of the found wall as vectors.</returns>
+    protected Vector3[] FindClosestWall(bool debugColliderEdges = false) {
         int excludeLayers = 1 << LayerMask.NameToLayer(ENEMY_LAYER_NAME) | 1 << LayerMask.NameToLayer(GROUND_LAYER_NAME) | 1 << LayerMask.NameToLayer(PLAYER_LAYER_NAME);
         int checkLayers = ~excludeLayers;
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 5f, checkLayers);
-        List<Vector3> objectEdges = new List<Vector3>();
-        Vector3 closestEdge = Vector3.zero;
-        foreach (var collider in colliders) {
-            objectEdges = Environment.GetObjectEdges(collider.transform);
-            closestEdge = Environment.FindClosestPosition(transform.position, objectEdges);
+        Collider[] colliders = Physics.OverlapSphere(m_Collider.bounds.center, 2.5f, checkLayers);
+        Collider closestCollider = null;
+        float closestDistance = Mathf.Infinity;
+        foreach (Collider collider in colliders) {
+            Vector3 closestPoint = collider.ClosestPoint(m_Collider.bounds.center);
+            float distance = (closestPoint - m_Collider.bounds.center).sqrMagnitude;
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestCollider = collider;
+            }
         }
-        Vector3 sideEdge = FindWallSideEdge(objectEdges, closestEdge);
-        if (debugWallEdges) {
-            Debug.DrawRay(closestEdge, Vector3.up * 100f, Color.magenta, float.MaxValue);
-            Debug.DrawRay(sideEdge, Vector3.up * 100f, Color.green, float.MaxValue);
+
+        if (closestCollider != null) {
+            List<Vector3> edges = FindFaceEdges(closestCollider, debugColliderEdges);
+            return edges.ToArray();
         }
-        return new Vector3[] {
-            closestEdge, sideEdge
-        };
+
+        return null;
     }
 
     /// <summary>
-    /// Locates the opposite edge of the wall facing the AI.
+    /// Finds the edges of a face on a collider closest to the AI's position.
     /// </summary>
-    /// <param name="objectEdges">Edges of the object in front of the AI.</param>
-    /// <param name="closestEdge">The closest edge detected.</param>
-    /// <returns>The opposite edge of the wall.</returns>
-    private Vector3 FindWallSideEdge(List<Vector3> objectEdges, Vector3 closestEdge) {
-        List<Vector3> oppositeEdgesPositions = new List<Vector3>();
-        List<Vector3> remainingEdges = new List<Vector3>();
-        foreach (var edge in objectEdges) {
-            if (edge != closestEdge) {
-                remainingEdges.Add(edge);
-            }
-        }
-        Vector3 closestEdgeToQuerierDirection = (transform.position - closestEdge).normalized;
-        closestEdgeToQuerierDirection.y = closestEdge.y;
-        foreach (var edge in remainingEdges) {
-            Vector3 edgeToClosestEdgeDirection = (transform.position - edge).normalized;
-            edgeToClosestEdgeDirection.y = closestEdge.y;
-            if (Vector3.Dot(closestEdgeToQuerierDirection, edgeToClosestEdgeDirection) <= 0f) {
-                oppositeEdgesPositions.Add(edge);
-            }
+    /// <param name="collider">The collider whose face edges are to be found.</param>
+    /// <returns>A list of Vector3 representing the edges of the face closest to the AI's position.</returns>
+    private List<Vector3> FindFaceEdges(Collider collider, bool debug = false) {
+        Vector3 origin = m_Collider.bounds.center;
+        Vector3 closestPoint = collider.ClosestPoint(origin);
+        Vector3 direction = (origin - closestPoint).normalized;
 
-            if (Vector3.Dot(closestEdgeToQuerierDirection, edgeToClosestEdgeDirection) >= 0f && Vector3.Dot(closestEdgeToQuerierDirection, edgeToClosestEdgeDirection) <= 0.90f) {
-                oppositeEdgesPositions.Add(edge);
+        Vector3 crossDirection = Vector3.Cross(direction, Vector3.up).normalized;
+
+        if (debug) {
+            Debug.DrawRay(closestPoint, direction, Color.magenta);
+            Debug.DrawRay(closestPoint, crossDirection, Color.yellow);
+        }
+
+        List<Vector3> objectEdges = Environment.GetObjectEdges(collider.transform, debugCalculatedEdges: false);
+        List<Vector3> faceEdges = new List<Vector3>();
+
+        foreach (Vector3 edge in objectEdges) {
+            Vector3 adustedEdge = edge;
+            adustedEdge.y = closestPoint.y;
+            Vector3 edgeToPointDirection = (closestPoint - adustedEdge).normalized;
+            float dotProduct = Vector3.Dot(crossDirection, edgeToPointDirection);
+            if (Mathf.Approximately(Mathf.Abs(dotProduct), 1f)) {
+                faceEdges.Add(edge);
+                if (debug) {
+                    Debug.DrawRay(edge, Vector3.up * 100f, Color.green);
+                }
             }
         }
-        return Environment.FindClosestPosition(transform.position, oppositeEdgesPositions);
+
+        if (faceEdges.Count == 0) {
+            Debug.LogWarning("Could not calculate collider edges");
+        }
+        return faceEdges;
     }
 
 #if UNITY_EDITOR
