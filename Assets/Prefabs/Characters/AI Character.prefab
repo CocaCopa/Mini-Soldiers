@@ -192,6 +192,7 @@ GameObject:
   - component: {fileID: 7164611912039488051}
   - component: {fileID: 980695355801780746}
   - component: {fileID: 8453317494463864265}
+  - component: {fileID: 3415048863320439614}
   - component: {fileID: 4717067714028393124}
   - component: {fileID: 4717067714028393123}
   - component: {fileID: 7313499653278246517}
@@ -250,6 +251,27 @@ CapsuleCollider:
   m_Height: 1.671502
   m_Direction: 1
   m_Center: {x: 0, y: 0.84, z: 0}
+--- !u!114 &3415048863320439614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7164611912039488053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76036f70852b9bd43864cbc054baa266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 65
+  stepHeight: 0.4
+  maxSlopeAngle: 50
+  maxBounces: 5
+  skinWidth: 0.015
+  minSpeedScale: 0.15
+  groundCheckDistance: 0.2
 --- !u!114 &4717067714028393124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c70a16175840e334c97631b0c8f4720c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handleCollisions: 1
   walkSpeed: 3.5
   runSpeed: 8
   accelerationCurve:

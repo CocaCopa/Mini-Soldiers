@@ -195,7 +195,7 @@ MonoBehaviour:
   m_name: Hotchkiss
   type: 0
   mode: 0
-  magazineSize: 15
+  magazineSize: 60
   rateOfFire: 6.5
   bulletSpeed: 220
   range: 500
