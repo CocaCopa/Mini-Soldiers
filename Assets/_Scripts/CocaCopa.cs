@@ -201,10 +201,9 @@ namespace CocaCopa.Utilities {
         /// <summary>
         /// Retrieves the world space positions of the four corners of the mesh rendered by the specified object's transform.
         /// </summary>
-        /// <param name="objectTransform">The transform of the object whose mesh corners are to be determined.</param>
-        /// <returns>A list containing the world space positions of the four corners of the mesh.</returns>
-        public static List<Vector3> GetObjectEdges(Transform objectTransform, bool debugCalculatedEdges = false) {
-            //Mesh mesh = objectTransform.GetComponent<MeshFilter>().mesh;
+        /// <param name="objectTransform">The transform of the object whose mesh corners are to be calculated.</param>
+        /// <returns>A list containing the world space positions of the four corners of the provided mesh.</returns>
+        public static List<Vector3> GetMeshColliderEdges(Transform objectTransform, bool debugCalculatedEdges = false) {
             Mesh mesh;
             if (objectTransform.TryGetComponent<MeshFilter>(out var meshFilter)) {
                 mesh = meshFilter.mesh;
@@ -239,6 +238,52 @@ namespace CocaCopa.Utilities {
                 frontBottomRight,
                 backBottomLeft,
                 backBottomRight
+            };
+        }
+
+        /// <summary>
+        /// Retrieves the world space positions of the four *bottom* corners of the provided box collider.
+        /// </summary>
+        /// <param name="collider">The box collider whose corners are to be calculated</param>
+        /// <returns>A list containing the world space positions of the four corners of the provided box collider.</returns>
+        public static List<Vector3> GetBoxColliderEdges(BoxCollider collider, bool debugCalculatedEdges = false) {
+            Vector3 extents = collider.size / 2f;
+            Vector3 forwardDirection = collider.transform.forward;
+            Vector3 rightDirection = collider.transform.right;
+            Vector3 upDirection = collider.transform.up;
+
+            Vector3 frontLeftCorner = collider.bounds.center;
+            frontLeftCorner += forwardDirection * extents.z;
+            frontLeftCorner -= rightDirection * extents.x;
+            frontLeftCorner -= upDirection * extents.y;
+
+            Vector3 frontRightCorner = collider.bounds.center;
+            frontRightCorner += forwardDirection * extents.z;
+            frontRightCorner += rightDirection * extents.x;
+            frontRightCorner -= upDirection * extents.y;
+
+            Vector3 backLeftCorner = collider.bounds.center;
+            backLeftCorner -= forwardDirection * extents.z;
+            backLeftCorner -= rightDirection * extents.x;
+            backLeftCorner -= upDirection * extents.y;
+
+            Vector3 backRightCorner = collider.bounds.center;
+            backRightCorner -= forwardDirection * extents.z;
+            backRightCorner += rightDirection * extents.x;
+            backRightCorner -= upDirection * extents.y;
+
+            if (debugCalculatedEdges) {
+                Debug.DrawRay(frontLeftCorner, Vector3.up * 100f, Color.green);
+                Debug.DrawRay(frontRightCorner, Vector3.up * 100f, Color.red);
+                Debug.DrawRay(backLeftCorner, Vector3.up * 100f, Color.yellow);
+                Debug.DrawRay(backRightCorner, Vector3.up * 100f, Color.magenta);
+            }
+
+            return new List<Vector3> {
+                frontLeftCorner,
+                frontRightCorner,
+                backLeftCorner,
+                backRightCorner
             };
         }
     }

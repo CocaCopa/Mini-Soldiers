@@ -8,9 +8,7 @@ public abstract class AIController : Controller {
 
     [SerializeField] private List<Transform> hideSpots;
 
-    private const string ENEMY_LAYER_NAME = "Enemy";
-    private const string PLAYER_LAYER_NAME = "Player";
-    private const string GROUND_LAYER_NAME = "Ground";
+    private const string WALL_COLLIDER_LAYER_NAME = "AI Wall Collider";
 
     private NavMeshPath navMeshPath;
     private Collider m_Collider;
@@ -83,15 +81,21 @@ public abstract class AIController : Controller {
     /// <returns>The calculated position for peeking around the corner.</returns>
     protected Vector3 CalculatePeekPosition(float peekCornerDistance, out Vector3 peekDirection) {
         Vector3[] wallEdges = FindClosestWall(true);
-        Vector3 closestEdge = Environment.FindClosestPosition(transform.position, wallEdges.ToList());
-        closestEdge.y = transform.position.y;
-        Vector3 edgeToEdgeDirection = (wallEdges[0] - wallEdges[1]).normalized;
-        Vector3 directionToEdge = (closestEdge - transform.position).normalized;
-        peekDirection = Vector3.Dot(edgeToEdgeDirection, directionToEdge) > 0f
-                ? edgeToEdgeDirection
-                : -edgeToEdgeDirection;
-        float distanceToEdge = (closestEdge - transform.position).magnitude;
-        return transform.position + peekDirection * (distanceToEdge + peekCornerDistance);
+        if (wallEdges.Length > 0) {
+            Vector3 closestEdge = Environment.FindClosestPosition(transform.position, wallEdges.ToList());
+            closestEdge.y = transform.position.y;
+            Vector3 edgeToEdgeDirection = (wallEdges[0] - wallEdges[1]).normalized;
+            Vector3 directionToEdge = (closestEdge - transform.position).normalized;
+            peekDirection = Vector3.Dot(edgeToEdgeDirection, directionToEdge) > 0f
+                    ? edgeToEdgeDirection
+                    : -edgeToEdgeDirection;
+            float distanceToEdge = (closestEdge - transform.position).magnitude;
+            return transform.position + peekDirection * (distanceToEdge + peekCornerDistance);
+        }
+        else {
+            peekDirection = Vector3.zero;
+            return Vector3.zero;
+        }
     }
 
     /// <summary>
@@ -132,9 +136,9 @@ public abstract class AIController : Controller {
     /// <param name="debugColliderEdges">True, will draw rays from the detected edges to the upward direction.</param>
     /// <returns>An array containing the edges of the found wall as vectors.</returns>
     protected Vector3[] FindClosestWall(bool debugColliderEdges = false) {
-        int excludeLayers = 1 << LayerMask.NameToLayer(ENEMY_LAYER_NAME) | 1 << LayerMask.NameToLayer(GROUND_LAYER_NAME) | 1 << LayerMask.NameToLayer(PLAYER_LAYER_NAME);
-        int checkLayers = ~excludeLayers;
-        Collider[] colliders = Physics.OverlapSphere(m_Collider.bounds.center, 2.5f, checkLayers);
+        int layerMask = LayerMask.GetMask(WALL_COLLIDER_LAYER_NAME);
+        float overlapDistance = 2.5f;
+        Collider[] colliders = Physics.OverlapSphere(m_Collider.bounds.center, overlapDistance, layerMask, QueryTriggerInteraction.Collide);
         Collider closestCollider = null;
         float closestDistance = Mathf.Infinity;
         foreach (Collider collider in colliders) {
@@ -148,11 +152,14 @@ public abstract class AIController : Controller {
         }
 
         if (closestCollider != null) {
-            List<Vector3> edges = FindFaceEdges(closestCollider, debugColliderEdges);
+            List<Vector3> edges = FindBoxColliderFaceEdges(closestCollider, debugColliderEdges);
             return edges.ToArray();
         }
+        else {
+            Debug.LogWarning("No colliders found. Make sure the colliders representing a wall are on the '" + WALL_COLLIDER_LAYER_NAME + "' layer and/or the AI's distance from the collider is <= " + overlapDistance + " units.");
+        }
 
-        return null;
+        return new Vector3[0];
     }
 
     /// <summary>
@@ -160,7 +167,7 @@ public abstract class AIController : Controller {
     /// </summary>
     /// <param name="collider">The collider whose face edges are to be found.</param>
     /// <returns>A list of Vector3 representing the edges of the face closest to the AI's position.</returns>
-    private List<Vector3> FindFaceEdges(Collider collider, bool debug = false) {
+    private List<Vector3> FindBoxColliderFaceEdges(Collider collider, bool debug = false) {
         Vector3 origin = m_Collider.bounds.center;
         Vector3 closestPoint = collider.ClosestPoint(origin);
         Vector3 direction = (origin - closestPoint).normalized;
@@ -172,7 +179,7 @@ public abstract class AIController : Controller {
             Debug.DrawRay(closestPoint, crossDirection, Color.yellow);
         }
 
-        List<Vector3> objectEdges = Environment.GetObjectEdges(collider.transform, debugCalculatedEdges: false);
+        List<Vector3> objectEdges = Environment.GetBoxColliderEdges(collider as BoxCollider, debugCalculatedEdges: false);
         List<Vector3> faceEdges = new List<Vector3>();
 
         foreach (Vector3 edge in objectEdges) {
