@@ -70,6 +70,7 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private Transform muzzleFlashTransform;
 
     public WeaponType Type => type;
+    public Transform MuzzleTransform => muzzleFlashTransform;
 
     private OverrideTransform overrideTransform;
     private Controller controller;
