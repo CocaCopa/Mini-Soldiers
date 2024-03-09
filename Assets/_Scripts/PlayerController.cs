@@ -2,9 +2,14 @@ using UnityEngine;
 
 public class PlayerController : Controller {
 
+    [Tooltip("The maximum angle in degrees that the character can look upward.")]
+    [SerializeField] private float maxLookUpAngle = 45f;
+
     private LineRenderer laserSight;
     private PlayerInput input;
     private CustomCamera customCamera;
+    private Vector3 trackDirection;
+    private float height;
 
     public Vector3 MoveDirection => (customCamera.CameraPivot.forward * DirectionalInput.y + customCamera.CameraPivot.right * DirectionalInput.x).normalized;
 
@@ -36,7 +41,8 @@ public class PlayerController : Controller {
 
     protected override void Update() {
         base.Update();
-        SetLookAtObjectPosition(input.MouseWorldPosition());
+        
+        SetLookAtObjectPosition(ClampLookAtObjectHeight());
         HandleMovementParameters();
         HandleCombatInput();
         ManageLaserSight();
@@ -77,5 +83,34 @@ public class PlayerController : Controller {
             laserLength.z = (endPosition - laserOrigin).magnitude;
             laserSight.SetPosition(1, laserLength);
         }
+    }
+
+    private Vector3 ClampLookAtObjectHeight() {
+        Vector3 characterToObjectDirection = input.MouseWorldPosition() - transform.position;
+        characterToObjectDirection.Normalize();
+        Vector3 lookDirection = new Vector3(input.MouseWorldPosition().x, transform.position.y, input.MouseWorldPosition().z) - transform.position;
+        lookDirection.Normalize();
+
+        if (Vector3.Angle(characterToObjectDirection, lookDirection) < maxLookUpAngle) {
+            trackDirection = characterToObjectDirection;
+            height = input.MouseWorldPosition().y;
+        }
+        else {
+            Vector3 origin = transform.position;
+            Vector3 direction = trackDirection;
+            Ray ray = new Ray(origin, direction);
+            float distance = Mathf.Infinity;
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, distance, ~LayerMask.GetMask("Player"))) {
+                height = hitInfo.point.y;
+                height = Mathf.Clamp(height, 1f, hitInfo.point.y);
+            }
+            else {
+                Debug.Log("Warning! Investigate this code block.");
+            }
+        }
+        Vector3 objectPosition = input.MouseWorldPosition();
+        objectPosition.y = height;
+
+        return objectPosition;
     }
 }
