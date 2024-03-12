@@ -25,6 +25,21 @@ namespace CocaCopa.Utilities {
         }
 
         /// <summary>
+        /// Checks if the given object reference is null and logs an error message if it is.
+        /// </summary>
+        /// <param name="obj">The object reference to check for null.</param>
+        /// <param name="errorMessage">The error message to log if the object reference is null.</param>
+        /// <returns>True if the object reference is null; otherwise, false.</returns>
+
+        public static bool NullReferenceCheck<T>(T obj, string errorMessage) where T: Object {
+            if (obj == null) {
+                Debug.LogError(errorMessage);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Interpolate an animation curve based on distance and speed.
         /// </summary>
         /// <param name="curve">The animation curve to interpolate.</param>
