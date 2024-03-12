@@ -1,5 +1,5 @@
-using Cinemachine.Utility;
 using UnityEngine;
+using CocaCopa.Utilities;
 
 [ExecuteInEditMode]
 public class CustomCamera : MonoBehaviour {
@@ -10,7 +10,8 @@ public class CustomCamera : MonoBehaviour {
     [SerializeField] private Transform followTransform;
     [Tooltip("Reference to the camera pivot object.")]
     [SerializeField] private Transform cameraPivot;
-    [Space(10)]
+
+    [Header("--- Follow ---")]
     [Tooltip("Offset the camera's follow position.")]
     [SerializeField] private Vector3 followOffset;
     [Tooltip("Offset the camera's look at position.")]
@@ -20,6 +21,14 @@ public class CustomCamera : MonoBehaviour {
     [SerializeField] private float followSpeed;
     [Tooltip("If enabled, the camera's look-at position will be stabilized based on the camera's right direction, ensuring that it maintains a consistent orientation relative to the target.")]
     [SerializeField] private bool stabilizeCameraLookAt = true;
+
+    [Header("--- Collisions ---")]
+    [SerializeField] private LayerMask collisionLayers;
+    [SerializeField] private float cameraRadius;
+
+    private const string followErrorMessage = "Follow Transform reference has not been assigned.";
+    private const string pivotErrorMessage = "Camera Pivot reference has not been assigned.";
+    private const string cameraErrorMessage = nameof(CustomCamera) + ": Missing Camera reference.";
 
     public Transform CameraPivot => cameraPivot;
     public Vector3 FollowOffset { get => followOffset; set => followOffset = value; }
@@ -33,17 +42,17 @@ public class CustomCamera : MonoBehaviour {
         followTransform = target;
     }
 
-    private void Update() {
-        if (FollowTransformAssigned()) {
-            cameraPivot.position = followTransform.position;
-        }
-    }
-
     private void LateUpdate() {
-        if (CameraPivotAssigned()) {
-            m_Camera.transform.position = CameraPosition();
-            m_Camera.transform.LookAt(CameraLookAt());
+        if (Common.NullReferenceCheck(m_Camera, cameraErrorMessage)
+            || Common.NullReferenceCheck(followTransform, followErrorMessage)
+            || Common.NullReferenceCheck(cameraPivot, pivotErrorMessage)) {
+            return;
         }
+
+        cameraPivot.position = followTransform.position;
+        m_Camera.transform.position = CameraPosition();
+        m_Camera.transform.LookAt(CameraLookAt());
+        HandleCollisions();
     }
 
     private Vector3 CameraPosition() {
@@ -78,19 +87,15 @@ public class CustomCamera : MonoBehaviour {
         lookAtPosition -= cameraPivot.right * followOffset.x;
     }
 
-    private bool FollowTransformAssigned() {
-        if (followTransform == null) {
-            Debug.LogError("Follow Transform reference has not been assigned.");
-            return false;
-        }
-        return true;
-    }
+    private void HandleCollisions() {
+        Vector3 origin = followTransform.position;
+        Vector3 toCamera = m_Camera.transform.position - origin;
+        Vector3 direction = toCamera.normalized;
+        Ray ray = new Ray(origin, direction);
+        float distance = toCamera.magnitude;
 
-    private bool CameraPivotAssigned() {
-        if (cameraPivot == null) {
-            Debug.LogError("Camera Pivot reference has not been assigned.");
-            return false;
+        if (Physics.SphereCast(ray, cameraRadius, out RaycastHit hitInfo, distance, collisionLayers)) {
+            print("Camera collision detected.");
         }
-        return true;
     }
 }

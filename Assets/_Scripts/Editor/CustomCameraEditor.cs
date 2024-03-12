@@ -11,6 +11,7 @@ public class CustomCameraEditor : Editor {
     SerializedProperty lookAtOffset;
     SerializedProperty followOffset;
     SerializedProperty stabilizeCameraLookAt;
+    SerializedProperty cameraRadius;
 
     private bool referencesFoldout;
 
@@ -21,6 +22,7 @@ public class CustomCameraEditor : Editor {
         lookAtOffset = serializedObject.FindProperty(nameof(lookAtOffset));
         followOffset = serializedObject.FindProperty(nameof(followOffset));
         stabilizeCameraLookAt = serializedObject.FindProperty(nameof(stabilizeCameraLookAt));
+        cameraRadius = serializedObject.FindProperty(nameof(cameraRadius));
     }
 
     public override void OnInspectorGUI() {
@@ -39,6 +41,23 @@ public class CustomCameraEditor : Editor {
         GUILayout.Space(15);
         Button_AllignRotationWithTarget();
         GUILayout.Space(10);
+    }
+
+    private void OnSceneGUI() {
+        Transform followTransform = this.followTransform.objectReferenceValue as Transform;
+        Camera camera = m_Camera.objectReferenceValue as Camera;
+
+        Vector3 lookAtTarget = followTransform.position + Vector3.up * lookAtOffset.vector3Value.y;
+        Vector3 toCamera = camera.transform.position - lookAtTarget;
+        Vector3 cameraPosition = lookAtTarget + toCamera.normalized * toCamera.magnitude;
+        Handles.color = Color.red;
+        Handles.DrawLine(lookAtTarget, cameraPosition, 2f);
+        Handles.color = Color.green;
+        Handles.DrawWireDisc(cameraPosition, Vector3.up, cameraRadius.floatValue);
+        Handles.DrawWireDisc(cameraPosition, Vector3.right, cameraRadius.floatValue);
+        Handles.DrawWireDisc(cameraPosition, Vector3.forward, cameraRadius.floatValue);
+        Handles.DrawWireDisc(cameraPosition, (Vector3.forward + Vector3.right).normalized, cameraRadius.floatValue);
+        Handles.DrawWireDisc(cameraPosition, (Vector3.forward - Vector3.right).normalized, cameraRadius.floatValue);
     }
 
     private void DisplayScriptReference() {

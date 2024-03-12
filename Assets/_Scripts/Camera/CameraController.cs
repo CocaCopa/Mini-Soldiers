@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour {
         cameraShoulderPoints = 1f;
     }
 
-    private void Update() {
+    private void LateUpdate() {
         CameraRotation();
         ChangeCameraShoulder();
     }
@@ -55,12 +55,14 @@ public class CameraController : MonoBehaviour {
         }
 
         float lerpTime = Common.EvaluateAnimationCurve(cameraShoulderCurve, ref cameraShoulderPoints, changeShoulderSpeed, incrementShoulderPoints);
+        // Follow Offset.
         float followOffsetX = Mathf.Lerp(leftSideFollow, rightSideFollow, lerpTime);
         Vector3 followOffset = customCamera.FollowOffset;
         followOffset.x = followOffsetX;
         customCamera.FollowOffset = followOffset;
 
-        float lookAtOffsetX = Mathf.Lerp(leftSideFollow, rightSideFollow, lerpTime);
+        // Look At Offset.
+        float lookAtOffsetX = Mathf.Lerp(leftSideLookAt, rightSideLookAt, lerpTime);
         Vector3 lookAtOffset = customCamera.LookAtOffset;
         lookAtOffset.x = lookAtOffsetX;
         customCamera.LookAtOffset = lookAtOffset;
