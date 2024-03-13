@@ -24,11 +24,14 @@ public class CustomCamera : MonoBehaviour {
 
     [Header("--- Collisions ---")]
     [SerializeField] private LayerMask collisionLayers;
+    [Tooltip("Determine the radius of the camera collision detection.\n\nValues that match the radius of the character's collider will avoid unwanted behaviour.")]
     [SerializeField] private float cameraRadius;
 
     private const string followErrorMessage = "Follow Transform reference has not been assigned.";
     private const string pivotErrorMessage = "Camera Pivot reference has not been assigned.";
     private const string cameraErrorMessage = nameof(CustomCamera) + ": Missing Camera reference.";
+
+    private Vector3 targetCameraPosition;
 
     public Transform CameraPivot => cameraPivot;
     public Vector3 FollowOffset { get => followOffset; set => followOffset = value; }
@@ -50,20 +53,39 @@ public class CustomCamera : MonoBehaviour {
         }
 
         cameraPivot.position = followTransform.position;
-        m_Camera.transform.position = CameraPosition();
-        m_Camera.transform.LookAt(CameraLookAt());
-        HandleCollisions();
+        HandleCameraPosition();
+        HandleCameraLookAt();
     }
 
-    private Vector3 CameraPosition() {
+    private bool CameraIsColliding(out RaycastHit hitInfo) {
+        Vector3 targetPosition = followTransform.position + Vector3.up * lookAtOffset.y;
+        Vector3 toDefaultPosition = DefaultCameraFollowPosition() - targetPosition;
+        Vector3 direction = toDefaultPosition.normalized;
+        Ray ray = new Ray(targetPosition, direction);
+        float distance = toDefaultPosition.magnitude;
+
+        return Physics.SphereCast(ray, cameraRadius, out hitInfo, distance, collisionLayers);
+    }
+
+    private Vector3 DefaultCameraFollowPosition() {
         Vector3 cameraPosition = cameraPivot.position;
         cameraPosition += cameraPivot.forward * followOffset.z;
         cameraPosition += cameraPivot.right * followOffset.x;
         cameraPosition += cameraPivot.up * followOffset.y;
-        return Vector3.Lerp(m_Camera.transform.position, cameraPosition, followSpeed * Time.deltaTime);
+        return cameraPosition;
     }
 
-    private Vector3 CameraLookAt() {
+    private void HandleCameraPosition() {
+        if (CameraIsColliding(out RaycastHit hitInfo)) {
+            targetCameraPosition = hitInfo.point + hitInfo.normal * cameraRadius;
+        }
+        else {
+            targetCameraPosition = DefaultCameraFollowPosition();
+        }
+        m_Camera.transform.position = Vector3.Lerp(m_Camera.transform.position, targetCameraPosition, followSpeed * Time.deltaTime);
+    }
+
+    private void HandleCameraLookAt() {
         Vector3 cameraLookAt = cameraPivot.position;
         cameraLookAt += cameraPivot.forward * lookAtOffset.z;
         if (stabilizeCameraLookAt) {
@@ -71,7 +93,7 @@ public class CustomCamera : MonoBehaviour {
         }
         cameraLookAt += cameraPivot.right * lookAtOffset.x;
         cameraLookAt += cameraPivot.up * lookAtOffset.y;
-        return cameraLookAt;
+        m_Camera.transform.LookAt(cameraLookAt);
     }
 
     private void StabilizeCameraLookAt(ref Vector3 lookAtPosition) {
@@ -85,17 +107,5 @@ public class CustomCamera : MonoBehaviour {
         float distanceInRightDirection = Vector3.Dot(directionToCamera, rightDirection);
         lookAtPosition += cameraPivot.right * distanceInRightDirection;
         lookAtPosition -= cameraPivot.right * followOffset.x;
-    }
-
-    private void HandleCollisions() {
-        Vector3 origin = followTransform.position;
-        Vector3 toCamera = m_Camera.transform.position - origin;
-        Vector3 direction = toCamera.normalized;
-        Ray ray = new Ray(origin, direction);
-        float distance = toCamera.magnitude;
-
-        if (Physics.SphereCast(ray, cameraRadius, out RaycastHit hitInfo, distance, collisionLayers)) {
-            print("Camera collision detected.");
-        }
     }
 }
