@@ -25,6 +25,11 @@ public class CombatManager : MonoBehaviour {
     [SerializeField] private AnimationClip[] drawAnimations;
     [SerializeField] private AnimationClip reloadAnimation;
 
+    /// <summary>
+    /// Smoothly aim the character's hand towards the mouse when switching weapons.
+    /// </summary>
+    private const float HAND_AIM_SPEED = 1.49f;
+
     private CharacterAnimator characterAnimator;
     private GameObject equippedWeaponObject;
     private Weapon equippedWeapon;
@@ -154,12 +159,12 @@ public class CombatManager : MonoBehaviour {
             }
         }
 
-        if (isSwitchingWeapon) {
+        if (isSwitchingWeapon && handAimConstraint.weight == 1f) {
             constraintAnimationPoints = 0f;
             handAimConstraint.weight = 0f;
         }
         else if (isCombatIdle && handAimConstraint.weight != 1f) {
-            float lerpTime = Common.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, 6.75f);
+            float lerpTime = Common.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, HAND_AIM_SPEED);
             handAimConstraint.weight = Mathf.Lerp(0f, 1f, lerpTime);
         }
     }
