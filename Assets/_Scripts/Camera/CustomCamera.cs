@@ -98,13 +98,12 @@ public class CustomCamera : MonoBehaviour {
 
     private void StabilizeCameraLookAt(ref Vector3 lookAtPosition) {
         Vector3 directionToCamera = m_Camera.transform.position - followTransform.position;
-
         Vector3 floorPosition = cameraPivot.position + cameraPivot.right * lookAtOffset.x;
         Vector3 cameraPosition = floorPosition - cameraPivot.forward * followOffset.z;
         Vector3 direction = floorPosition - cameraPosition;
         Vector3 rightDirection = Vector3.Cross(direction.normalized, Vector3.up);
-
         float distanceInRightDirection = Vector3.Dot(directionToCamera, rightDirection);
+        // Since the distance on the X axis is now stabilized based on the 'distanceInRightDirection' the follow offset can be removed.
         lookAtPosition += cameraPivot.right * distanceInRightDirection;
         lookAtPosition -= cameraPivot.right * followOffset.x;
     }
