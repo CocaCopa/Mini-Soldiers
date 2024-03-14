@@ -101,6 +101,8 @@ public class CombatManager : MonoBehaviour {
 
     public void PullGunTrigger(bool autoReload = true) {
         if (equippedWeapon && !isReloading) {
+            constraintAnimationPoints = 1f;
+            handAimConstraint.weight = 1f;
             isCombatIdle = true;
             relaxTimer = relaxTime;
             StartCoroutine(CheckForDrawAnimation(1f));
@@ -163,6 +165,10 @@ public class CombatManager : MonoBehaviour {
                 float lerpTime = Common.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, HAND_AIM_SPEED);
                 handAimConstraint.weight = Mathf.Lerp(0f, 1f, lerpTime);
             }
+        }
+        else if (constraintAnimationPoints != 0f) {
+            float lerpTime = Common.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, HAND_AIM_SPEED * 4f, increment: false);
+            handAimConstraint.weight = Mathf.Lerp(0f, 1f, lerpTime);
         }
     }
 
