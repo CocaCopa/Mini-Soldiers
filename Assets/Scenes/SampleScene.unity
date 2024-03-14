@@ -2714,7 +2714,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012522992350, guid: 0feffba2c957641828b6d50406f56cd9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 43.595356
+      value: -12.98
       objectReference: {fileID: 0}
     - target: {fileID: 4000012522992350, guid: 0feffba2c957641828b6d50406f56cd9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2722,7 +2722,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012522992350, guid: 0feffba2c957641828b6d50406f56cd9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.171383
+      value: -4.53
       objectReference: {fileID: 0}
     - target: {fileID: 4000012522992350, guid: 0feffba2c957641828b6d50406f56cd9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2754,7 +2754,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 64000013972345694, guid: 0feffba2c957641828b6d50406f56cd9, type: 3}
       propertyPath: m_Convex
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0feffba2c957641828b6d50406f56cd9, type: 3}
@@ -4397,6 +4397,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   cameraRadius: 0.05
+  collisionOffset: 0.1
 --- !u!1 &6436099476255328227
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,8 +24,10 @@ public class CustomCamera : MonoBehaviour {
 
     [Header("--- Collisions ---")]
     [SerializeField] private LayerMask collisionLayers;
-    [Tooltip("Determine the radius of the camera collision detection.\n\nValues that match the radius of the character's collider will avoid unwanted behaviour.")]
+    [Tooltip("Determine the radius of the camera collision detection.\n\nValues that match or are less than the radius of the character's collider will avoid unwanted behaviour.")]
     [SerializeField] private float cameraRadius;
+    [Tooltip("Offset to adjust the distance between the camera and the collision point. This helps prevent the camera from clipping through objects when colliding.")]
+    [SerializeField] private float collisionOffset;
 
     private const string followErrorMessage = "Follow Transform reference has not been assigned.";
     private const string pivotErrorMessage = "Camera Pivot reference has not been assigned.";
@@ -77,7 +79,7 @@ public class CustomCamera : MonoBehaviour {
 
     private void HandleCameraPosition() {
         if (CameraIsColliding(out RaycastHit hitInfo)) {
-            targetCameraPosition = hitInfo.point + hitInfo.normal * cameraRadius;
+            targetCameraPosition = hitInfo.point + hitInfo.normal * (cameraRadius + collisionOffset);
         }
         else {
             targetCameraPosition = DefaultCameraFollowPosition();
