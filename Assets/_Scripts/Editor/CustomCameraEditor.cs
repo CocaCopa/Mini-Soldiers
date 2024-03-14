@@ -46,7 +46,9 @@ public class CustomCameraEditor : Editor {
     private void OnSceneGUI() {
         Transform followTransform = this.followTransform.objectReferenceValue as Transform;
         Camera camera = m_Camera.objectReferenceValue as Camera;
-
+        if (followTransform == null || camera == null) {
+            return;
+        }
         Vector3 lookAtTarget = followTransform.position + Vector3.up * lookAtOffset.vector3Value.y;
         Vector3 toCamera = camera.transform.position - lookAtTarget;
         Vector3 cameraPosition = lookAtTarget + toCamera.normalized * toCamera.magnitude;
