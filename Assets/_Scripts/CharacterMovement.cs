@@ -27,6 +27,7 @@ public class CharacterMovement : MonoBehaviour {
 
     private AnimationCurve movementCurve = AnimationCurve.Constant(0, 0, 0);
     private Vector3 lastDirectionalInput;
+    private Vector3 gravity;
 
     private float moveCurveEvaluationSpeed;
     private float accelerationPoints;
@@ -49,7 +50,7 @@ public class CharacterMovement : MonoBehaviour {
             Debug.LogWarning(name + ":\n" + nameof(CollisionDetection) + " component is not attached to the given character. Collisions will be ignored.");
         }
     }
-    Vector3 gravity;
+    
     private void FixedUpdate() {
         CalculateGravity();
     }
