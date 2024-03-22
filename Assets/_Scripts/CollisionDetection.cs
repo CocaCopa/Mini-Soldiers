@@ -28,6 +28,7 @@ public class CollisionDetection : MonoBehaviour {
 
     [Header("--- Ground Check ---")]
     [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField, Range(0f,1f)] private float timeScale = 1.0f;
 
     public bool IsGrounded => isGrounded;
 
@@ -41,6 +42,7 @@ public class CollisionDetection : MonoBehaviour {
     private void Update() {
         Bounds colliderBounds = m_Collider.bounds;
         colliderBounds.Expand(-2f * skinWidth);
+        Time.timeScale = timeScale;
     }
 
     private void FixedUpdate() {
@@ -70,13 +72,14 @@ public class CollisionDetection : MonoBehaviour {
                 snapToSurface = Vector3.zero;
             }
 
-            if (angle <= maxSlopeAngle || (StepHeight(velocity) && !gravityPass)) {
+            if (angle <= maxSlopeAngle) {
                 if (gravityPass) {
                     return snapToSurface;
                 }
                 leftover = ProjectAndScale(leftover, hitInfo.normal);
             }
             else {
+
                 float scale = 1 - Vector3.Dot(
                     new Vector3(hitInfo.normal.x, 0f, hitInfo.normal.z).normalized,
                     -new Vector3(initialVelocity.x, 0f, initialVelocity.z).normalized
@@ -93,6 +96,15 @@ public class CollisionDetection : MonoBehaviour {
                 else {
                     leftover = ProjectAndScale(leftover, hitInfo.normal);
                     leftover *= scale;
+                }
+
+                if (StepHeight(velocity.normalized, hitInfo.point, out float height)) {
+                    /*Vector3 newPos = hitInfo.point + Vector3.up * 0.01f;
+                    Vector3 pos = transform.position;
+                    pos.y = newPos.y;
+                    transform.position = pos;*/
+                    velocity.y = height * 1.01f;
+                    leftover.y = height * 1.01f;
                 }
             }
 
@@ -120,25 +132,59 @@ public class CollisionDetection : MonoBehaviour {
         isGrounded = Physics.SphereCast(ray, m_Collider.radius, groundCheckDistance, collisionLayers);
     }
 
-    private bool StepHeight(Vector3 moveDirection) {
-        Vector3 origin = moveDirection.normalized * 0.5f + m_Collider.bounds.center + Vector3.up * m_Collider.height * 0.5f;
+    private bool StepHeight(Vector3 moveDirection, Vector3 hitpoint, out float height) {
+        Vector3 origin = hitpoint;
+        origin.y = m_Collider.bounds.center.y + m_Collider.height * 0.5f;
+        Debug.DrawRay(origin, Vector3.down, Color.red);
         Vector3 direction = Vector3.down;
         Ray ray = new Ray(origin, direction);
         float distance = m_Collider.height;
-        Debug.DrawRay(origin, direction * distance, Color.yellow);
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, distance, collisionLayers)) {
-            if (hitInfo.transform.TryGetComponent<Collider>(out var hitCollider)) {
-                return hitCollider.bounds.max.y - m_Collider.bounds.min.y <= stepHeight || hitInfo.point.y - transform.position.y <= stepHeight;
-            }
+        height = 0f;
+
+        if (Physics.SphereCast(ray, 0.25f, out RaycastHit hitInfo, distance, collisionLayers)) {
+            Debug.DrawRay(hitInfo.point, hitInfo.normal * 5f, Color.yellow, 5f);
+            Debug.DrawRay(transform.position, moveDirection * 5f, Color.magenta);
+            //if (Vector3.Angle(hitInfo.normal, moveDirection) == 90f || Mathf.Approximately(Vector3.Angle(hitInfo.normal, moveDirection), 90f)) {
+                if (hitInfo.transform.TryGetComponent<Collider>(out var hitCollider)) {
+                    height = hitInfo.point.y - transform.position.y;
+                    return hitCollider.bounds.max.y - m_Collider.bounds.min.y <= stepHeight || hitInfo.point.y - transform.position.y <= stepHeight;
+                }
+            //}
         }
         return false;
     }
-
+    
     private Vector3 ProjectAndScale(Vector3 leftover, Vector3 normal) {
         float magnitude = leftover.magnitude;
         leftover = Vector3.ProjectOnPlane(leftover, normal);
         leftover.Normalize();
         leftover *= magnitude;
         return leftover;
+    }
+
+    private bool Step(RaycastHit hitInfo, Vector3 moveDirection, out float height) {
+        Vector3 origin = hitInfo.point;
+        origin.y = m_Collider.center.y + m_Collider.height * 0.5f;
+        height = 0f;
+        if (Physics.Raycast(new Ray(origin, Vector3.down), out RaycastHit hit, m_Collider.height - 0.1f, collisionLayers)) {
+            Debug.DrawRay(origin, Vector3.down * hit.distance, Color.magenta);
+            if (m_Collider.height - hit.distance <= stepHeight) {
+                Debug.Log("step");
+                height = hit.point.y;
+            }
+        }
+        return height != 0f;
+
+        /*Vector3 origin = moveDirection.normalized * 0.5f + m_Collider.bounds.center + Vector3.up * m_Collider.height * 0.5f;
+        Vector3 direction = Vector3.down;
+        Ray ray = new Ray(origin, direction);
+        float distance = m_Collider.height;
+        Debug.DrawRay(origin, direction * distance, Color.yellow);
+        if (Physics.Raycast(ray, out hitInfo, distance, collisionLayers)) {
+            if (hitInfo.transform.TryGetComponent<Collider>(out var hitCollider)) {
+                if (hitCollider.bounds.max.y - m_Collider.bounds.min.y <= stepHeight || hitInfo.point.y - transform.position.y <= stepHeight)
+                    Debug.Log("Step");
+            }
+        }*/
     }
 }

@@ -165,7 +165,7 @@ public class CharacterMovement : MonoBehaviour {
             if (collisionDetection.IsGrounded) {
                 gravity = Vector3.zero;
             }
-            gravity += 0.25f * Time.fixedDeltaTime * Physics.gravity;
+            else gravity += 0.25f * Time.fixedDeltaTime * Physics.gravity;
         }
     }
 }
