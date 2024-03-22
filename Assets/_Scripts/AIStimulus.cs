@@ -27,7 +27,6 @@ public class AIStimulus : MonoBehaviour {
     /// <param name="targetTransform">The transform of the target.</param>
     /// <returns>True if the AI has a clear line of sight to the target; otherwise, false.</returns>
     public bool CanSeeTarget(Transform targetTransform) {
-
         Vector3 myPosition = transform.position;
         Vector3 targetPosition = targetTransform.position;
         Vector3 toTargetVector = targetPosition - myPosition;
