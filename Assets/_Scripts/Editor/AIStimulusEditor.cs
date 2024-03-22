@@ -69,11 +69,11 @@ public class AIStimulusEditor : Editor {
             Handles.color = ArcColor();
             Vector3 forwardDirection = aiStimulus.EyesTransform.forward;
             // The transform of the eyes rotate based on the animation. This line stabilizes the height of the direction.
-            forwardDirection.y = aiStimulus.transform.position.y;
+            forwardDirection.y = 0f;
             Vector3 rotatedForward = Quaternion.Euler(0, -aiStimulus.FieldOfView * 0.5f, 0) * forwardDirection;
             Handles.DrawSolidArc(
                 aiStimulus.transform.position,
-                Vector3.up,
+                aiStimulus.transform.up,
                 rotatedForward,
                 aiStimulus.FieldOfView,
                 aiStimulus.SightRadius);
