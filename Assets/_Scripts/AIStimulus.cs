@@ -14,10 +14,12 @@ public class AIStimulus : MonoBehaviour {
     public float SightRadius { get => sightRadius; set => sightRadius = value; }
     public float FieldOfView { get => fieldOfView; set => fieldOfView = value; }
 
-    private float eyesPositionY;
+    private float eyesHeightOffset;
 
     private void Awake() {
-        eyesPositionY = eyesTransform.position.y;
+        float eyesWorldPositionY = eyesTransform.position.y;
+        float myTransformY = transform.position.y;
+        eyesHeightOffset = eyesWorldPositionY - myTransformY;
     }
 
     /// <summary>
@@ -43,13 +45,12 @@ public class AIStimulus : MonoBehaviour {
     public bool ClearLineOfSight(Transform targetTransform) {
         Vector3 origin = transform.position;
         // The character animations affect the position/height of the eyes. Changes to the Y positions help stabilize the height of the direction.
-        origin.y += eyesPositionY;
+        origin.y += eyesHeightOffset;
         Vector3 targetPosition = targetTransform.position;
-        targetPosition.y += eyesPositionY;
+        targetPosition.y += eyesHeightOffset;
         Vector3 direction = (targetPosition - origin).normalized;
-        Physics.Raycast(origin, direction, out RaycastHit hitInfo, sightRadius);
-        if (hitInfo.transform != null && hitInfo.transform.gameObject == targetTransform.gameObject) {
-            return true;
+        if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, sightRadius)) {
+            return hitInfo.transform.gameObject == targetTransform.gameObject;
         }
         return false;
     }
