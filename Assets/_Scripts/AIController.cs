@@ -106,7 +106,7 @@ public abstract class AIController : Controller {
     private Vector3 NavMeshMovementDirection(float distanceFromTarget) {
         Vector3 direction = Vector2.zero;
         if (currentWaypointIndex < waypoints.Length) {
-            if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) <= 0.1f) {
+            if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex]) <= 0.25f) {
                 currentWaypointIndex++;
                 if (currentWaypointIndex >= waypoints.Length) {
                     ReachedPathDestination = true;
