@@ -115,6 +115,7 @@ MonoBehaviour:
   recoilResetSpeed: 1.5
   backwardsKickAmount: 0.2
   upwardsKickAmount: 50
+  debugBulletSpread: 0
   spreadDispersion: 2
   minSpread: 0
   maxSpread: 0
@@ -218,7 +219,6 @@ GameObject:
   - component: {fileID: 1636084892440925315}
   - component: {fileID: 2385589624737897254}
   - component: {fileID: 504304572530749420}
-  - component: {fileID: 7742130807166305287}
   m_Layer: 0
   m_Name: pistol_drum_001
   m_TagString: Untagged
@@ -291,20 +291,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7742130807166305287
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2161545465666162233}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -809555383057140104, guid: 621e13bc586e1ad48a650363b09c0918, type: 3}
 --- !u!1 &6631929178997509818
 GameObject:
   m_ObjectHideFlags: 0
