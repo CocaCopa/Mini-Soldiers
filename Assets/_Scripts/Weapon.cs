@@ -1,6 +1,6 @@
+using CocaCopa.Utilities;
 using System.Collections;
 using UnityEngine;
-using CocaCopa.Utilities;
 using UnityEngine.Animations.Rigging;
 
 public enum WeaponType {
@@ -183,6 +183,12 @@ public class Weapon : MonoBehaviour {
             SpawnImpactEffect(hit);
             if (hit.transform.TryGetComponent<IDamageable>(out var target)) {
                 DealDamageToTarget(target);
+            }
+            if (hit.transform.TryGetComponent<Rigidbody>(out var targetRigidbody) && targetRigidbody.isKinematic == false) {
+                Vector3 direction = (hit.point - transform.position).normalized;
+                float amount = 1.5f;
+                Vector3 force = amount * direction;
+                targetRigidbody.AddForce(force, ForceMode.Impulse);
             }
         }
     }
