@@ -428,13 +428,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionLayers:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 2113
   stepHeight: 0.4
   maxSlopeAngle: 50
   maxBounces: 5
   skinWidth: 0.015
   minSpeedScale: 0
   groundCheckDistance: 0.2
+  timeScale: 1
 --- !u!114 &4755060025152278165
 MonoBehaviour:
   m_ObjectHideFlags: 0
