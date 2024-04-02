@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae387c9a657da684b82f50453078fac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_name: 
+  m_name: Colt_1911
   type: 1
   mode: 1
   magazineSize: 7

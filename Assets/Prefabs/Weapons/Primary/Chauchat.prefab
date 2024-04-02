@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae387c9a657da684b82f50453078fac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_name: 
+  m_name: Chauchat
   type: 0
   mode: 0
   magazineSize: 0
@@ -185,12 +185,14 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   recoilResetSpeed: 0
-  positionOffset: {x: 0, y: 0, z: 0}
-  rotationOffset: {x: 0, y: 0, z: 0}
+  backwardsKickAmount: 0
+  upwardsKickAmount: 0
+  debugBulletSpread: 0
   spreadDispersion: 0
   minSpread: 0
   maxSpread: 0
+  bulletShellPrefab: {fileID: 0}
+  bulletShellTransform: {fileID: 0}
   bulletImpactEffect: {fileID: 0}
   muzzleEffect: {fileID: 0}
   muzzleFlashTransform: {fileID: 0}
-  shootAnimation: {fileID: 7400000, guid: d3c77ec88dccb7e4180fb37c756685da, type: 2}

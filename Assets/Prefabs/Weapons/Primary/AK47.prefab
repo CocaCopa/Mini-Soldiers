@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae387c9a657da684b82f50453078fac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_name: Hotchkiss
+  m_name: AK-47
   type: 0
   mode: 0
   magazineSize: 30
@@ -350,6 +350,7 @@ MonoBehaviour:
   recoilResetSpeed: 7.5
   backwardsKickAmount: 0.165
   upwardsKickAmount: 15
+  debugBulletSpread: 0
   spreadDispersion: 1
   minSpread: 0.08
   maxSpread: 0.12

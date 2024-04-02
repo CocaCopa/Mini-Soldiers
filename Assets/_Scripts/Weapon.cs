@@ -25,7 +25,7 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private float range;
     [Tooltip("Damage dealt by the weapon.")]
     [SerializeField] private float damage;
-    [Tooltip("Damage drop-off curve")]
+    [Tooltip("Damage drop-off curve.")]
     [SerializeField] private AnimationCurve damageDropOff = AnimationCurve.Linear(0, 1, 1, 0);
 
     [Header("--- Weapon Recoil ---")]
@@ -72,6 +72,7 @@ public class Weapon : MonoBehaviour {
     private float recoilPositionAnimPoints = 0f;
 
     public int RemainingBullets => bulletsInMagazine;
+    public int MagazineSize => magazineSize;
 
     private void OnEnable() {
         if (controller == null) {
@@ -146,7 +147,6 @@ public class Weapon : MonoBehaviour {
         // Kick weapon backwards.
         overrideTransform.data.position = overridePosition;
         recoilPositionAnimPoints = 0f;
-
         // Kick weapon upwards.
         defaultWeaponRotation = transform.parent.localRotation;
         transform.parent.Rotate(-Vector3.up * upwardsKickAmount);
@@ -185,7 +185,6 @@ public class Weapon : MonoBehaviour {
     private void FireBulletTowardsDirection(out RaycastHit hit) {
         Vector3 origin = muzzleFlashTransform.position;
         Vector3 aimPosition = controller.ObjectToLookAt.transform.position;
-        //aimPosition.y = origin.y;
         Vector3 direction = SpreadBullet(origin, aimPosition);
         Ray ray = new Ray(origin, direction);
         float rayDistance = range;
@@ -218,6 +217,9 @@ public class Weapon : MonoBehaviour {
     }
 
     private void DealDamageToTarget(IDamageable target) {
+        if (damage == 0f) {
+            Debug.LogWarning("Weapon '" + m_name + "' is set to deal 0 damage");
+        }
         target.TakeDamage(damage);
     }
 }

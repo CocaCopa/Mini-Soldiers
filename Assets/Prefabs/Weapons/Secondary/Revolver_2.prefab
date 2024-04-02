@@ -47,14 +47,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae387c9a657da684b82f50453078fac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_name: 
+  m_name: Revolver_2
   type: 1
   mode: 1
   magazineSize: 6
   rateOfFire: 1
   bulletSpeed: 250
   range: 500
-  damage: 0
+  damage: 100
   damageDropOff:
     serializedVersion: 2
     m_Curve:
