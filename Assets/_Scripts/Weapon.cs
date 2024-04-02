@@ -3,17 +3,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public enum WeaponType {
-    Primary,
-    Secondary,
-    Melee
-};
-
-public enum WeaponMode {
-    Automatic,
-    SemiAutomatic
-};
-
 public class Weapon : MonoBehaviour {
 
     [Tooltip("Name of the weapon")]

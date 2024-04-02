@@ -82,14 +82,25 @@ public abstract class AIPositionFinder : MonoBehaviour {
     /// <param name="transforms">The list of transforms to filter.</param>
     /// <param name="transform_1">The first reference transform.</param>
     /// <param name="transform_2">The second reference transform.</param>
+    /// <param name="compare">Choose the dot product comparison type.</param>
+    /// <param name="dotProduct">IndicateZ the desired dot product.</param>
     /// <returns>The filtered list of transforms.</returns>
-    public static List<Transform> FilterByDotProduct(List<Transform> transforms, Transform transform_1, Transform transform_2) {
+    public static List<Transform> FilterByDotProduct(List<Transform> transforms, Transform transform_1, Transform transform_2, CompareDotProduct compare, float dotProduct) {
         List<Transform> filteredTransforms = new List<Transform>();
         foreach (Transform m_Transform in transforms) {
             MarkAsInvalid(m_Transform.position);
             Vector3 spotToTransform_1 = (transform_1.position - m_Transform.position).normalized;
             Vector3 spotToTransform_2 = (transform_2.position - m_Transform.position).normalized;
-            if (Vector3.Dot(spotToTransform_2, spotToTransform_1) > 0f) {
+            bool dotProductComparison = false;
+            switch (compare) {
+                case CompareDotProduct.LessThan:
+                dotProductComparison = Vector3.Dot(spotToTransform_2, spotToTransform_1) <= dotProduct;
+                break;
+                case CompareDotProduct.GreaterThan:
+                dotProductComparison = Vector3.Dot(spotToTransform_2, spotToTransform_1) >= dotProduct;
+                break;
+            }
+            if (dotProductComparison) {
                 MarkAsValid(m_Transform.position);
                 filteredTransforms.Add(m_Transform);
             }

@@ -115,8 +115,7 @@ public class PlayerInput : MonoBehaviour {
     public Vector3 MouseWorldPosition() {
         Vector3 mouseScreenPosition = Input.mousePosition;
         Ray mouseRay = Camera.main.ScreenPointToRay(mouseScreenPosition);
-
-        if (Physics.Raycast(mouseRay, out RaycastHit hit, float.MaxValue/*, LayerMask.GetMask("Ground")*/)) {
+        if (Physics.Raycast(mouseRay, out RaycastHit hit, float.MaxValue, ~LayerMask.GetMask("Props"))) {
             Vector3 mouseHitPoint = hit.point;
             return mouseHitPoint;
         }

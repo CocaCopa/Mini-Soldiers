@@ -10,6 +10,9 @@ public class AIControllerEditor : Editor {
     SerializedProperty hideSpots;
     SerializedProperty onGameStart;
     SerializedProperty lookAtTargetObjectSpeed;
+    SerializedProperty mainState;
+    SerializedProperty playerSpottedState;
+    SerializedProperty peekCornerState;
 
     private bool autoAssignFailed = false;
     private bool hideSpotsHelper = false;
@@ -20,12 +23,21 @@ public class AIControllerEditor : Editor {
         onGameStart = serializedObject.FindProperty(nameof(onGameStart));
         lookAtTargetObjectSpeed = serializedObject.FindProperty(nameof(lookAtTargetObjectSpeed));
         hideSpots = serializedObject.FindProperty(nameof(hideSpots));
+        mainState = serializedObject.FindProperty(nameof(mainState));
+        playerSpottedState = serializedObject.FindProperty(nameof(playerSpottedState));
+        peekCornerState = serializedObject.FindProperty(nameof(peekCornerState));
     }
 
     public override void OnInspectorGUI() {
         DisplayScriptReference();
         EditorGUILayout.PropertyField(onGameStart);
         EditorGUILayout.PropertyField(lookAtTargetObjectSpeed);
+        EditorGUILayout.Space(10);
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.PropertyField(mainState);
+        EditorGUILayout.PropertyField(playerSpottedState);
+        EditorGUILayout.PropertyField(peekCornerState);
+        EditorGUI.EndDisabledGroup();
     }
 
     protected void DisplayHideSpotsHelperButton() {

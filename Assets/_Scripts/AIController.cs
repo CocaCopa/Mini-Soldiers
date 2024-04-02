@@ -15,9 +15,16 @@ public abstract class AIController : Controller {
     private Vector3[] waypoints;
     private int currentWaypointIndex;
 
-    protected AI_State State { get; set; }
-    protected PlayerSpotted_SubState PlayerSpottedState { get; set; }
-    protected PeekCorner_SubState PeekCornerState { get; set; }
+    [Tooltip("- Patrol\r\n- Investigate\r\n- PlayerSpotted")]
+    [SerializeField] private AI_State mainState = AI_State.Unassigned;
+    [Tooltip("- FindNewHideSpot\r\n- Hide\r\n- PeekCorner")]
+    [SerializeField] private PlayerSpotted_SubState playerSpottedState = PlayerSpotted_SubState.Unassigned;
+    [Tooltip("- Cover\r\n- Peek\r\n- Reload")]
+    [SerializeField] private PeekCorner_SubState peekCornerState = PeekCorner_SubState.Unassigned;
+
+    protected AI_State MainState { get => mainState; set => mainState = value; }
+    protected PlayerSpotted_SubState PlayerSpottedState { get => playerSpottedState; set => playerSpottedState = value; }
+    protected PeekCorner_SubState PeekCornerState { get => peekCornerState; set => peekCornerState = value; }
     protected AIStimulus Stimulus { get; private set; }
     protected Collider MyCollider => m_Collider;
     protected float StoppingDistance { get; set; }
@@ -61,17 +68,30 @@ public abstract class AIController : Controller {
     }
 
     /// <summary>
+    /// Caclulates the position of the closest hide spot.
+    /// </summary>
+    /// <returns>The position of the closest hide spot.</returns>
+    protected Vector3 ClosestHideSpot() {
+        return Environment.FindClosestPosition(transform.position, hideSpots);
+    }
+
+    /// <summary>
     /// Filters the provided hide spots and picks the best position to hide from the provided target.
     /// </summary>
     /// <param name="againstTarget">Target transform to filter the environment against.</param>
     /// <returns></returns>
     protected Vector3 FindHideSpot(Transform againstTarget) {
-        List<Transform> targetDistanceFilter = AIPositionFinder.FilterByDistance(hideSpots, againstTarget, 20f);
-        List<Transform> myDistanceFilter = AIPositionFinder.FilterByDistance(targetDistanceFilter, transform, 10f);
-        List<Transform> dotFilter = AIPositionFinder.FilterByDotProduct(myDistanceFilter, transform, againstTarget);
-        List<Transform> losFilter = AIPositionFinder.FilterByLineOfSight(dotFilter, againstTarget);
-        List<Transform> positionFilter = AIPositionFinder.FilterByObjectTowardsTarget(losFilter, againstTarget, 2f);
-        return Environment.FindClosestPosition(transform.position, positionFilter);
+        // Select spots 20m away from the player.
+        List<Transform> filteredHideSpots = AIPositionFinder.FilterByDistance(hideSpots, againstTarget, 20f);
+        // Select spots 10m away from the AI.
+        filteredHideSpots = AIPositionFinder.FilterByDistance(filteredHideSpots, transform, 10f);
+        // 
+        filteredHideSpots = AIPositionFinder.FilterByDotProduct(filteredHideSpots, transform, againstTarget, CompareDotProduct.GreaterThan, dotProduct: 0f);
+        // Select spots not seeable by the player.
+        filteredHideSpots = AIPositionFinder.FilterByLineOfSight(filteredHideSpots, againstTarget);
+        // Select spots that have an object towards the player's position.
+        filteredHideSpots = AIPositionFinder.FilterByObjectTowardsTarget(filteredHideSpots, againstTarget, 2f);
+        return Environment.FindClosestPosition(transform.position, filteredHideSpots);
     }
 
     /// <summary>
@@ -156,7 +176,7 @@ public abstract class AIController : Controller {
             return edges.ToArray();
         }
         else {
-            Debug.LogWarning("No colliders found. Make sure the colliders representing a wall are on the '" + WALL_COLLIDER_LAYER_NAME + "' layer and/or the AI's distance from the collider is <= " + overlapDistance + " units.");
+            Debug.LogWarning("No colliders found. Make sure the colliders representing a wall are on the '" + WALL_COLLIDER_LAYER_NAME + "' layer and/or the AI's distance from the collider is less than " + overlapDistance + " units.");
         }
 
         return new Vector3[0];

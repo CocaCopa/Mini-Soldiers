@@ -58,7 +58,7 @@ public class AIGunner : AIController {
 
     protected override void Start() {
         base.Start();
-        State = AI_State.Patrol;
+        MainState = AI_State.Patrol;
         SetNewDestination(patrolPoints[0].position);
         patrolPointIndex++;
     }
@@ -82,7 +82,7 @@ public class AIGunner : AIController {
     }
 
     private void StateManager() {
-        switch (State) {
+        switch (MainState) {
             case AI_State.Patrol:
             StatePatrol();
             break;
@@ -112,7 +112,7 @@ public class AIGunner : AIController {
         if (Stimulus.CanSeeTarget(PlayerTransform)) {
             targetLookAtPosition = PlayerTransform.position;
             if (Common.TickTimer(ref timeToSpotPlayerTimer, timeToSpotPlayer)) {
-                State = AI_State.PlayerSpotted;
+                MainState = AI_State.PlayerSpotted;
                 PlayerSpottedState = PlayerSpotted_SubState.FindNewHideSpot;
             }
         }
@@ -136,7 +136,7 @@ public class AIGunner : AIController {
             delayBeforeShootingTime = Random.Range(delayBeforeShootingMin, delayBeforeShootingMax);
             delayBeforeShootingTimer = delayBeforeShootingTime;
         }
-
+                
         switch (PlayerSpottedState) {
             case PlayerSpotted_SubState.FindNewHideSpot:
             PlayerSpotted_FindNewHideSpot();

@@ -42,6 +42,11 @@ public class AIStimulus : MonoBehaviour {
         return false;
     }
 
+    /// <summary>
+    /// Checks if there is a clear line of sight from the current transform's position to the specified target's transform position.
+    /// </summary>
+    /// <param name="targetTransform">The transform of the target to check for line of sight.</param>
+    /// <returns>True if there is a clear line of sight to the target, otherwise false.</returns>
     public bool ClearLineOfSight(Transform targetTransform) {
         Vector3 origin = transform.position;
         // The character animations affect the position/height of the eyes. Changes to the Y positions help stabilize the height of the direction.
