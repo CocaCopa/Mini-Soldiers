@@ -132,7 +132,7 @@ public class CombatManager : MonoBehaviour {
     }
     
     public void ReloadEquippedWeapon(float delayReload = 0f) {
-        if (isReloading == false) {
+        if (isReloading == false && equippedWeapon.RemainingBullets < equippedWeapon.MagazineSize) {
             if (reloadRoutine != null) {
                 StopCoroutine(reloadRoutine);
             }
