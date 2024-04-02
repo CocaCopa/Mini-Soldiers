@@ -302,6 +302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onGameStart: 0
   lookAtTargetObjectSpeed: 10
+  maximumHealthPoints: 100
   hideSpots:
   - {fileID: 0}
   - {fileID: 0}
@@ -319,6 +320,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  mainState: 0
+  playerSpottedState: 0
+  peekCornerState: 0
   patrolPoints:
   - {fileID: 0}
   - {fileID: 0}

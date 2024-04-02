@@ -450,6 +450,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onGameStart: 0
   lookAtTargetObjectSpeed: 10
+  maximumHealthPoints: 100
+  currentHealthPoints: 0
   maxLookUpAngle: 45
 --- !u!114 &5183159776375108306
 MonoBehaviour:

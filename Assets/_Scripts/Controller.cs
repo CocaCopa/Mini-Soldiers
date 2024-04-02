@@ -13,12 +13,16 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     [SerializeField] private OnGameStart onGameStart;
     [Tooltip("How fast should the character turn their head to look at the 'ObjectToLookAt' target.")]
     [SerializeField] private float lookAtTargetObjectSpeed = 10f;
+    [Tooltip("The maximum health points of the character.")]
+    [SerializeField] private float maximumHealthPoints;
 
     private LookAtObjectAnimRig objectAnimRig;
     private GameObject objectToLookAt;
     private CharacterMovement movement;
     private CharacterOrientation orientation;
     protected CombatManager combatManager;
+
+    [SerializeField] private float currentHealthPoints;
 
     protected bool IsRunning { get; set; }
     protected Vector2 DirectionalInput { get; set; }
@@ -33,6 +37,8 @@ public abstract class Controller : MonoBehaviour, IDamageable {
         movement = GetComponent<CharacterMovement>();
         orientation = GetComponent<CharacterOrientation>();
         combatManager = GetComponent<CombatManager>();
+
+        currentHealthPoints = maximumHealthPoints;
     }
 
     protected virtual void Start() {
@@ -75,7 +81,11 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     }
 
     public virtual void TakeDamage(float amount) {
+        currentHealthPoints -= amount;
         OnCharacterTakeDamage?.Invoke(this, EventArgs.Empty);
+        if (currentHealthPoints <= 0) {
+            OnCharacterDeath?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public virtual void Respawn() {

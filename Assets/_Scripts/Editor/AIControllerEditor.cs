@@ -13,6 +13,8 @@ public class AIControllerEditor : Editor {
     SerializedProperty mainState;
     SerializedProperty playerSpottedState;
     SerializedProperty peekCornerState;
+    SerializedProperty maximumHealthPoints;
+    SerializedProperty currentHealthPoints;
 
     private bool autoAssignFailed = false;
     private bool hideSpotsHelper = false;
@@ -20,24 +22,34 @@ public class AIControllerEditor : Editor {
 
     public virtual void OnEnable() {
         LoadInspectorValues();
+        FindTargetScriptProperties();
+    }
+
+    private void FindTargetScriptProperties() {
         onGameStart = serializedObject.FindProperty(nameof(onGameStart));
         lookAtTargetObjectSpeed = serializedObject.FindProperty(nameof(lookAtTargetObjectSpeed));
         hideSpots = serializedObject.FindProperty(nameof(hideSpots));
         mainState = serializedObject.FindProperty(nameof(mainState));
         playerSpottedState = serializedObject.FindProperty(nameof(playerSpottedState));
         peekCornerState = serializedObject.FindProperty(nameof(peekCornerState));
+        maximumHealthPoints = serializedObject.FindProperty(nameof(maximumHealthPoints));
+        currentHealthPoints = serializedObject.FindProperty(nameof(currentHealthPoints));
     }
 
     public override void OnInspectorGUI() {
         DisplayScriptReference();
+        serializedObject.Update();
         EditorGUILayout.PropertyField(onGameStart);
         EditorGUILayout.PropertyField(lookAtTargetObjectSpeed);
-        EditorGUILayout.Space(10);
+        EditorGUILayout.PropertyField(maximumHealthPoints);
         EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.PropertyField(currentHealthPoints);
+        EditorGUILayout.Space(10);
         EditorGUILayout.PropertyField(mainState);
         EditorGUILayout.PropertyField(playerSpottedState);
         EditorGUILayout.PropertyField(peekCornerState);
         EditorGUI.EndDisabledGroup();
+        serializedObject.ApplyModifiedProperties();
     }
 
     protected void DisplayHideSpotsHelperButton() {
@@ -45,7 +57,6 @@ public class AIControllerEditor : Editor {
         hideSpotsHelper = EditorGUILayout.Toggle("Hide Spots Helper", hideSpotsHelper);
         if (hideSpotsHelper) {
             hideSpotsHolderTransform = EditorGUILayout.ObjectField("Hide Spots Holder", hideSpotsHolderTransform, typeof(Transform), true) as Transform;
-
             Button_AutoAssignHolder();
             Button_AssignHideSpots();
         }
