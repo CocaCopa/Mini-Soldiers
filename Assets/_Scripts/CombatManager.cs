@@ -42,12 +42,14 @@ public class CombatManager : MonoBehaviour {
     private AnimationCurve constraintCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
     private bool allowAutoReload = true;
     private bool isReloading;
+    private bool isShooting;
 
     public Transform RightHandTransform => rightHandTransform;
     public Weapon EquippedWeapon => equippedWeapon;
     public bool IsCombatIdle => isCombatIdle;
     public bool IsSwitchingWeapon => isSwitchingWeapon;
     public bool IsReloading => isReloading;
+    public bool IsShooting => isShooting;
 
     private void Awake() {
         characterAnimator = GetComponentInChildren<CharacterAnimator>();
@@ -58,16 +60,8 @@ public class CombatManager : MonoBehaviour {
         ManageIdleState();
     }
 
-    public void SwitchToPrimary() {
-        SwitchWeapon(loadoutWeapons[0]);
-    }
-
-    public void SwitchToSecondary() {
-        SwitchWeapon(loadoutWeapons[1]);
-    }
-
-    public void SwitchToMelee() {
-        SwitchWeapon(loadoutWeapons[2]);
+    public void SwitchWeapon(WeaponSwitch weaponSwitch) {
+        SwitchWeapon(loadoutWeapons[(int)weaponSwitch]);
     }
 
     private void SwitchWeapon(GameObject weaponObject) {
@@ -95,7 +89,7 @@ public class CombatManager : MonoBehaviour {
                 weaponType = equippedWeapon.Type
             });
 
-            StartCoroutine(CheckForDrawAnimation(1));
+            StartCoroutine(CheckForDrawAnimation(animationPercentage: 1f));
         }
     }
 

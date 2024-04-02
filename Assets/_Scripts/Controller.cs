@@ -58,13 +58,13 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     private void EquipWeaponOnGameStart() {
         switch (onGameStart) {
             case OnGameStart.SwitchToPrimary:
-            combatManager.SwitchToPrimary();
+            combatManager.SwitchWeapon(WeaponSwitch.Primary);
             break;
             case OnGameStart.SwitchToSecondary:
-            combatManager.SwitchToSecondary();
+            combatManager.SwitchWeapon(WeaponSwitch.Secondary);
             break;
             case OnGameStart.SwitchToMelee:
-            combatManager.SwitchToMelee();
+            combatManager.SwitchWeapon(WeaponSwitch.Melee);
             break;
         }
     }

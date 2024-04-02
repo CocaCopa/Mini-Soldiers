@@ -28,15 +28,15 @@ public class PlayerController : Controller {
     }
 
     private void Input_OnPrimarySwitchPressed(object sender, System.EventArgs e) {
-        combatManager.SwitchToPrimary();
+        combatManager.SwitchWeapon(WeaponSwitch.Primary);
     }
 
     private void Input_OnSecondarySwitchPressed(object sender, System.EventArgs e) {
-        combatManager.SwitchToSecondary();
+        combatManager.SwitchWeapon(WeaponSwitch.Secondary);
     }
 
     private void Input_OnMeleeSwitchPressed(object sender, System.EventArgs e) {
-        combatManager.SwitchToMelee();
+        combatManager.SwitchWeapon(WeaponSwitch.Melee);
     }
 
     protected override void Update() {
