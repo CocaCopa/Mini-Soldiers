@@ -78,9 +78,11 @@ public class Weapon : MonoBehaviour {
         if (controller == null) {
             controller = transform.root.GetComponent<Controller>();
             overrideTransform = transform.root.GetComponentInChildren<OverrideTransform>();
-            overridePosition = new Vector3(backwardsKickAmount, 0f, 0f);
             bulletsInMagazine = magazineSize;
+            //overridePosition = new Vector3(backwardsKickAmount, 0f, 0f);
         }
+        kickWeaponRotation = defaultWeaponRotation = Quaternion.identity;
+        overridePosition = Vector3.zero;
     }
 
     private void OnDisable() {
@@ -88,7 +90,8 @@ public class Weapon : MonoBehaviour {
             controller = null;
             overrideTransform = null;
         }
-        if (recoilPositionAnimPoints != 1 && defaultWeaponRotation != Quaternion.identity) {
+        if (recoilPositionAnimPoints != 1f && defaultWeaponRotation != Quaternion.identity) {
+            overridePosition = Vector3.zero;
             transform.parent.localRotation = defaultWeaponRotation;
         }
     }
@@ -102,11 +105,15 @@ public class Weapon : MonoBehaviour {
     }
 
     public void PullGunTrigger() {
-        if (mode == WeaponMode.Automatic) {
+        switch (mode) {
+            case WeaponMode.Automatic:
             Shoot();
-        }
-        else if (mode == WeaponMode.SemiAutomatic && isTriggerPulled == false) {
-            Shoot();
+            break;
+            case WeaponMode.SemiAutomatic:
+            if (isTriggerPulled == false) {
+                Shoot();
+            }
+            break;
         }
         isTriggerPulled = true;
     }
@@ -143,6 +150,7 @@ public class Weapon : MonoBehaviour {
         // Reset recoil.
         if (defaultWeaponRotation != Quaternion.identity) {
             transform.parent.localRotation = defaultWeaponRotation;
+            overridePosition = new Vector3(backwardsKickAmount, 0f, 0f);
         }
         // Kick weapon backwards.
         overrideTransform.data.position = overridePosition;
