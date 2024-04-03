@@ -212,7 +212,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7164611912039488053}
-  m_LocalRotation: {x: -0, y: -0.00000037252897, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 13.53, y: 0, z: -10.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -303,16 +303,8 @@ MonoBehaviour:
   onGameStart: 0
   lookAtTargetObjectSpeed: 10
   maximumHealthPoints: 100
+  currentHealthPoints: 0
   hideSpots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -324,8 +316,6 @@ MonoBehaviour:
   playerSpottedState: 0
   peekCornerState: 0
   patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   patrolTime: 5
@@ -434,7 +424,6 @@ MonoBehaviour:
   - {fileID: 1788837982872976861, guid: 6233f32a3ecfe674ca2948ca20ee4626, type: 3}
   autoReloadDelay: 0.4
   rightHandTransform: {fileID: 7164611912266882435}
-  handAimConstraint: {fileID: 7164611912548996407}
   drawAnimations:
   - {fileID: 7400000, guid: 2b06ec130e774544f868d940a1500b64, type: 2}
   - {fileID: 7400000, guid: ee5a8604c8ea9cb46ba3943dc4700508, type: 2}
@@ -6426,6 +6415,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7164611912548996406}
+  - component: {fileID: 3466765052877485976}
   - component: {fileID: 7164611912548996407}
   m_Layer: 9
   m_Name: HandAim
@@ -6449,6 +6439,18 @@ Transform:
   m_Father: {fileID: 4717067714625326833}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3466765052877485976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7164611912548996425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e45fd5ac0ba370f4eae19ee2f1773e4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7164611912548996407
 MonoBehaviour:
   m_ObjectHideFlags: 0

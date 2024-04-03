@@ -549,7 +549,6 @@ MonoBehaviour:
   - {fileID: 1788837982872976861, guid: 6233f32a3ecfe674ca2948ca20ee4626, type: 3}
   autoReloadDelay: 0.35
   rightHandTransform: {fileID: 4755060025444714788}
-  handAimConstraint: {fileID: 4755060025733022096}
   drawAnimations:
   - {fileID: 7400000, guid: 2b06ec130e774544f868d940a1500b64, type: 2}
   - {fileID: 7400000, guid: ee5a8604c8ea9cb46ba3943dc4700508, type: 2}
@@ -6540,6 +6539,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4755060025733022097}
+  - component: {fileID: 336625720779887987}
   - component: {fileID: 4755060025733022096}
   m_Layer: 8
   m_Name: HandAim
@@ -6563,6 +6563,18 @@ Transform:
   m_Father: {fileID: 7198697710399855190}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &336625720779887987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4755060025733022190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e45fd5ac0ba370f4eae19ee2f1773e4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4755060025733022096
 MonoBehaviour:
   m_ObjectHideFlags: 0
