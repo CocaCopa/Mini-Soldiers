@@ -14,42 +14,35 @@ public class CombatManager : MonoBehaviour {
     public event EventHandler<OnSwitchWeaponsEventArgs> OnSwitchWeapons;
     public event EventHandler OnInitiateWeaponReload;
 
-    [Tooltip("Primary / Secondary / Melee weapons of the character.")]
-    [SerializeField] private GameObject[] loadoutWeapons;
-    [Tooltip("")]
-    [SerializeField] private float autoReloadDelay = 0.2f;
     [Tooltip("The bone transform that will hold the character's weapons.")]
     [SerializeField] private Transform rightHandTransform;
-    [SerializeField] private MultiAimConstraint handAimConstraint;
+    [Tooltip("Delay before the character will auto reload once the magazine of the weapon is empty.")]
+    [SerializeField] private float autoReloadDelay = 0.2f;
+    [Space(10)]
+    [Tooltip("Primary / Secondary / Melee weapons of the character.")]
+    [SerializeField] private GameObject[] loadoutWeapons;
     [Tooltip("The animation clip of the 'Attack' animation state referenced in the animator controller.")]
     [SerializeField] private AnimationClip[] drawAnimations;
     [SerializeField] private AnimationClip reloadAnimation;
-
-    /// <summary>
-    /// Smoothly aim the character's hand towards the mouse when switching weapons.
-    /// </summary>
-    private const float HAND_AIM_SPEED = 1.49f;
 
     private CharacterAnimator characterAnimator;
     private GameObject equippedWeaponObject;
     private Weapon equippedWeapon;
     private Coroutine reloadRoutine;
-    private bool isSwitchingWeapon;
-    private bool isCombatIdle;
     private float relaxTime = 5f;
     private float relaxTimer;
-    private float constraintAnimationPoints;
-    private AnimationCurve constraintCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
     private bool allowAutoReload = true;
+    private bool isCombatIdle;
+    private bool isSwitchingWeapon;
+    private bool isPullingGunTrigger;
     private bool isReloading;
-    private bool isShooting;
 
     public Transform RightHandTransform => rightHandTransform;
     public Weapon EquippedWeapon => equippedWeapon;
     public bool IsCombatIdle => isCombatIdle;
     public bool IsSwitchingWeapon => isSwitchingWeapon;
     public bool IsReloading => isReloading;
-    public bool IsShooting => isShooting;
+    public bool IsPullingGunTrigger => isPullingGunTrigger;
 
     private void Awake() {
         characterAnimator = GetComponentInChildren<CharacterAnimator>();
@@ -74,8 +67,6 @@ public class CombatManager : MonoBehaviour {
                 isReloading = false;
                 reloadRoutine = null;
             }
-            constraintAnimationPoints = 0f;
-            handAimConstraint.weight = 0f;
             equippedWeaponObject = weaponObject;
             equippedWeaponObject.SetActive(true);
             equippedWeapon = equippedWeaponObject.GetComponent<Weapon>();
@@ -95,22 +86,25 @@ public class CombatManager : MonoBehaviour {
 
     public void PullGunTrigger(bool autoReload = true) {
         if (equippedWeapon && !isReloading) {
-            constraintAnimationPoints = 1f;
-            handAimConstraint.weight = 1f;
             isCombatIdle = true;
             relaxTimer = relaxTime;
             StartCoroutine(CheckForDrawAnimation(1f));
             if (!isSwitchingWeapon) {
+                isPullingGunTrigger = true;
                 equippedWeapon.PullGunTrigger();
                 if (autoReload && CanAutoReload()) {
                     ReloadEquippedWeapon(autoReloadDelay);
                 }
             }
         }
+        else {
+            isPullingGunTrigger = false;
+        }
     }
 
     public void ReleaseGunTrigger() {
         equippedWeapon.ReleaseGunTrigger();
+        isPullingGunTrigger = false;
     }
 
     private bool CanAutoReload() {
@@ -136,6 +130,9 @@ public class CombatManager : MonoBehaviour {
 
     private IEnumerator ReloadRoutine(float delayReload) {
         yield return new WaitForSeconds(delayReload);
+        while (isSwitchingWeapon) {
+            yield return null;
+        }
         isReloading = true;
         isCombatIdle = true;
         relaxTimer = relaxTime;
@@ -153,16 +150,7 @@ public class CombatManager : MonoBehaviour {
         if (isCombatIdle) {
             if (Common.TickTimer(ref relaxTimer, relaxTime)) {
                 isCombatIdle = false;
-                handAimConstraint.weight = 0f;
             }
-            if (handAimConstraint.weight != 1f) {
-                float lerpTime = Common.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, HAND_AIM_SPEED);
-                handAimConstraint.weight = Mathf.Lerp(0f, 1f, lerpTime);
-            }
-        }
-        else if (constraintAnimationPoints != 0f) {
-            float lerpTime = Common.EvaluateAnimationCurve(constraintCurve, ref constraintAnimationPoints, HAND_AIM_SPEED * 4f, increment: false);
-            handAimConstraint.weight = Mathf.Lerp(0f, 1f, lerpTime);
         }
     }
 
