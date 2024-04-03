@@ -2,48 +2,37 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(AIController))]
-public class AIControllerEditor : Editor {
+public class AIControllerEditor : ControllerEditor {
 
     private const string AUTO_ASSIGN_HOLDER = "Auto Assign Holder";
     private const string ASSIGN_HIDE_SPOTS = "Assign Hide Spots";
 
     SerializedProperty hideSpots;
-    SerializedProperty onGameStart;
-    SerializedProperty lookAtTargetObjectSpeed;
     SerializedProperty mainState;
     SerializedProperty playerSpottedState;
     SerializedProperty peekCornerState;
-    SerializedProperty maximumHealthPoints;
-    SerializedProperty currentHealthPoints;
 
     private bool autoAssignFailed = false;
     private bool hideSpotsHelper = false;
     private Transform hideSpotsHolderTransform;
 
-    public virtual void OnEnable() {
+    public virtual new void OnEnable() {
+        base.OnEnable();
         LoadInspectorValues();
         FindTargetScriptProperties();
     }
 
     private void FindTargetScriptProperties() {
-        onGameStart = serializedObject.FindProperty(nameof(onGameStart));
-        lookAtTargetObjectSpeed = serializedObject.FindProperty(nameof(lookAtTargetObjectSpeed));
         hideSpots = serializedObject.FindProperty(nameof(hideSpots));
         mainState = serializedObject.FindProperty(nameof(mainState));
         playerSpottedState = serializedObject.FindProperty(nameof(playerSpottedState));
         peekCornerState = serializedObject.FindProperty(nameof(peekCornerState));
-        maximumHealthPoints = serializedObject.FindProperty(nameof(maximumHealthPoints));
-        currentHealthPoints = serializedObject.FindProperty(nameof(currentHealthPoints));
     }
 
     public override void OnInspectorGUI() {
-        DisplayScriptReference();
+        base.OnInspectorGUI();
         serializedObject.Update();
-        EditorGUILayout.PropertyField(onGameStart);
-        EditorGUILayout.PropertyField(lookAtTargetObjectSpeed);
-        EditorGUILayout.PropertyField(maximumHealthPoints);
         EditorGUI.BeginDisabledGroup(true);
-        EditorGUILayout.PropertyField(currentHealthPoints);
         EditorGUILayout.Space(10);
         EditorGUILayout.PropertyField(mainState);
         EditorGUILayout.PropertyField(playerSpottedState);

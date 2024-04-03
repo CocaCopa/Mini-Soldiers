@@ -1,4 +1,3 @@
-using PlasticPipe.PlasticProtocol.Messages;
 using UnityEditor;
 
 [CustomEditor(typeof(AIGunner))]
