@@ -21,10 +21,10 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private float rateOfFire;
     [Tooltip("Speed of the bullet.")]
     [SerializeField] private float bulletSpeed;
-    [Tooltip("Maximum range at which the weapon can deal damage.")]
-    [SerializeField] private float range;
     [Tooltip("Damage dealt by the weapon.")]
     [SerializeField] private float damage;
+    [Tooltip("Applies weapon damage based on distance: Within the specified range, damage follows a drop-off curve. Beyond this range, minimum damage is applied, calculated by the drop-off curve in conjunction with the specified damage value.")]
+    [SerializeField] private float range;
     [Tooltip("Damage drop-off curve.")]
     [SerializeField] private AnimationCurve damageDropOff = AnimationCurve.Linear(0, 1, 1, 0);
 
@@ -195,7 +195,7 @@ public class Weapon : MonoBehaviour {
         Vector3 aimPosition = controller.ObjectToLookAt.transform.position;
         Vector3 direction = SpreadBullet(origin, aimPosition);
         Ray ray = new Ray(origin, direction);
-        float rayDistance = range;
+        float rayDistance = float.MaxValue;
         Physics.Raycast(ray, out hit, rayDistance);
     }
 
@@ -223,11 +223,17 @@ public class Weapon : MonoBehaviour {
         impactEffectObject.transform.forward = -hit.normal;
         Destroy(impactEffectObject, 5f);
     }
-
+    
     private void DealDamageToTarget(IDamageable target) {
         if (damage == 0f) {
             Debug.LogWarning("Weapon '" + m_name + "' is set to deal 0 damage");
         }
-        target.TakeDamage(damage);
+        Transform targetTransform = (target as MonoBehaviour)?.transform;
+        float distanceToTarget = Vector3.Distance(targetTransform.position, transform.position);
+        distanceToTarget = Mathf.Clamp(distanceToTarget, 0f, range);
+        float distancePercentage = distanceToTarget / range;
+        float dropOffPercentage = damageDropOff.Evaluate(distancePercentage);
+        float modifiedDamage = damage * dropOffPercentage;
+        target.TakeDamage(modifiedDamage);
     }
 }
