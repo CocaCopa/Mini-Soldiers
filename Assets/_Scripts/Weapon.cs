@@ -38,6 +38,7 @@ public class Weapon : MonoBehaviour {
     [SerializeField] private float upwardsKickAmount;
 
     [Header("--- Bullet Spread ---")]
+    [Tooltip("True, a ray will appear in the scene view in front of the weapon's barrel, representing the spread of the weapon.")]
     [SerializeField] private bool debugBulletSpread;
     [Tooltip("Spread dispersion of the weapon. Higher values will soften the intensity of the bullet spread.")]
     [SerializeField] private float spreadDispersion;
