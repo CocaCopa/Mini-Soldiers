@@ -21,18 +21,21 @@ public class CameraController : MonoBehaviour {
 
     private void Awake() {
         customCamera = GetComponent<CustomCamera>();
+        InitializeCamera();
+    }
 
+    private void LateUpdate() {
+        CameraRotation();
+        ChangeCameraShoulder();
+    }
+
+    private void InitializeCamera() {
         rightSideFollow = customCamera.FollowOffset.x;
         leftSideFollow = -rightSideFollow;
         rightSideLookAt = customCamera.LookAtOffset.x;
         leftSideLookAt = -rightSideLookAt;
         incrementShoulderPoints = true;
         cameraShoulderPoints = 1f;
-    }
-
-    private void LateUpdate() {
-        CameraRotation();
-        ChangeCameraShoulder();
     }
 
     private void CameraRotation() {

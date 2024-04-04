@@ -46,7 +46,7 @@ public abstract class AIController : Controller {
 
     protected new virtual void Update() {
         base.Update();
-        DirectionalInput = NavMeshMovementDirection(StoppingDistance);
+        DirectionalInput = IsAlive ? NavMeshMovementDirection(StoppingDistance) : Vector3.zero;
         RelativeForwardDir = Vector3.forward;
         RelativeRightDir = Vector3.right;
     }
@@ -219,6 +219,17 @@ public abstract class AIController : Controller {
             Debug.LogWarning("Could not calculate collider edges");
         }
         return faceEdges;
+    }
+
+    public override void TakeDamage(float amount) {
+        base.TakeDamage(amount);
+        if (CurrentHealthPoints <= 0) {
+            SetNewDestination(transform.position);
+            MainState = AI_State.Dead;
+            PlayerSpottedState = PlayerSpotted_SubState.Unassigned;
+            PeekCornerState = PeekCorner_SubState.Unassigned;
+
+        }
     }
 
 #if UNITY_EDITOR

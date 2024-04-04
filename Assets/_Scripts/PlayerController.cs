@@ -41,11 +41,15 @@ public class PlayerController : Controller {
 
     protected override void Update() {
         base.Update();
-        
-        SetLookAtObjectPosition(ClampLookAtObjectHeight());
-        HandleMovementParameters();
-        HandleCombatInput();
-        ManageLaserSight();
+        if (IsAlive) {
+            SetLookAtObjectPosition(ClampLookAtObjectHeight());
+            HandleMovementParameters();
+            HandleCombatInput();
+            ManageLaserSight();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            TakeDamage(100f);
+        }
     }
 
     private void HandleMovementParameters() {
@@ -112,5 +116,15 @@ public class PlayerController : Controller {
         objectPosition.y = height;
 
         return objectPosition;
+    }
+
+    public override void TakeDamage(float amount) {
+        base.TakeDamage(amount);
+        if (CurrentHealthPoints <= 0f) {
+            laserSight.gameObject.SetActive(false);
+            input.MotionControlsEnabled(false);
+            input.CombatControlsEnabled(false);
+            DirectionalInput = Vector2.zero;
+        }
     }
 }

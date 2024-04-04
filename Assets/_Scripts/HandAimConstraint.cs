@@ -5,6 +5,7 @@ using CocaCopa.Utilities;
 public class HandAimConstraint : MonoBehaviour {
 
     private MultiAimConstraint handAimConstraint;
+    private Controller controller;
     private CombatManager combatManager;
     private AnimationCurve constraintCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
     private float constraintAnimationPoints;
@@ -22,6 +23,7 @@ public class HandAimConstraint : MonoBehaviour {
 
     private void Awake() {
         handAimConstraint = GetComponent<MultiAimConstraint>();
+        controller = transform.root.GetComponent<Controller>();
         combatManager = transform.root.GetComponent<CombatManager>();
         combatManager.OnSwitchWeapons += CombatManager_OnSwitchWeapons;
     }
@@ -32,8 +34,10 @@ public class HandAimConstraint : MonoBehaviour {
     }
 
     private void Update() {
-        CalculateHandAimBehaviour();
-        ManageHandConstraint();
+        if (controller.IsAlive) {
+            CalculateHandAimBehaviour();
+            ManageHandConstraint();
+        }
     }
 
     private void CalculateHandAimBehaviour() {

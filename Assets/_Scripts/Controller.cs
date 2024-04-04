@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public abstract class Controller : MonoBehaviour, IDamageable {
 
@@ -16,14 +17,19 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     [Tooltip("The maximum health points of the character.")]
     [SerializeField] private float maximumHealthPoints;
 
+    private CapsuleCollider characterCollider;
     private LookAtObjectAnimRig objectAnimRig;
+    private Rig characterRig;
     private GameObject objectToLookAt;
     private CharacterMovement movement;
     private CharacterOrientation orientation;
     protected CombatManager combatManager;
 
     [SerializeField] private float currentHealthPoints;
+    private bool isAlive = true;
 
+    public bool IsAlive => isAlive;
+    protected float CurrentHealthPoints => currentHealthPoints;
     protected bool IsRunning { get; set; }
     protected Vector2 DirectionalInput { get; set; }
     protected Vector3 RelativeForwardDir { get; set; }
@@ -33,7 +39,9 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     public float CurrentMovementSpeed => movement.CurrentSpeed;
 
     protected virtual void Awake() {
+        characterCollider = GetComponent<CapsuleCollider>();
         objectAnimRig = GetComponentInChildren<LookAtObjectAnimRig>();
+        characterRig = objectAnimRig.GetComponent<Rig>();
         movement = GetComponent<CharacterMovement>();
         orientation = GetComponent<CharacterOrientation>();
         combatManager = GetComponent<CombatManager>();
@@ -52,7 +60,9 @@ public abstract class Controller : MonoBehaviour, IDamageable {
     }
 
     protected virtual void FixedUpdate() {
-        movement.MoveTowardsDirection(DirectionalInput, IsRunning, RelativeForwardDir, RelativeRightDir);
+        if (isAlive) {
+            movement.MoveTowardsDirection(DirectionalInput, IsRunning, RelativeForwardDir, RelativeRightDir);
+        }
     }
 
     private void EquipWeaponOnGameStart() {
@@ -84,11 +94,15 @@ public abstract class Controller : MonoBehaviour, IDamageable {
         currentHealthPoints -= amount;
         OnCharacterTakeDamage?.Invoke(this, EventArgs.Empty);
         if (currentHealthPoints <= 0) {
+            isAlive = false;
+            characterCollider.enabled = false;
+            characterRig.weight = 0f;
             OnCharacterDeath?.Invoke(this, EventArgs.Empty);
         }
     }
 
     public virtual void Respawn() {
+        isAlive = true;
         OnCharacterRespawn?.Invoke(this, EventArgs.Empty);
     }
 }

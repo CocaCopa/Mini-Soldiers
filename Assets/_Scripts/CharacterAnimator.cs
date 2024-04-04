@@ -4,9 +4,6 @@ public class CharacterAnimator : MonoBehaviour {
 
     private const string MOVEMENT_ANIMATION_SPEED = "MovementAnimationSpeed";
     private const string MOVEMENT_SPEED = "MovementSpeed";
-    private const string DRAW_RIFLE = "DrawRifle";
-    private const string DRAW_PISTOL = "DrawPistol";
-    private const string DRAW_KNIFE = "DrawKnife";
     private const string RELOAD = "Reload";
     private const string PRIMARY_IDLE = "PrimaryIdle";
     private const string SECONDARY_IDLE = "SecondaryIdle";
@@ -16,6 +13,11 @@ public class CharacterAnimator : MonoBehaviour {
 
     private const string STATE_NAME_DRAW_WEAPON = "m_weapon_draw";
     private const string STATE_NAME_DRAW_PISTOL = "m_pistol_draw";
+    private const string STATE_NAME_TAKE_DAMAGE = "m_weapon_damage";
+    private const string STATE_NAME_DEAD_A = "m_death_A";
+    private const string STATE_NAME_DEAD_B = "m_death_B";
+    private const string STATE_NAME_DEAD_C = "m_death_C";
+    private const string STATE_NAME_DEAD_D = "m_death_D";
 
     private Controller controller;
     private CharacterOrientation orientation;
@@ -29,13 +31,34 @@ public class CharacterAnimator : MonoBehaviour {
         animator = GetComponent<Animator>();
 
         controller.OnCharacterTakeDamage += Controller_OnTakeDamage;
+        controller.OnCharacterDeath += Controller_OnCharacterDeath;
         combatManager.OnSwitchWeapons += CombatManager_OnSwitchWeapons;
         combatManager.OnInitiateWeaponReload += CombatManager_OnInitiateWeaponReload;
     }
 
+    private void Controller_OnCharacterDeath(object sender, System.EventArgs e) {
+        string randomDeathAnimation = null;
+        float randomNumber = Random.Range(0, 3);
+        switch (randomNumber) {
+            case 0:
+            randomDeathAnimation = STATE_NAME_DEAD_A;
+            break;
+            case 1:
+            randomDeathAnimation = STATE_NAME_DEAD_B;
+            break;
+            case 2:
+            randomDeathAnimation = STATE_NAME_DEAD_C;
+            break;
+            case 3:
+            randomDeathAnimation = STATE_NAME_DEAD_D;
+            break;
+        }
+        animator.Play(randomDeathAnimation, layer: 0, normalizedTime: 0f);
+        animator.SetLayerWeight(layerIndex: 1, weight: 0f);
+    }
+
     private void Controller_OnTakeDamage(object sender, System.EventArgs e) {
-        //animator.SetTrigger("Damage");
-        animator.Play("m_weapon_damage", 2, 0);
+        animator.Play(STATE_NAME_TAKE_DAMAGE, layer: 2, normalizedTime: 0f);
     }
 
     private void CombatManager_OnInitiateWeaponReload(object sender, System.EventArgs e) {

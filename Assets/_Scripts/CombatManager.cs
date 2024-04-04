@@ -25,6 +25,7 @@ public class CombatManager : MonoBehaviour {
     [SerializeField] private AnimationClip[] drawAnimations;
     [SerializeField] private AnimationClip reloadAnimation;
 
+    private Controller controller;
     private CharacterAnimator characterAnimator;
     private GameObject equippedWeaponObject;
     private Weapon equippedWeapon;
@@ -45,8 +46,17 @@ public class CombatManager : MonoBehaviour {
     public bool IsPullingGunTrigger => isPullingGunTrigger;
 
     private void Awake() {
+        controller = GetComponent<Controller>();
         characterAnimator = GetComponentInChildren<CharacterAnimator>();
         InitializeEquippedWeapons();
+    }
+
+    private void Start() {
+        controller.OnCharacterDeath += Controller_OnCharacterDeath;
+    }
+
+    private void Controller_OnCharacterDeath(object sender, EventArgs e) {
+        equippedWeaponObject.SetActive(false);
     }
 
     private void Update() {

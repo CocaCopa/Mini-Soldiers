@@ -1,5 +1,6 @@
 public enum AI_State {
     Unassigned,
+    Dead,
     Patrol,
     Investigate,
     PlayerSpotted,

@@ -36,11 +36,9 @@ public class CustomCameraEditor : Editor {
             EditorGUILayout.PropertyField(cameraPivot);
             EditorGUI.indentLevel--;
         }
+            Button_AllignRotationWithTarget();
         DrawDefaultExcludingCustomFields();
         serializedObject.ApplyModifiedProperties();
-        GUILayout.Space(15);
-        Button_AllignRotationWithTarget();
-        GUILayout.Space(10);
     }
 
     private void OnSceneGUI() {
