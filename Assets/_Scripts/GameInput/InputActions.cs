@@ -277,6 +277,54 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Camera"",
+            ""id"": ""afe307a2-18dc-4162-886e-d7ed9790e19c"",
+            ""actions"": [
+                {
+                    ""name"": ""RotateCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""87d120d5-14cc-47c9-9483-db531612b592"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeShoulder"",
+                    ""type"": ""Button"",
+                    ""id"": ""27a7c3a1-ced3-444e-ad0a-1f297d350291"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b311bf7d-d64a-4b58-96db-4e504621bdff"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""85b0572d-fb53-44f0-9d6a-20eefa0a352b"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeShoulder"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -292,6 +340,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Combat_PrimarySwitch = m_Combat.FindAction("PrimarySwitch", throwIfNotFound: true);
         m_Combat_SecondarySwitch = m_Combat.FindAction("SecondarySwitch", throwIfNotFound: true);
         m_Combat_MeleeSwitch = m_Combat.FindAction("MeleeSwitch", throwIfNotFound: true);
+        // Camera
+        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
+        m_Camera_RotateCamera = m_Camera.FindAction("RotateCamera", throwIfNotFound: true);
+        m_Camera_ChangeShoulder = m_Camera.FindAction("ChangeShoulder", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -481,6 +533,60 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         }
     }
     public CombatActions @Combat => new CombatActions(this);
+
+    // Camera
+    private readonly InputActionMap m_Camera;
+    private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
+    private readonly InputAction m_Camera_RotateCamera;
+    private readonly InputAction m_Camera_ChangeShoulder;
+    public struct CameraActions
+    {
+        private @InputActions m_Wrapper;
+        public CameraActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @RotateCamera => m_Wrapper.m_Camera_RotateCamera;
+        public InputAction @ChangeShoulder => m_Wrapper.m_Camera_ChangeShoulder;
+        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public void AddCallbacks(ICameraActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CameraActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Add(instance);
+            @RotateCamera.started += instance.OnRotateCamera;
+            @RotateCamera.performed += instance.OnRotateCamera;
+            @RotateCamera.canceled += instance.OnRotateCamera;
+            @ChangeShoulder.started += instance.OnChangeShoulder;
+            @ChangeShoulder.performed += instance.OnChangeShoulder;
+            @ChangeShoulder.canceled += instance.OnChangeShoulder;
+        }
+
+        private void UnregisterCallbacks(ICameraActions instance)
+        {
+            @RotateCamera.started -= instance.OnRotateCamera;
+            @RotateCamera.performed -= instance.OnRotateCamera;
+            @RotateCamera.canceled -= instance.OnRotateCamera;
+            @ChangeShoulder.started -= instance.OnChangeShoulder;
+            @ChangeShoulder.performed -= instance.OnChangeShoulder;
+            @ChangeShoulder.canceled -= instance.OnChangeShoulder;
+        }
+
+        public void RemoveCallbacks(ICameraActions instance)
+        {
+            if (m_Wrapper.m_CameraActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICameraActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CameraActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CameraActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CameraActions @Camera => new CameraActions(this);
     public interface IMotionActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -493,5 +599,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         void OnPrimarySwitch(InputAction.CallbackContext context);
         void OnSecondarySwitch(InputAction.CallbackContext context);
         void OnMeleeSwitch(InputAction.CallbackContext context);
+    }
+    public interface ICameraActions
+    {
+        void OnRotateCamera(InputAction.CallbackContext context);
+        void OnChangeShoulder(InputAction.CallbackContext context);
     }
 }

@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour {
     [SerializeField] private AnimationCurve cameraShoulderCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
     [SerializeField] private float changeShoulderSpeed;
 
+    private PlayerInput input;
     private CustomCamera customCamera;
     private Vector2 initialMousePosition;
     private float initialY;
@@ -20,6 +21,7 @@ public class CameraController : MonoBehaviour {
     private float rightSideLookAt;
 
     private void Awake() {
+        input = FindObjectOfType<PlayerInput>();
         customCamera = GetComponent<CustomCamera>();
         InitializeCamera();
     }
@@ -39,11 +41,11 @@ public class CameraController : MonoBehaviour {
     }
 
     private void CameraRotation() {
-        if (Input.GetMouseButtonDown(1)) {
+        if (input.CameraRotatePerformed()) {
             initialMousePosition = Input.mousePosition;
             initialY = customCamera.CameraPivot.eulerAngles.y;
         }
-        if (Input.GetMouseButton(1)) {
+        if (input.CameraRotateHold()) {
             float mouseDrag = (Input.mousePosition.x - initialMousePosition.x) / Screen.width - (Input.mousePosition.y - initialMousePosition.y) / Screen.height;
             angle = mouseDrag * sensitivity;
             Vector3 eulerAngles = customCamera.CameraPivot.eulerAngles;
@@ -53,7 +55,7 @@ public class CameraController : MonoBehaviour {
     }
 
     private void ChangeCameraShoulder() {
-        if (Input.GetMouseButtonDown(2)) {
+        if (input.ChangeCameraShoulderPerformed()) {
             incrementShoulderPoints = !incrementShoulderPoints;
         }
 

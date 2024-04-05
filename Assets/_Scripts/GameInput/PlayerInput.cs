@@ -17,6 +17,9 @@ public class PlayerInput : MonoBehaviour {
     private bool fireInputHold = false;
     private bool fireInputReleased = false;
     private bool reloadInputPerformed = false;
+    private bool cameraRotateInputHold = false;
+    private bool cameraRotateInputPerformed = false;
+    private bool changeShoulderPerformed = false;
 
     private Transform playerTransform;
     private Vector3 smoothMovementInput;
@@ -32,6 +35,9 @@ public class PlayerInput : MonoBehaviour {
         inputActions.Combat.PrimarySwitch.performed += PrimarySwitch_performed;
         inputActions.Combat.SecondarySwitch.performed += SecondarySwitch_performed;
         inputActions.Combat.MeleeSwitch.performed += MeleeSwitch_performed;
+
+        inputActions.Camera.RotateCamera.performed += RotateCamera_performed;
+        inputActions.Camera.RotateCamera.canceled += RotateCamera_canceled;
 
         playerTransform = FindObjectOfType<PlayerController>().transform;
         smoothMovementInput = playerTransform.forward;
@@ -50,6 +56,18 @@ public class PlayerInput : MonoBehaviour {
         }
         else if (reloadInputPerformed) {
             reloadInputPerformed = false;
+        }
+        if (inputActions.FindAction(nameof(inputActions.Camera.RotateCamera)).WasPerformedThisFrame()) {
+            cameraRotateInputPerformed = true;
+        }
+        else if (cameraRotateInputPerformed) {
+            cameraRotateInputPerformed = false;
+        }
+        if (inputActions.FindAction(nameof(inputActions.Camera.ChangeShoulder)).WasPerformedThisFrame()) {
+            changeShoulderPerformed = true;
+        }
+        else if (changeShoulderPerformed) {
+            changeShoulderPerformed = false;
         }
     }
 
@@ -105,10 +123,21 @@ public class PlayerInput : MonoBehaviour {
         runInputHold = false;
     }
 
+    private void RotateCamera_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        cameraRotateInputHold = true;
+    }
+
+    private void RotateCamera_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        cameraRotateInputHold = false;
+    }
+
     public bool RunInputHold() => runInputHold;
     public bool FireInputHold() => fireInputHold;
     public bool FireInputReleased() => fireInputReleased;
     public bool ReloadInputPerformed() => reloadInputPerformed;
+    public bool CameraRotateHold() => cameraRotateInputHold;
+    public bool CameraRotatePerformed() => cameraRotateInputPerformed;
+    public bool ChangeCameraShoulderPerformed() => changeShoulderPerformed;
 
     public Vector2 MovementInput() => new(smoothMovementInput.x, smoothMovementInput.z);
 
