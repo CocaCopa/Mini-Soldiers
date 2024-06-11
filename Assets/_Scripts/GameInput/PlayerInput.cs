@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
 
+    [Tooltip("Layers detectable by the mouse raycast.")]
+    [SerializeField] private LayerMask mouseLayers;
     [Tooltip("Interpolation speed of the raw directional input.")]
     [SerializeField] private float smoothInputValue;
 
@@ -144,7 +146,7 @@ public class PlayerInput : MonoBehaviour {
     public Vector3 MouseWorldPosition() {
         Vector3 mouseScreenPosition = Input.mousePosition;
         Ray mouseRay = Camera.main.ScreenPointToRay(mouseScreenPosition);
-        if (Physics.Raycast(mouseRay, out RaycastHit hit, float.MaxValue, ~LayerMask.GetMask("Props"))) {
+        if (Physics.Raycast(mouseRay, out RaycastHit hit, float.MaxValue, mouseLayers)) {
             Vector3 mouseHitPoint = hit.point;
             return mouseHitPoint;
         }

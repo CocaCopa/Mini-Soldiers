@@ -223,6 +223,8 @@ public abstract class AIController : Controller {
 
     public override void TakeDamage(float amount) {
         base.TakeDamage(amount);
+        mainState = AI_State.PlayerSpotted;
+        playerSpottedState = PlayerSpotted_SubState.FindNewHideSpot;
         if (CurrentHealthPoints <= 0) {
             SetNewDestination(transform.position);
             MainState = AI_State.Dead;

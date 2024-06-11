@@ -44,4 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd52ca78e772d6849a9bed7fc6d334cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseLayers:
+    serializedVersion: 2
+    m_Bits: 577
   smoothInputValue: 300

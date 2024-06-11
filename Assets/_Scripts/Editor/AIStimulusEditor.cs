@@ -8,6 +8,8 @@ public class AIStimulusEditor : Editor {
     private const string ColorAlphaKey = "ColorAlpha";
     private const string TargetTransformKey = "TargetTransform";
 
+    SerializedProperty sightRadius;
+
     private AIStimulus aiStimulus;
     private Transform targetTransform;
     private bool foldout;
@@ -16,11 +18,15 @@ public class AIStimulusEditor : Editor {
 
     private void OnEnable() {
         aiStimulus = target as AIStimulus;
+        sightRadius = serializedObject.FindProperty(nameof(sightRadius));
         LoadInspectorValues();
     }
 
     public override void OnInspectorGUI() {
         DisplayScriptReference();
+        if (sightRadius.floatValue < 0f) {
+            sightRadius.floatValue = 0f;
+        }
         EditorGUI.BeginChangeCheck();
         DrawDebugSettingsFoldout();
         if (EditorGUI.EndChangeCheck()) {

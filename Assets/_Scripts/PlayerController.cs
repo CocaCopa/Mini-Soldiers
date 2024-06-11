@@ -48,7 +48,9 @@ public class PlayerController : Controller {
             ManageLaserSight();
         }
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            TakeDamage(100f);
+            //TakeDamage(100f);
+            Transform ai = GameObject.Find("AI Character").transform;
+            transform.position = ai.position + ai.forward * 7f;
         }
     }
 
